@@ -46,7 +46,82 @@ Consider a Vector class like this with copy constructors and an assignment opera
         T& operator[](int i) { return p[i]; }
 
         T operator[](int i) const { return p[i]; }
+
+        unsigned int size() const { return length; }
     };
+
+Some sort of motivating example like, say, Cross Product code...
+How can we write efficient yet intuitive cross product code involving Vector<int>, where
+      
+   v = v1 x v2;
+   v = v1 x v2 x v3;;
+     
+        T operator[](int i) const { return p[i]; }
+    };
+
+ 
+Code below illustrates how remove_reference<T> and move() work
+   
+.. code-block:: cpp
+
+    //This is the code that begins to illustrates what remove_reference does.
+    
+    // remove_reference defined
+    template<typename _Tp>
+      class Remove_reference
+      {
+        public:
+        Remove_reference()
+        {
+          cout << "In non-specialization Remove_reference<_Tp> constructor" << endl; 
+        }
+        typedef _Tp   type; 
+      };
+    
+      
+    // remove_reference partial template specializations
+    template<typename _Tp>
+      class Remove_reference<_Tp&> { 
+        public:
+        Remove_reference()
+        {
+              cout << "In partial template specialization Remove_reference<_Tp&> constructor" << endl;
+        }
+        typedef _Tp   type; 
+    };
+    
+    template<typename _Tp>
+      class Remove_reference<_Tp&&> { 
+        public:
+         Remove_reference()
+         {
+             cout << "In partial template specialization Remove_reference<_Tp&&> constructor" << endl;
+         } 
+         typedef _Tp   type; 
+    };
+    
+    // End Illustration Code
+    
+    template<typename T>
+    constexpr typename Remove_reference<T>::type&& Move(T&& arg) 
+    {
+      Remove_reference<T> tmp;
+    
+      return static_cast<typename Remove_reference<T>::type&&>(arg);
+    }
+    
+   string a{"test"};
+  
+   string&& rval = Move(a); 
+     
+   Move(a);
+   
+   Move(string{"xyz"});
+ 
+Conclusion:
+
+Move() is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations
+of remove_reference to do this.
 
 .. code-block:: cpp
 
