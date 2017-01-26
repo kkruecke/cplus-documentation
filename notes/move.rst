@@ -1,4 +1,5 @@
 .. include:: <isopub.txt>
+.. include:: <isonum.txt>
 
 Move Semantics
 ==============
@@ -73,7 +74,7 @@ the current line's semicolon\ |ndash|\ as oppossed to an lvalue which is an obje
     X f3(); // returns rvalue
     X& f4(); // returns lvalue
 
-An rvalue variable is declared using ``&&``:
+An rvalue variable is declared using ``&&``: 
 
 .. code-block:: cpp
 
@@ -148,8 +149,10 @@ Implementation
 The move constructor and move assignment read from the rvalue parameter. They perform a shallow copy of its resourses, and then write to the rvalue effectively
 stealing its resources. This prevents memory deallocation when the rvalue's destructor is called.
 
-std::move()
------------
+std\ |colon|\ |colon|\ move()
+-----------------------------
+
+``std::move()`` casts its argument to an rvalue. It works for both rvalues and lvalues.
 
 Code below illustrates how remove_reference<T> and move() work
    
