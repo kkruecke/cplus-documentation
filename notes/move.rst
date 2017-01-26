@@ -58,7 +58,8 @@ Move Semantics
 --------------
 
 C++11 introduced move constructors and move assignment operators, which are methods overloaded on rvalues. An rvalue is a temporary whose lifetime does not extend past
-the current line's semicolon\ |ndash|\ as oppossed to an lvalue which is an object whose address we can take:
+the current line's semicolon\ |ndash|\ as oppossed to an lvalue which is an object whose address we can take. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. 
+Here are some examples:
 
 .. code-block:: cpp
 
@@ -83,6 +84,10 @@ An rvalue variable is declared using ``&&``:
 
 Implementation
 --------------
+
+The move constructor and move assignment both read from the rvalue parameter and write to it. They perform a shallow copy of its resourses, and then write to the rvalue
+effectively stealing its resources. The rvalue's ``length`` is set to 0 and the pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's
+destructor is called. 
  
 .. code-block:: cpp
 
@@ -146,26 +151,66 @@ Implementation
         T operator[](int i) const { return p[i]; }
     };
 
-The move constructor and move assignment read from the rvalue parameter. They perform a shallow copy of its resourses, and then write to the rvalue effectively
-stealing its resources. This prevents memory deallocation when the rvalue's destructor is called.
+Note concerning Derived classes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-std\ |colon|\ |colon|\ move()
------------------------------
+Since an rvalue reference parameter is not a temporary and its address can be taken, an rvalue parameter is itself an lvalue. This has implications for how move semantics 
+must be implemented in derived classes:
 
-``std::move()`` casts its argument to an rvalue. It works for both rvalues and lvalues.
+.. code-block:: cpp
 
-Code below illustrates how remove_reference<T> and move() work
-   
+    class Base {
+        char *p;
+        int length;
+      public:
+       //...snip
+       Base(Base&& lhs) 
+       {
+         p = lhs.p;
+         lhs.p = nullptr;
+         length = p.length;
+         p.length = 0;  
+       } 
+       //...snip 
+    }; 
+
+    Derived : public Base {
+
+       public:
+
+         Derived(Devied&& d) : Base(std::move(d)) {}  
+    };
+
+Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy
+constructor.
+
+How std\ |colon|\ |colon|\ move() works
+---------------------------------------
+
+``std::move()`` casts its argument to an rvalue. Since it works for both rvalues and lvalues, no harm is done when passing it an parameter that is already an rvalue.
+The is the g++ version of ``std::move()`` looks like this.
+
+.. code-block::cpp
+
+    template<typename T> constexpr typename std::remove_reference<T>::type&& move(T&& __t) noexcept
+    { 
+      return static_cast<typename std::remove_reference<T>::type&&>(__t); 
+    }
+
+``T&&`` is a forwarding reference that will bind to both lvalues and rvalues. When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is
+passed T resolves to the underlying nonreference type. We can see this by implementing a version of remove_reference and its partial template specializations, which have
+constructors: 
+
 .. code-block:: cpp
 
     //This is the code that begins to illustrates what remove_reference does.
     
     // remove_reference defined
     template<typename _Tp>
-      class Remove_reference
+      class remove_reference
       {
         public:
-        Remove_reference()
+        remove_reference()
         {
           cout << "In non-specialization Remove_reference<_Tp> constructor" << endl; 
         }
@@ -175,29 +220,27 @@ Code below illustrates how remove_reference<T> and move() work
       
     // remove_reference partial template specializations
     template<typename _Tp>
-      class Remove_reference<_Tp&> { 
+      class remove_reference<_Tp&> { 
         public:
-        Remove_reference()
+        remove_reference()
         {
-              cout << "In partial template specialization Remove_reference<_Tp&> constructor" << endl;
+              cout << "In partial template specialization remove_reference<_Tp&> constructor" << endl;
         }
         typedef _Tp   type; 
     };
     
     template<typename _Tp>
-      class Remove_reference<_Tp&&> { 
+      class remove_reference<_Tp&&> { 
         public:
-         Remove_reference()
+         remove_reference()
          {
-             cout << "In partial template specialization Remove_reference<_Tp&&> constructor" << endl;
+             cout << "In partial template specialization remove_reference<_Tp&&> constructor" << endl;
          } 
          typedef _Tp   type; 
     };
     
-    // End Illustration Code
-    
     template<typename T>
-    constexpr typename Remove_reference<T>::type&& Move(T&& arg) 
+    constexpr typename Remove_reference<T>::type&& move(T&& arg) 
     {
       Remove_reference<T> tmp;
     
@@ -211,6 +254,10 @@ Code below illustrates how remove_reference<T> and move() work
     Move(a);
    
     Move(string{"xyz"});
+
+This results is the output:
+
+<TODO> 
  
 Conclusion:
 -----------
