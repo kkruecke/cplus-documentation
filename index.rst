@@ -3,7 +3,7 @@ Notes on Data Structures and Algorithms in C++
 
 .. toctree::
    
-   notes/perfect_forwarding.rst
+   notes/move.rst
    notes/regex.rst
    notes/merge-sort.rst
    notes/shell-sort.rst
