@@ -2,9 +2,9 @@ Notes on Data Structures and Algorithms in C++
 ==============================================
 
 .. toctree::
-   
-   notes/move.rst
-   notes/perfect-forwarding.rst
+   :maxdepth: 2
+
+   notes/rvaluve-forwarding-refs.rst
    notes/regex.rst
    notes/merge-sort.rst
    notes/shell-sort.rst
@@ -14,5 +14,5 @@ Notes on Data Structures and Algorithms in C++
    notes/radix-sort.rst
    notes/tree23.rst
    notes/tree234.rst
+   notes/red-black.rst
    notes/llrb.rst
-   notes/stl-topics.rst

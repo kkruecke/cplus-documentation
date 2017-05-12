@@ -1,4 +1,5 @@
 .. include:: <isopub.txt>
+.. include:: <isonum.txt>
 
 .. role:: kurt-code
 

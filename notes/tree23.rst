@@ -123,7 +123,10 @@ that contains keys greater than ``keys_values[0].key`` but less than ``keys_valu
         
         constexpr int getTotalItems() const noexcept { return totalItems; }
         constexpr int getChildCount() const noexcept { return totalItems + 1; }
+
         constexpr std::unique_ptr<Node23>& getNonNullChild() noexcept;
+
+        constexpr int getSoleChildIndex() const noexcept; // called from subroutine's of tree23<Key,Value>::remove(Key)
 
 	std::ostream& test_parent_ptr(std::ostream& ostr, const Node23 *root) const noexcept;
 

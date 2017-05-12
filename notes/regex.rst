@@ -1,7 +1,7 @@
 .. include:: <isopub.txt>
 
-Regular Expressions
-===================
+C++ Regular Expressions Functions
+=================================
 
 regex_match
 -----------

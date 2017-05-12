@@ -3,4 +3,5 @@ rm -rf _build
 rm ./cplusplus.tar.gz
 make html
 tar -czvf cplusplus.tar.gz  -C _build/html . 
-scp cplusplus.tar.gz kurt@direct.krueckeberg.org:/var/www/kurttest.com/cplusplus/
+sshpass -pkk0457 scp cplusplus.tar.gz kurt@66.172.33.113:/var/www/kurttest.com/cplusplus
+sshpass -pkk0457 ssh kurt@66.172.33.113 
