@@ -4,7 +4,7 @@ Notes on Data Structures and Algorithms in C++
 .. toctree::
    :maxdepth: 2
 
-   notes/rvaluve-forwarding-refs.rst
+   notes/rvalue-forwarding-refs.rst
    notes/regex.rst
    notes/merge-sort.rst
    notes/shell-sort.rst
