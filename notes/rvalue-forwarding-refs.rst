@@ -1,8 +1,8 @@
 .. include:: <isopub.txt>
 .. include:: <isonum.txt>
 
-Rvalue References and Forwarding References
-===========================================
+Rvalue References and Forwarding References in C++
+==================================================
 
 Basic Concepts
 --------------
@@ -29,7 +29,7 @@ See http://en.cppreference.com/w/cpp/concept
 Move Semantics
 --------------
 
-This Vector class serves as a motivating example for move semantics Move semantics allow one to overloaded a class\ |apos|\ s constructor and assignment operator with an `rvalue reference`_. Such
+This Vector class serves as a motivating example for move semantics. Move semantics allow yout to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). Such
 overloaded methods allow the compiler to always chose the a more effecient constructor or assignment operator when an rvalue is passed as input. Here is template class ``Vector``.
 It has the usual copy constructor and assignment operator as well as an addend method called ``void push_back(const Vector<T>)`` that take an ``const Vector&``:
 
@@ -188,6 +188,7 @@ It has the usual copy constructor and assignment operator as well as an addend m
        return *this;
     }
 
+.. _rvalue-reference:
     
 rvalue references and their role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

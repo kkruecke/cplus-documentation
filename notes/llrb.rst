@@ -1,5 +1,4 @@
 .. include:: <isopub.txt>
-#.. include:: ../include/html-entities.txt
 
 .. role:: kurt-code
 

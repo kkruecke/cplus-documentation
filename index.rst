@@ -12,7 +12,7 @@ Notes on Data Structures and Algorithms in C++
    notes/stack.rst
    notes/heap.rst
    notes/radix-sort.rst
+   notes/bst.rst
    notes/tree23.rst
    notes/tree234.rst
    notes/red-black.rst
-   notes/llrb.rst
