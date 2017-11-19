@@ -8,9 +8,10 @@ Heap  and Priority Queues
 Description
 -----------
 
-A heap is a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete(in a complete
-binary tree, the height of the left subtree is at most one more than the height of the right subtree). A heap has the further ordering property that the parent node is
-greater than or equal to its children. This is weaker ordering than a binary search tree as it does not specify any relative ordering between the children of the parent.
+A heap can be viewed visually is a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete (in a complete binary tree, the height of the left subtree is at most
+one more than the height of the right subtree). A heap's ordering, though, differs from a binary search tree. In a binary serach tree, a right child is allows greater than a left child (as well as being greater than its parent).
+However, in a heap a left sibling may be greater than a right sibling because the ordering of siblings is undetermined.  In a binary search tree, a parent key is always less than its right child. In a heap it is just the opposite: the parent
+key is always guaranteed to be greater than its child keys.
 
 .. figure:: ../images/heap-depiction.jpg
    :alt: Logical Structure 
@@ -25,13 +26,55 @@ Operations
 
 The abstract heap data type has three primary operatons:
 
-1. ``peekTop()``\ |ndash|\ returns the root
-2. ``add(int priority, const T& t)``\ |ndash|\ adds a new node to the end of the heap, which "trickles up" to its position in the ordering.
-3. ``remove()``\ |ndash|\ deletes the root and reheapifyies array by making the last item the root, and then moving in downward until we
-     again have a value heap.  
+1. **peekTop()**  
+2. **add(int priority, const T& t)** 
+3. **remove()**
+
+**peekTop()** gets the root of the tree. **add(int priority, const T& t)** adds a new node to the end of the heap, which "trickles up" to its position in the ordering. **remove()**  deletes the root and reheapifyies array by making the last
+item the root, and then moving in downward until we again have a value heap.  
 
 Implementation
 --------------
+
+Mathematical Properties of an Array Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A heap can be implemented using an array once we realize that the following properties????????
+
+Proof by Induction
+^^^^^^^^^^^^^^^^^^
+
+Proof by Induction involves two steps: first proving the base case: if :math:`n=0` is true, then, :math:`2^{0+1} - 1 = 1` is true, which is trivial; and next, proving if the equation is true for :math:`n`, it is also true for :math:`n+1`,
+that is: 
+
+    If :math:`2^0 + 2^1 + ... + 2^n = 2^{n+1}-1`, implies :math:`2^0 + 2^1 + ... + 2^n + 2^{n+1} = 2^{n+2}-1`. 
+
+To see this, we add :math:`2^{n+1}` to both sides: 
+
+    :math:`(2^0 + 2^1 + ... + 2^n) + 2^{n+1}= (2^{n+1}-1) + 2^{n+1}`
+
+This simplies to:
+
+    :math:`2^0 + 2^1 + ... + 2^n + 2^{n+1}= 2^{n+2}-1`
+
+Proof using base 2
+^^^^^^^^^^^^^^^^^^
+
+    :math:`2^0` in binary is 1
+
+    :math:`2^1` in binary is 10
+
+    :math:`2^2` in binary is 100
+
+    :math:`2^3` in binary is 1000
+
+    :math:`2^n` in binary is 100...0 (n zeros)
+
+Add these facts together, and you get :math:`2^0 + 2^1 +...+ 2^n` in binary is 11...11 (n+1 ones). Now it's obvious that adding 1 to that gives you 100⋯00 (n+1 zeros), which we all know is :math:`2^n+1`. Thus :math:`2^n + 1` is equal so the
+sum of powers of two up to :math:`2^n`.
+
+.. todo::
+   elbaborate on the array based implementation.
 
 .. code-block:: cpp
 

@@ -12,7 +12,7 @@ Basic Concepts
 #. `Copy Constructable <http://en.cppreference.com/w/cpp/concept/CopyConstructible>`_ 	specifies that an object of the type can be constructed from an lvalue
 #. `Copy Assignable <http://en.cppreference.com/w/cpp/concept/CopyAssignable>`_ 	specifies that an object of the type can be assigned from  an lvalue
 #. `Copy Insertable <http://en.cppreference.com/w/cpp/concept/CopyInsertable>`_
-#. `Move Constructable <http://en.cppreference.com/w/cpp/concept/MoveConstructible>`	specifies that an object of the type can be constructed from an rvalue
+#. `Move Constructable <http://en.cppreference.com/w/cpp/concept/MoveConstructible>`_	specifies that an object of the type can be constructed from an rvalue
 #. `Move Assignable <http://en.cppreference.com/w/cpp/concept/MoveAssignable>`_ 	specifies that an object of the type can be assigned from an rvalue
 
 Container Element Concepts
