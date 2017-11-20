@@ -8,24 +8,7 @@ Heap  and Priority Queues
 Description
 -----------
 
-.. todo:: Add basic definition and image a complete binary tree.
-
-Basic Operations
-----------------
-
-The abstract heap data type has three primary operatons:
-
-1. **peekTop()**  
-2. **add(int priority, const T& t)** 
-3. **remove()**
-
-**peekTop()** gets the root of the tree. **add(int priority, const T& t)** adds a new node to the end of the heap, which "trickles up" to its position in the ordering. **remove()**  deletes the root and reheapifyies array by making the last
-item the root, and then moving in downward until we again have a value heap.  
-
-Implemented as an Array
------------------------
-
-A heap can be viewed visually as a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete (in a complete binary tree, the height of the left subtree is at most
+A heap can be viewed visually is a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete (in a complete binary tree, the height of the left subtree is at most
 one more than the height of the right subtree). A heap's ordering, though, differs from a binary search tree. In a binary serach tree, a right child is allows greater than a left child (as well as being greater than its parent).
 However, in a heap a left sibling may be greater than a right sibling because the ordering of siblings is undetermined.  In a binary search tree, a parent key is always less than its right child. In a heap it is just the opposite: the parent
 key is always guaranteed to be greater than its child keys.
@@ -37,40 +20,61 @@ key is always guaranteed to be greater than its child keys.
    :figclass: custom-figure
 
    **Figure 1. Logical Structure of a binary heap.** From: https://www.cs.uaf.edu/2009/spring/cs311/slides/cs311_20090417_heap_pq_stl.pdf
-In a complete binary tree, the root has left and right children, which in turn have left and right children. If we number the positon nodes of this this recursive binary structure as below 
 
-.. figure:: ../images/heap-nodes-numbered.jpg
-   :alt: Logical Structure 
-   :align: center 
-   :scale: 100 %
-   :figclass: custom-figure
+Operations
+----------
 
-   **Figure 1. Numbering the Nodes of a Complete Binarya binary heap.** 
+The abstract heap data type has three primary operatons:
 
-then using a node's position or sequence in the tree, we can calulate the position of its parent and its two children :
+1. **peekTop()**  
+2. **add(int priority, const T& t)** 
+3. **remove()**
 
-===================================== ==============================
+**peekTop()** gets the root of the tree. **add(int priority, const T& t)** adds a new node to the end of the heap, which "trickles up" to its position in the ordering. **remove()**  deletes the root and reheapifyies array by making the last
+item the root, and then moving in downward until we again have a value heap.  
 
-===================================== ==============================
-  Parent(i) = i/2                      returns position of parent
-  Left(i)  = 2i                        returns left child position
-  Right(i) = 2i + 1                    returns right child position
-===================================== ==============================
+Implementation
+--------------
 
-These calculation are the basis for an array based implementation of a heap. Starting with the root, each level of the tree starts at position :math:`2^n` in the array. The root is at index :math:`2^0 = 1`, the second level starts at
-:math:`2^1 = 2` , the third at :math:`2^2 = 4`, the fourth at :math:`2^3 = 8` and so on:
+Mathematical Properties of an Array Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. figure:: ../images/heap-as-array1.gif
-   :alt: Logical Structure 
-   :align: center 
-   :scale: 100 %
-   :figclass: custom-figure
+A heap can be implemented using an array once we realize that the following properties????????
 
-In the figure above, the 7th element of the array is ???. Parent(6) is index 3, which is ??, Left(6) is at index 12, which is ??, and Right(6) is at index 13, which is ???
-.. todo:: describe how you use the array to implement the basic operations.
+Proof by Induction
+^^^^^^^^^^^^^^^^^^
 
-Code
-----
+Proof by Induction involves two steps: first proving the base case: if :math:`n=0` is true, then, :math:`2^{0+1} - 1 = 1` is true, which is trivial; and next, proving if the equation is true for :math:`n`, it is also true for :math:`n+1`,
+that is: 
+
+    If :math:`2^0 + 2^1 + ... + 2^n = 2^{n+1}-1`, implies :math:`2^0 + 2^1 + ... + 2^n + 2^{n+1} = 2^{n+2}-1`. 
+
+To see this, we add :math:`2^{n+1}` to both sides: 
+
+    :math:`(2^0 + 2^1 + ... + 2^n) + 2^{n+1}= (2^{n+1}-1) + 2^{n+1}`
+
+This simplies to:
+
+    :math:`2^0 + 2^1 + ... + 2^n + 2^{n+1}= 2^{n+2}-1`
+
+Proof using base 2
+^^^^^^^^^^^^^^^^^^
+
+    :math:`2^0` in binary is 1
+
+    :math:`2^1` in binary is 10
+
+    :math:`2^2` in binary is 100
+
+    :math:`2^3` in binary is 1000
+
+    :math:`2^n` in binary is 100...0 (n zeros)
+
+Add these facts together, and you get :math:`2^0 + 2^1 +...+ 2^n` in binary is 11...11 (n+1 ones). Now it's obvious that adding 1 to that gives you 100⋯00 (n+1 zeros), which we all know is :math:`2^n+1`. Thus :math:`2^n + 1` is equal so the
+sum of powers of two up to :math:`2^n`.
+
+.. todo::
+   elbaborate on the array based implementation.
 
 .. code-block:: cpp
 
