@@ -8,23 +8,7 @@ Heap  and Priority Queues
 Description
 -----------
 
-.. todo:: Add basic definition and image a complete binary tree.
-
-Basic Operations
-----------------
-
-The abstract heap data type has three primary operatons:
-
-1. **peekTop()**  
-2. **add(int priority, const T& t)** 
-3. **remove()**
-
-**peekTop()** gets the root of the tree. **add(int priority, const T& t)** adds a new node to the end of the heap, which "trickles up" to its position in the ordering. **remove()**  deletes the root and reheapifyies array by making the last
-item the root, and then moving in downward until we again have a value heap.  
-
-Implemented as an Array
------------------------
-
+Conceptually a heap is like a queue with the elements arranged by in either ascending or descending order based on their numerical priority, priority being the numerical key to the ordering. 
 A heap can be viewed visually as a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete (in a complete binary tree, the height of the left subtree is at most
 one more than the height of the right subtree). A heap's ordering, though, differs from a binary search tree. In a binary serach tree, a right child is allows greater than a left child (as well as being greater than its parent).
 However, in a heap a left sibling may be greater than a right sibling because the ordering of siblings is undetermined.  In a binary search tree, a parent key is always less than its right child. In a heap it is just the opposite: the parent
@@ -67,7 +51,21 @@ These calculation are the basis for an array based implementation of a heap. Sta
    :figclass: custom-figure
 
 In the figure above, the 7th element of the array is ???. Parent(6) is index 3, which is ??, Left(6) is at index 12, which is ??, and Right(6) is at index 13, which is ???
-.. todo:: describe how you use the array to implement the basic operations.
+
+Basic Operations
+----------------
+
+The abstract heap data type has three primary operatons:
+
+1. **peekTop()**  
+2. **add(int priority, const T& t)** 
+3. **remove()**
+
+**peekTop()** gets the root of the tree. **add(int priority, const T& t)** adds a new node to the end of the heap, which "trickles up" to its position in the ordering. **remove()**  deletes the root and reheapifyies array by making the last
+item the root, and then moving in downward until we again have a value heap.  
+
+Pseudo Code of Array Implementation
+-----------------------------------
 
 Code
 ----
