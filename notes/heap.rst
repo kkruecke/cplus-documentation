@@ -20,7 +20,8 @@ is always greater than its child.
 
    **Figure 1. Logical Structure of a binary heap.** From: https://www.cs.uaf.edu/2009/spring/cs311/slides/cs311_20090417_heap_pq_stl.pdf
 
-While a heap is understand as a type of complete binary tree, it can be stored compactly in an array.  The array representation can be achieved by traversing the binary tree in level order. 
+While a heap is understand as a type of complete binary tree, it can be stored compactly in an array. The array representation can be achieved by traversing the binary tree in level order. In the array below, index zero is unoccupied.
+The root is placed at index one. 
 
 .. .. figure:: ../images/heap-nodes-numbered.jpg
 ..    :alt: Logical Structure 
@@ -36,7 +37,7 @@ While a heap is understand as a type of complete binary tree, it can be stored c
    :scale: 100 %
    :figclass: custom-figure
 
-No space is required for pointers; instead, the parent and children of each node can be found by simple arithmetic on array indices:
+In the array representation of a heap no space is required for pointers; instead, the parent and children of each node can be found by simple arithmetic on array indices:
 
 ===================================== ==============================
 
@@ -46,15 +47,13 @@ No space is required for pointers; instead, the parent and children of each node
   Right(i) = 2i + 1                    returns right child position
 ===================================== ==============================
 
-These calculation are the basis for an array based implementation of a heap.
-
 .. figure:: ../images/heap-as-array1.gif
    :alt: Logical Structure 
    :align: center 
    :scale: 100 %
    :figclass: custom-figure
 
-If we begin the array at index zero instead of one, then the calculations for the position of a node's parent and its two children beome:
+If we begin the array at index zero instead of one, the calculations for the position of a node's parent and its two children become:
 
 ===================================== ==============================
 
@@ -64,6 +63,7 @@ If we begin the array at index zero instead of one, then the calculations for th
   Right(i) = 2i + 2                    returns right child position
 ===================================== ==============================
 
+.. todo:: Organize the remaining discussion after reading the bookmarked articles and understanding them and how they flow.
 
 Basic Operations
 ----------------
