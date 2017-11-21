@@ -8,11 +8,9 @@ Heap  and Priority Queues
 Description
 -----------
 
-Conceptually a heap is like a queue with the elements arranged by in either ascending or descending order based on their numerical priority, priority being the numerical key to the ordering. 
-A heap can be viewed visually as a complete binary tree, i.e., a binary tree in which nodes are added starting on the left and moving to the right until the level is complete (in a complete binary tree, the height of the left subtree is at most
-one more than the height of the right subtree). A heap's ordering, though, differs from a binary search tree. In a binary serach tree, a right child is allows greater than a left child (as well as being greater than its parent).
-However, in a heap a left sibling may be greater than a right sibling because the ordering of siblings is undetermined.  In a binary search tree, a parent key is always less than its right child. In a heap it is just the opposite: the parent
-key is always guaranteed to be greater than its child keys.
+A heap can be viewed visually as a complete binary tree, a binary tree in which nodes are added starting on the left first and moving to the right until the level is complete. Iin a complete binary tree, the height of the left subtree is at most
+one more than the height of the right subtree. A heap, though, is not a binary search tree where every right child is greater than its parent, which is greater than its left child. In a heap the ordering of siblings is undetermined, but a parent
+is always greater than its child.  
 
 .. figure:: ../images/heap-depiction.jpg
    :alt: Logical Structure 
@@ -21,17 +19,24 @@ key is always guaranteed to be greater than its child keys.
    :figclass: custom-figure
 
    **Figure 1. Logical Structure of a binary heap.** From: https://www.cs.uaf.edu/2009/spring/cs311/slides/cs311_20090417_heap_pq_stl.pdf
-In a complete binary tree, the root has left and right children, which in turn have left and right children. If we number the positon nodes of this this recursive binary structure as below 
 
-.. figure:: ../images/heap-nodes-numbered.jpg
+While a heap is understand as a type of complete binary tree, it can be stored compactly in an array.  The array representation can be achieved by traversing the binary tree in level order. 
+
+.. .. figure:: ../images/heap-nodes-numbered.jpg
+..    :alt: Logical Structure 
+..    :align: center 
+..    :scale: 100 %
+..    :figclass: custom-figure
+
+..    **Figure 1. Numbering the Nodes of a Complete Binarya binary heap.** 
+
+.. figure:: ../images/heap-as-array1.gif
    :alt: Logical Structure 
    :align: center 
    :scale: 100 %
    :figclass: custom-figure
 
-   **Figure 1. Numbering the Nodes of a Complete Binarya binary heap.** 
-
-then using a node's position or sequence in the tree, we can calulate the position of its parent and its two children :
+No space is required for pointers; instead, the parent and children of each node can be found by simple arithmetic on array indices:
 
 ===================================== ==============================
 
@@ -41,8 +46,7 @@ then using a node's position or sequence in the tree, we can calulate the positi
   Right(i) = 2i + 1                    returns right child position
 ===================================== ==============================
 
-These calculation are the basis for an array based implementation of a heap. Starting with the root, each level of the tree starts at position :math:`2^n` in the array. The root is at index :math:`2^0 = 1`, the second level starts at
-:math:`2^1 = 2` , the third at :math:`2^2 = 4`, the fourth at :math:`2^3 = 8` and so on:
+These calculation are the basis for an array based implementation of a heap.
 
 .. figure:: ../images/heap-as-array1.gif
    :alt: Logical Structure 
@@ -50,7 +54,16 @@ These calculation are the basis for an array based implementation of a heap. Sta
    :scale: 100 %
    :figclass: custom-figure
 
-In the figure above, the 7th element of the array is ???. Parent(6) is index 3, which is ??, Left(6) is at index 12, which is ??, and Right(6) is at index 13, which is ???
+If we begin the array at index zero instead of one, then the calculations for the position of a node's parent and its two children beome:
+
+===================================== ==============================
+
+===================================== ==============================
+  Parent(i) = (i-1)/2                  returns position of parent
+  Left(i)  = 2i + 1                    returns left child position
+  Right(i) = 2i + 2                    returns right child position
+===================================== ==============================
+
 
 Basic Operations
 ----------------
