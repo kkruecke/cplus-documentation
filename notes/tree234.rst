@@ -190,7 +190,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     #include <iosfwd>
     #include <string>
     #include <iostream>
-    #include "level-order-display.h"
     
     // fwd declarations
     template<typename Key, typename Value> class tree234;    
@@ -200,12 +199,12 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         
     template<typename Key, typename Value> class tree234 {
         
-       union KeyValue { // A union is used to hold to two types of pairs, one of which (pair) has a non-const Key; the other has a const Key.
-           friend class tree234<Key, Value>;
+       union KeyValue { // This union is used to hold to two types of pairs: one has a non-const Key, the other a const Key.
        
            std::pair<Key, Value>        _pair;  // ...this eliminates constantly casting of const_cast<Key>(p.first) = some_noconst_key;
            std::pair<const Key, Value>  _constkey_pair;  // but always return this member of the union.
     
+         public:    
            KeyValue() {} 
           ~KeyValue() {}
           
@@ -226,7 +225,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            constexpr Value&  value()  { return _pair.second; }
            constexpr const Value& value() const { return _constkey_pair.second; }
     
-         public:    
+    
            constexpr const std::pair<Key, Value>& pair() const { return _pair; }
            constexpr std::pair<Key, Value>& pair() { return _pair; }
             
@@ -240,8 +239,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            }
        };
      
-      public:
-          
        class Node { // public nested node class Tree<Key, Value>::Node
          private:  
            friend class tree234<Key, Value>;             
@@ -353,6 +350,48 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
                  return node234.print(ostr);
                }
       }; // end class Tree<Key, Value>::Node  
+      
+      class NodeLevelOrderPrinter {
+    
+          std::ostream& ostr;
+          int current_level;
+          int height;
+    
+          void display_level(std::ostream& ostr, int level) const noexcept
+          {
+            ostr << "\n\n" << "current_level = " <<  current_level << ' '; 
+               
+            // Provide some basic spacing to tree appearance.
+            std::size_t num = height - current_level + 1;
+            
+            std::string str( num, ' ');
+            
+            ostr << str; 
+          }
+    
+          std::ostream& (Node::*pmf)(std::ostream&) const noexcept;
+    
+         public: 
+            
+         NodeLevelOrderPrinter (int hght,  std::ostream& (Node::*pmf_)(std::ostream&) const noexcept, std::ostream& ostr_in): height{hght}, ostr{ostr_in}, current_level{0}, pmf{pmf_} {}
+    
+         NodeLevelOrderPrinter (const NodeLevelOrderPrinter& lhs): height{lhs.height}, ostr{lhs.ostr}, current_level{lhs.current_level}, pmf{lhs.pmf} {}
+    
+         void operator ()(const Node *pnode, int level)
+         { 
+             // Did current_level change?
+             if (current_level != level) { 
+            
+                 current_level = level;
+            
+                 display_level(ostr, level);       
+             }
+    
+             (pnode->*pmf)(std::cout);
+    
+             std::cout << ' ' << std::flush;
+         }
+      };
     
      private:
     
@@ -428,7 +467,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
          tree234(std::initializer_list<std::pair<Key, Value>> list) noexcept; 
          
          constexpr int size() const;
-         int getHeight() const noexcept; // get depth of tree from root to leaf.
     
         ~tree234(); 
     
@@ -464,8 +502,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         
         void printPostOrder(std::ostream&) const noexcept;
     
-        void test(Key key);
-    
         bool isEmpty() const noexcept;
     
         class iterator : public std::iterator<std::bidirectional_iterator_tag, typename tree234<Key, Value>::value_type> { 
@@ -487,7 +523,14 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
              iterator& decrement() noexcept;
     
-             iterator(tree234<Key, Value>& lhs, int i);  // called by end()
+             iterator(tree234<Key, Value>& lhs, int i);  // called by end()   
+    
+             constexpr reference dereference() noexcept 
+             { 
+                 return cursor->keys_values[key_index].constkey_pair(); 
+             } 
+    
+    
           public:
     
              explicit iterator(tree234<Key, Value>&); 
@@ -499,11 +542,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
              bool operator==(const iterator& lhs) const;
              
              constexpr bool operator!=(const iterator& lhs) const { return !operator==(lhs); }
-             
-             constexpr reference dereference() noexcept 
-             { 
-                 return cursor->keys_values[key_index].constkey_pair(); 
-             } 
     
              constexpr const std::pair<const Key, Value>& dereference() const noexcept 
              { 
@@ -529,7 +567,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
           private:
             iterator iter; 
-             explicit const_iterator(const tree234<Key, Value>& lhs, int i);
+            explicit const_iterator(const tree234<Key, Value>& lhs, int i);
           public:
              
              explicit const_iterator(const tree234<Key, Value>& lhs);
@@ -937,7 +975,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
       return tree_size;
     }
                  
-    template<typename Key, typename Value> inline int tree234<Key, Value>::getHeight() const noexcept
+    template<typename Key, typename Value> inline int tree234<Key, Value>::height() const noexcept
     {
       int depth = 0;
     
@@ -962,7 +1000,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     /*
      * F is a functor whose function call operator takes two parameters: a Node * and an int indicating the depth of the node from the root, which has depth 1.
      */
-    template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::levelOrderTraverse(Functor f) const noexcept
+    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::levelOrderTraverse(Functor f) const noexcept
     {
        if (root.get() == nullptr) return;
        
@@ -975,19 +1013,15 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
        while (!q.empty()) {
     
-            std::pair<const Node *, int> pair_ = q.front();
+            auto [pnode, tree_level] = q.front(); // uses C++17 unpacking
     
-            const Node *current = pair_.first;
-    
-            int tree_level = pair_.second;
-    
-            f(current, tree_level); // For example: print out all the keys_values in current.
+            f(pnode, tree_level); // For example: print out all the keys_values in pnode.
              
-            if (!current->isLeaf()) {
+            if (!pnode->isLeaf()) {
                 
-                for(auto i = 0; i < current->getChildCount(); ++i) {
+                for(auto i = 0; i < pnode->getChildCount(); ++i) {
     
-                   q.push(std::make_pair(current->children[i].get(), tree_level + 1));  
+                   q.push(std::make_pair(pnode->children[i].get(), tree_level + 1));  
                 }
             }
             q.pop(); 
@@ -1008,8 +1042,8 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
      
           f(current->keys_values[key_index].pair());
     
-          std::pair<const Node *, int> pair = getSuccessor(current, key_index);   
-    
+          std::pair<const Node *, int> pair = getSuccessor(current, key_index);  
+      
           current = pair.first;
           key_index = pair.second;
       }
@@ -1330,7 +1364,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
          if (key < keys_values[i].key()) {
                 
              next = children[i].get(); 
-             child_index = i;  // new code. index is such that: this->children[index] == next
+             child_index = i;  // index is such that: this->children[index] == next
              return false;
     
          } else if (keys_values[i].key() == key) {
@@ -1556,8 +1590,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
         while(true) {
           
-           // TODO: Do we need to resume the search with the parent? Doesn't this result sometimes in splitting the parent, too, when we don't need to?
-     
            if(current->isFourNode()) {// if four node encountered, split it, moving a value up to parent.
     
               split(const_cast<Node *>(current)); // split needs to modify the tree.
@@ -1613,14 +1645,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        if (root.get() == pnode) {
        
          std::shared_ptr<Node> new_root = std::make_shared<Node>(std::move(pnode->keys_values[1])); // Middle value will become new root
-         
-         /*
-         root.release(); // <--- TODO: What do we do now that this is a shared_ptr<Node>?   // We don't want the current root's underlying memory, to which pnode points, to be freed when root is assigned below. 
-          
-         std::shared_ptr<Node> tmp{pnode};  
-    
-         new_root->connectChild(0, tmp); 
-         */
          
          new_root->connectChild(0, root); 
          new_root->connectChild(1, largestNode); 
@@ -1717,7 +1741,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            if (current != root.get() && current->isTwoNode()) { 
     
                // If not the root, convert 2-nodes encountered while descending into 3- or 4-nodes... 
-               current = convertTwoNode(const_cast<Node *>(current)); // ..and resume the key search with the now converted node.
+               current = convertTwoNode(const_cast<Node *>(current)); // ..and resume the key search with the now converted node 
            } 
     
            const Node *next = nullptr;
@@ -1961,7 +1985,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
       totalItems = 3;
       
-      std::shared_ptr<Node> leftOrphan = std::move(children[0]);  // TODO: children[0].get() OR std::shared_ptr
+      std::shared_ptr<Node> leftOrphan = std::move(children[0]);  
       std::shared_ptr<Node> rightOrphan = std::move(children[1]); 
         
       // make grandchildren the children of this.
@@ -1971,7 +1995,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
       connectChild(3, rightOrphan->children[1]);
         
       return this;  
-    }// <-- Note: leftOrphan and rightOrphan are automatically deleted here when their shared_ptr<Node> go out of scope??????????????????/
+    }// <-- Note: leftOrphan and rightOrphan are automatically deleted here when their shared_ptr<Node> goes out of scope.
     
     /* 
      * Requires: sibling is to the left, therefore: parent->children[sibling_id]->keys_values[0] < parent->keys_values[index] < parent->children[node2_index]->keys_values[0]
@@ -2043,9 +2067,9 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
       Node *p2node = parent->children[node2_index].get();
     
       // First get the index of the parent's key value to be stolen and added into the 2-node
-      int parent_key_index = std::min(node2_index, sibling_index); 
+      //--int parent_key_index = std::min(node2_index, sibling_index); 
     
-      if (node2_index > sibling_index) { // sibling is to the left: 
+      if (int parent_key_index = std::min(node2_index, sibling_index); node2_index > sibling_index) { // sibling is to the left:   Note: This is the C++17 if with initializer syntax
     
           /* Adjust parent:
              1. Remove parent key (and shift its remaining keys_values and reduce its totalItems)
@@ -2055,7 +2079,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            */
           std::shared_ptr<Node> psibling = parent->disconnectChild(sibling_index); // This will do #2. 
           
-          //--Key parent_key = parent->removeKey(parent_key_index); //this will do #1
           KeyValue parent_key_value = parent->removeKeyValue(parent_key_index); //this will do #1
     
           // Now, add both the sibling's and parent's key to 2-node
@@ -2108,8 +2131,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
     template<typename Key, typename Value> inline void tree234<Key, Value>::printlevelOrder(std::ostream& ostr) const noexcept
     {
-      //--BasicTreePrinter tree_printer(*this);
-      levelOrderDisplay<tree234<Key, Value>> tree_printer(*this, ostr);  
+      NodeLevelOrderPrinter tree_printer(height(), (&Node::print), ostr);  
       
       levelOrderTraverse(tree_printer);
       
@@ -2123,7 +2145,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     }
 	    
     /*
-     TODO: The comments here sometimes be confuse predecessor with successor; likewise, the comments for iterator::getSuccessor confuse the successor with the predecessor!
+     TODO: The comments here sometimes be confuse predecessor with successor; likewise, the comments for iterator::getSuccessor confuse the successor with the predecessor! Make these comments clearer.
     Two cases are possible: 1.) when current is an internal node and 2.) when current is a leaf node.
     case 2:
     If current is a leaf node, and if it is a a 3-node and key-index is 1, then the predecessor is trivial: the first key is the predecessor. If, however, the key_index is 0, we ascend the parent
@@ -2363,7 +2385,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
       } else {
     
-          cursor = current = pair.first;
+          cursor = current = pair.first; 
           key_index = pair.second;
       }
     
@@ -2386,7 +2408,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
       if (pair.first != nullptr) { // nullptr implies there is no predecessor cursor->keys_values[key_index].key().
           
-          cursor = current = pair.first;
+          cursor = current = pair.first; 
           key_index = pair.second;
       }
     
@@ -2540,12 +2562,12 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
         return -1; // not found
     }
-    
+    /*
     template<class Key, class Value> inline int tree234<Key, Value>::height() const noexcept
     {
        return height(root);
     }
-    
+    */
     template<class Key, class Value> int tree234<Key, Value>::height(const Node* pnode) const noexcept
     {
        if (pnode == nullptr) {
