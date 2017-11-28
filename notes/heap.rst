@@ -165,7 +165,8 @@ Add places the new item at the end of the heap, and then swaps it with its paren
 **remove()** Code 
 ~~~~~~~~~~~~~~~~~
 
-Removes the root. Places the last item in the heap as the root, and the repair the heap property by invoking `swim(int index)`, which swap the new root going down is swapped with its largest child.  
+Removes the root. Places the last item in the heap as the root, and the repair the heap property by invoking `sink(int index)`, which recursively swaps the new root with its largest child, as long 
+as the largest child is larger than the root or until the root has become a leaf.
 
 .. code-block:: cpp
 
@@ -196,8 +197,8 @@ Removes the root. Places the last item in the heap as the root, and the repair t
   
        int right_child = child + 1; 
   
-        // When max heap, if root is smaller than one of its children, swap root with that child.
-        // When min heap, if root is larger than one of the children, swap root with that child.
+        // When max heap, if root is smaller than largest child, swap root with that child.
+        // When min heap, if root is larger than its smallest child, swap root with that child.
        if (compare(vec[child], vec[right_child])) {
               
              child = right_child; 
