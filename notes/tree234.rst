@@ -28,8 +28,8 @@ This link has a more high level pseudo code.
 
 4. http://www2.thu.edu.tw/~emtools/Adv.%20Data%20Structure/2-3,2-3-4%26red-blackTree_952.pdf 
 
-tree234<Key, Value> Use of shared_ptr<Node> to Manage Memory
-------------------------------------------------------------
+tree234's Use of shared_ptr<Node> to Manage Memory
+--------------------------------------------------
 
 tree234's root node is of type ``shared<Node>``. tree234's assignament operator and copy constructor are trivial: they simply copy the root node. The underlying root Node therefore is not deleted until its reference count goes to 0. 
 Class Node contains the array: type ``std::array<std::shared_ptr<Node>, 4>``.  ``shared_ptr``'s reference counting handles all the memory management for the tree properly.  The children are not deleted until the root is evetually destructed, when
@@ -225,10 +225,9 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            constexpr Value&  value()  { return _pair.second; }
            constexpr const Value& value() const { return _constkey_pair.second; }
     
-    
            constexpr const std::pair<Key, Value>& pair() const { return _pair; }
            constexpr std::pair<Key, Value>& pair() { return _pair; }
-            
+                   
            constexpr const std::pair<const Key, Value>& constkey_pair() const { return _constkey_pair; }
            constexpr       std::pair<const Key, Value>& constkey_pair() { return _constkey_pair; }
     
@@ -404,11 +403,11 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         bool DoSearch(Key key, const Node *&location, int& index) noexcept;
     
         // implementations of the public depth-frist traversal methods    
-        template<typename Functor> void DoInOrderTraverse(Functor f, const std::shared_ptr<Node>& root) const noexcept;
+        template<typename Functor> void DoInOrderTraverse(Functor f, const Node *proot) const noexcept;
     
-        template<typename Functor> void DoPostOrderTraverse(Functor f,  const std::shared_ptr<Node>& root) const noexcept;
+        template<typename Functor> void DoPostOrderTraverse(Functor f,  const Node *proot) const noexcept;
     
-        template<typename Functor> void DoPreOrderTraverse(Functor f, const std::shared_ptr<Node>& root) const noexcept;
+        template<typename Functor> void DoPreOrderTraverse(Functor f, const Node *proot) const noexcept;
     
         void CloneTree(const std::shared_ptr<Node>& src_node, std::shared_ptr<Node> &dest_node, const Node *parent) noexcept; 
     
@@ -1028,11 +1027,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        }
     }
     
-    template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::inOrderTraverse(Functor f) const noexcept
-    {
-       DoInOrderTraverse(f, root);
-    }
-    
     template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::iterativeInOrderTraverse(Functor f) const noexcept
     {
        const Node *current = min(root.get());
@@ -1066,26 +1060,29 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        }
        return current;
     }
-    
+    template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::inOrderTraverse(Functor f) const noexcept
+    {
+       DoInOrderTraverse(f, root.get());
+    }
     
     template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::postOrderTraverse(Functor f) const noexcept
     {
-       DoPostOrderTraverse(f, root);
+       DoPostOrderTraverse(f, root.get());
     }
     
     template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::preOrderTraverse(Functor f) const noexcept
     {
-       DoPreOrderTraverse(f, root);
+       DoPreOrderTraverse(f, root.get());
     }
     
     template<typename Key, typename Value> template<typename Functor> inline void tree234<Key, Value>::debug_dump(Functor f) noexcept
     {
-       DoPostOrder4Debug(f, root);
+       DoPostOrder4Debug(f, root.get());
     }
     /*
      * post order traversal 
      */
-    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoPostOrderTraverse(Functor f, const std::shared_ptr<Node>& current) const noexcept
+    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoPostOrderTraverse(Functor f, const Node *current) const noexcept
     {  
        if (current == nullptr) {
     
@@ -1095,39 +1092,39 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        switch (current->totalItems) {
     
           case 1: // two node
-                DoPostOrderTraverse(f, current->children[0]);
+                DoPostOrderTraverse(f, current->children[0].get());
     
-                DoPostOrderTraverse(f, current->children[1]);
+                DoPostOrderTraverse(f, current->children[1].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
                 break;
     
           case 2: // three node
-                DoPostOrderTraverse(f, current->children[0]);
+                DoPostOrderTraverse(f, current->children[0].get());
     
-                DoPostOrderTraverse(f, current->children[1]);
+                DoPostOrderTraverse(f, current->children[1].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoPostOrderTraverse(f, current->children[2]);
+                DoPostOrderTraverse(f, current->children[2].get());
     
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
                 break;
     
           case 3: // four node
-                DoPostOrderTraverse(f, current->children[0]);
+                DoPostOrderTraverse(f, current->children[0].get());
     
-                DoPostOrderTraverse(f, current->children[1]);
+                DoPostOrderTraverse(f, current->children[1].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoPostOrderTraverse(f, current->children[2]);
+                DoPostOrderTraverse(f, current->children[2].get());
     
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
     
-                DoPostOrderTraverse(f, current->children[3]);
+                DoPostOrderTraverse(f, current->children[3].get());
     
-                f(current->keys_values[2].pair());
+                f(current->keys_values[2].constkey_pair());
      
                 break;
        }
@@ -1135,7 +1132,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     /*
      * pre order traversal 
      */
-    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoPreOrderTraverse(Functor f, const std::shared_ptr<Node>& current) const noexcept
+    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoPreOrderTraverse(Functor f, const Node *current) const noexcept
     {  
     
       if (current == nullptr) {
@@ -1146,41 +1143,41 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        switch (current->totalItems) {
     
           case 1: // two node
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[0]);
+                DoPreOrderTraverse(f, current->children[0].get());
     
-                DoPreOrderTraverse(f, current->children[1]);
+                DoPreOrderTraverse(f, current->children[1].get());
     
                 break;
     
           case 2: // three node
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[0]);
+                DoPreOrderTraverse(f, current->children[0].get());
     
-                DoPreOrderTraverse(f, current->children[1]);
+                DoPreOrderTraverse(f, current->children[1].get());
     
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[2]);
+                DoPreOrderTraverse(f, current->children[2].get());
     
                 break;
     
           case 3: // four node
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[0]);
+                DoPreOrderTraverse(f, current->children[0].get());
     
-                DoPreOrderTraverse(f, current->children[1]);
+                DoPreOrderTraverse(f, current->children[1].get());
     
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[2]);
+                DoPreOrderTraverse(f, current->children[2].get());
     
-                f(current->keys_values[2].pair());
+                f(current->keys_values[2].constkey_pair());
     
-                DoPreOrderTraverse(f, current->children[3]);
+                DoPreOrderTraverse(f, current->children[3].get());
     
                 break;
        }
@@ -1189,46 +1186,46 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     /*
      * In order traversal
      */
-    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoInOrderTraverse(Functor f, const std::shared_ptr<Node>& current) const noexcept
+    template<typename Key, typename Value> template<typename Functor> void tree234<Key, Value>::DoInOrderTraverse(Functor f, const Node *current) const noexcept
     {     
        if (current == nullptr) return;
     
        switch (current->getTotalItems()) {
     
           case 1: // two node
-                DoInOrderTraverse(f, current->children[0]);
+                DoInOrderTraverse(f, current->children[0].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[1]);
+                DoInOrderTraverse(f, current->children[1].get());
                 break;
     
           case 2: // three node
-                DoInOrderTraverse(f, current->children[0]);
+                DoInOrderTraverse(f, current->children[0].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[1]);
+                DoInOrderTraverse(f, current->children[1].get());
      
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[2]);
+                DoInOrderTraverse(f, current->children[2].get());
                 break;
     
           case 3: // four node
-                DoInOrderTraverse(f, current->children[0]);
+                DoInOrderTraverse(f, current->children[0].get());
     
-                f(current->keys_values[0].pair());
+                f(current->keys_values[0].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[1]);
+                DoInOrderTraverse(f, current->children[1].get());
      
-                f(current->keys_values[1].pair());
+                f(current->keys_values[1].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[2]);
+                DoInOrderTraverse(f, current->children[2].get());
     
-                f(current->keys_values[2].pair());
+                f(current->keys_values[2].constkey_pair());
     
-                DoInOrderTraverse(f, current->children[3]);
+                DoInOrderTraverse(f, current->children[3].get());
      
                 break;
        }
