@@ -29,21 +29,16 @@ See http://en.cppreference.com/w/cpp/concept
 Move Semantics
 --------------
 
-This Vector class serves as a motivating example for move semantics. Move semantics allow yout to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). Such
+This Vector class serves as a motivating example for move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). Such
 overloaded methods allow the compiler to always chose the a more effecient constructor or assignment operator when an rvalue is passed as input. Here is template class ``Vector``.
 It has the usual copy constructor and assignment operator as well as an addend method called ``void push_back(const Vector<T>)`` that take an ``const Vector&``:
 
 .. code-block:: cpp
 
     #include <memory>
-    #include <utility>
-    #include <algorithm>
-    #include <stdexcept>
-    #include <iterator>
-    #include <iostream>
+    #include <initializer_list>
     
-    template<class T> 
-    class Vector {
+    template<class T>  class Vector {
     
        std::unique_ptr<T[]> p;
     
@@ -57,48 +52,80 @@ It has the usual copy constructor and assignment operator as well as an addend m
        static const int default_sz = 2;
     
        public:
-        Vector() : p( std::make_unique<T[]>( Vector::default_sz )  ), current{0}, size(Vector::default_sz)  
-        {
-        }
-
-        Vector(std::initializer_list<T> lst) 
-        {
-          for (auto& x : lst) {
-               push_back(x);  
-          }
-        }
     
-        Vector(const Vector& lhs);
-    
-        Vector& operator=(const Vector& lhs);
-    
-        void push_back(const T& t);
-    
-        T& operator[](int);
-    
-        const T& operator[](int) const;
+         Vector() : p(std::make_unique<T[]>(Vector::default_sz )), size{Vector::default_sz}, current{0}  
+         {
+         }
+         
+         Vector(std::initializer_list<T> lst) : p(std::make_unique<T[]>(Vector::default_sz )), size{Vector::default_sz}, current{0}  
+         {
+            for (auto& x : lst) {
+                push_back(std::move(x));  
+           }
+         }
         
-        std::ostream& print(std::ostream& ostr) const
-        {
-           std::copy(p.get(), p.get() + current, std::ostream_iterator<T>(ostr, "\n"));
-           return ostr;   
-        }
+         Vector(const Vector<T>& lhs);
+         
+         Vector& operator=(const Vector<T>& lhs);
+        
+         void push_back(const T& t);
+        
+         void push_back(T&& t);
     
-        void* operator new (std::size_t size, void* ptr) noexcept;
+         T& operator[](int);
+        
+         const T& operator[](int) const;
+    
+         std::ostream& print(std::ostream& ostr) const
+         {
+            if (size != 0) {
+                
+            std::copy(p.get(), p.get() + current, std::ostream_iterator<T>(ostr, ", "));
+            }
+            return ostr;   
+         }
+         
+         friend std::ostream& operator<<(std::ostream& ostr, const Vector<T>& vec)
+         {
+             return vec.print(ostr);
+         }
+         
+         int count() const { return size; }
+         
+         void* operator new (std::size_t size, void* ptr) noexcept;
     };
     
-    template<class T> std::ostream& operator<<(std::ostream& ostr, const Vector<T>& vec)
+    
+    template<class T> inline Vector<T>::Vector(const Vector& lhs) : p{new T[lhs.size]}, size{lhs.size}, current{lhs.current}
     {
-        ostr << "Printing Vector:" << "\n";
-        vec.print(ostr);
-        return ostr;
+      std::copy(p.get(), lhs.p, lhs.p + lhs.size); 
+      
     }
     
+    template<class T> inline Vector<T>::Vector(Vector<T>&& lhs) : p(std::move(lhs.p)), size{lhs.size}, current{lhs.current}
+    {
+        lhs.size = 0;
+    }
+    
+    template<class T> Vector<T>&  Vector<T>::operator=(const Vector& lhs)
+    {
+       if (this != &lhs) {
+    
+           p = std::make_unique<T[]>(new T[lhs.size]);
+           
+           size = lhs.size;
+    
+           copy(p, lhs.p, lhs.p + lhs.size);
+       }     
+    
+       return *this;
+    }
+             
     template<class T> void Vector<T>::grow()
     {
       auto new_size = size * Vector<T>::growth_factor; 
     
-      std::unique_ptr<T[]> ptr = std::make_unique<T[]>( new_size ); 
+      std::unique_ptr<T[]> ptr = std::make_unique<T[]>(new_size); 
       
       for (auto i = 0; i < size; ++i) {
           
@@ -108,23 +135,8 @@ It has the usual copy constructor and assignment operator as well as an addend m
       size = new_size;
       
       p = std::move(ptr);
-    
-      ++current;
     } 
     
-    template<class T> Vector<T>::Vector(const Vector& lhs)
-    {
-      p.reset(); 
-    
-      p = new T[lhs.size];
-    
-      std::copy(p.get(), lhs.p, lhs.p + lhs.size); 
-      
-      size = lhs.size;
-    
-      current = lhs.current;
-    
-    }
     template<class T> void Vector<T>::push_back(const T& t)
     {
       if (current == size) {
@@ -137,57 +149,21 @@ It has the usual copy constructor and assignment operator as well as an addend m
     
     template<class T> T& Vector<T>::operator[](int pos)
     {
-      if (pos < size && pos > 0) {
+      if (pos >= size || pos < 0) {
           
+          throw(std::out_of_range("pos not in range."));   
+        
+      } else {
+    
          return p[pos];
-    
-      } else {
-    
-        throw(std::out_of_range("pos not in range."));
       }
     }
-    
-    template<class T> const T&    Vector<T>::operator[](int pos) const
+        
+    template<class T> inline const T& Vector<T>::operator[](int pos) const
     {
-      if (pos < size && pos > 0) {
-          
-         return const_cast<const T&>(p[pos]);
-    
-      } else {
-    
-        throw(std::out_of_range("pos not in range."));
-      }
+       return static_cast<T *>(this)->operator[](pos);
     }
-                     
-    template<class T> Vector<T>&  Vector<T>::operator=(const Vector& lhs)
-    {
-       if (this != &lhs) {
     
-           delete [] p;
-    
-           size = lhs.size;
-    
-           p = new char[size * sizeof(T)];
-    
-           copy(p, lhs.p, lhs.p + lhs.size);
-       }     
-    
-       return *this;
-    }
-                     
-    template<class T> Vector<T>&  Vector<T>::operator=(Vector&& lhs)
-    {
-       if (this != &lhs)  {
-    
-           p = std::move(lhs.p); 
-    
-           size = lhs.size;
-           lhs.size = 0;
-       }     
-    
-       return *this;
-    }
-
 .. _rvalue-reference:
     
 rvalue references and their role
@@ -218,59 +194,185 @@ An rvalue variable is declared using ``&&``:
 
     int&& j = 8;
     int&& k = f3();
+    int v = 9;
+    int&& l = v; // error: cannot bind to rvlue reference l to lvalue v.
 
-The rvalue reference j above is not really of any value. Even if we alter j and hence alter the literal value of 8, this change immediately goes away after the semicolon
-is encountered. The real value of rvalues simply lie in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an rvalue, is there method that
-takes an rvalue reference"? It there is, it invokes it. 
+The rvalue reference j above is not really of any value. While we can change the value of a literal, using this trick
+ 
+.. code-block:: cpp
+
+    int&& j = 8;
+    j = 9;
+    cout << j;  // prints: 9
+
+The temporay is deleted once j goes out of scope, and this technique has not real applicability. The real value of rvalues simply lie in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
+rvalue, is there method that takes an rvalue reference"? It there is, it invokes it. 
 
 Implications for constructors and assignment operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references.  The compiler can will now
-branch at compiler time depending on whether the constructor (or assignment operator) is being passed an lvalue or an rvalue. But how do you implement the 
-constructor and assigment operator that take an rvalue reference. 
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references.  The compiler can will now branch at compiler time depending on whether the constructor (or assignment operator) is
+being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
 
 Implementation of move constructor and move assignment operator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The move constructor and move assignment both read from and write to the rvalue reference parameter. They perform a shallow copy of its resourses, and then, in the example
-below, set the rvalue object\ |apos|\ s ``length`` to 0 and it\ |apos|\ s pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's destructor is called. 
+The move constructor and move assignment both read from and write to the rvalue reference parameter. They perform a shallow copy of its resourses, and then, in the example below, set the rvalue object\ |apos|\ s ``length`` to 0 and it\ |apos|\ s
+pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's destructor is called. 
  
 .. code-block:: cpp
 
-    template<class T> 
-    class Vector {
-       //...snip (same as above)    
+    #include <memory>
+    #include <initializer_list>
+    
+    template<class T>  class Vector {
+    
+       std::unique_ptr<T[]> p;
+    
+       int size;
+    
+       int current;
+    
+       void grow(); 
+    
+       static const int growth_factor = 2;
+       static const int default_sz = 2;
+    
        public:
-        Vector() : p( std::make_unique<T[]>( Vector::default_sz )  ), current{0}  
-        {
-        }
     
-        Vector(const Vector& lhs);
-        Vector(Vector&& lhs); 
-
-        Vector& operator=(const Vector& lhs);
+         Vector() : p(std::make_unique<T[]>(Vector::default_sz )), current{0}  
+         {
+         }
     
-        Vector& operator=(Vector&& lhs);
+         Vector(std::initializer_list<T> lst) 
+         {
+           for (auto& x : lst) {
+                push_back(x);  
+           }
+         }
+        
+         Vector(const Vector<T>& lhs);
+         
+         Vector(Vector<T>&& lhs); 
     
-        void push_back(const T& t);
+         Vector& operator=(const Vector<T>& lhs);
+        
+         Vector& operator=(Vector<T>&& lhs);
+        
+         void push_back(const T& t);
+        
+         void push_back(T&& t);
     
-        void push_back(T&& t);
-        template<class... ARGS> void emplace_back(ARGS&& ... args);
+         template<class... ARGS> void emplace_back(ARGS&& ... args);
+        
+         T& operator[](int);
+        
+         const T& operator[](int) const;
     
-        T& operator[](int);
+         std::ostream& print(std::ostream& ostr) const
+         {
+            std::copy(p.get(), p.get() + current, std::ostream_iterator<T>(ostr, "\n"));
+            return ostr;   
+         }
+         
+         friend std::ostream& operator<<(std::ostream& ostr, const Vector<T>& vec)
+         {
+             return vec.print(ostr);
+         }
     
-        const T& operator[](int) const;
-        void* operator new (std::size_t size, void* ptr) noexcept;
+         void* operator new (std::size_t size, void* ptr) noexcept;
     };
-
-    template<class T> Vector<T>::Vector(Vector&& lhs)
-    {
-      p = std::move(lhs.p); 
     
-      size = lhs.size;
-      current = lhs.current;
-      lhs.size = 0;
+    
+    template<class T> inline Vector<T>::Vector(const Vector& lhs) : p{new T[lhs.size]}, size{lhs.size}, current{lhs.current}
+    {
+      std::copy(p.get(), lhs.p, lhs.p + lhs.size); 
+      
+    }
+    
+    template<class T> inline Vector<T>::Vector(Vector<T>&& lhs) : p(std::move(lhs.p)), size{lhs.size}, current{lhs.current}
+    {
+        lhs.size = 0;
+    }
+    
+    template<class T> Vector<T>&  Vector<T>::operator=(const Vector& lhs)
+    {
+       if (this != &lhs) {
+    
+           p = std::make_unique<T[]>(new T[lhs.size]);
+           
+           size = lhs.size;
+    
+           copy(p, lhs.p, lhs.p + lhs.size);
+       }     
+    
+       return *this;
+    }
+                     
+    template<class T> Vector<T>&  Vector<T>::operator=(Vector&& lhs)
+    {
+       if (this != &lhs)  {
+    
+           p = std::move(lhs.p); 
+    
+           size = lhs.size;
+           
+           lhs.size = 0;
+       }     
+    
+       return *this;
+    }
+    
+    template<class T> void Vector<T>::grow()
+    {
+      auto new_size = size * Vector<T>::growth_factor; 
+    
+      std::unique_ptr<T[]> ptr = std::make_unique<T[]>(new_size); 
+      
+      for (auto i = 0; i < size; ++i) {
+          
+          ptr[i] = std::move(p[i]); 
+      }
+    
+      size = new_size;
+      
+      p = std::move(ptr);
+    
+      ++current;
+    } 
+    
+    template<class T> void Vector<T>::push_back(const T& t)
+    {
+      if (current == size) {
+          
+         grow();
+      }
+    
+      p[current++] = t;
+    }
+    
+    template<class T> T& Vector<T>::operator[](int pos)
+    {
+      if (pos < size && pos > 0) {
+          
+         return p[pos];
+    
+      } else {
+    
+        throw(std::out_of_range("pos not in range."));
+      }
+    }
+    
+    template<class T> const T&  Vector<T>::operator[](int pos) const
+    {
+      if (pos < size && pos > 0) {
+          
+         return const_cast<const T&>(p[pos]);
+    
+      } else {
+    
+        throw(std::out_of_range("pos not in range."));
+      }
     }
     
     template<class T> void  Vector<T>::push_back(T&& t)
@@ -280,7 +382,7 @@ below, set the rvalue object\ |apos|\ s ``length`` to 0 and it\ |apos|\ s pointe
       }
       p[current++] = std::move( t );
     }
-
+    
     template<class T> template<class... ARGS> void Vector<T>::emplace_back(ARGS&& ... args)
     {
        if (size == current) {
@@ -296,22 +398,8 @@ below, set the rvalue object\ |apos|\ s ``length`` to 0 and it\ |apos|\ s pointe
        
        current++; 
     }
-    
-    template<class T> Vector<T>&  Vector<T>::operator=(Vector&& lhs)
-    {
-       if (this != &lhs)  {
-    
-           p = std::move(lhs.p); 
-    
-           lhs.p = nullptr;
-    
-           size = lhs.size;
-       }     
-       return *this;
-    }
-
-Obviously the constructor and assignment operator overloaded to take an rvalue reference are more efficient that their copy constructor and copy assignment operator
-counterparts. For example 
+           
+Obviously the constructor and assignment operator overloaded to take an rvalue reference are more efficient that their copy constructor and copy assignment operator counterparts. For example 
 
 .. code-block:: cpp
 
@@ -324,9 +412,8 @@ counterparts. For example
 Rvalue References and Derived classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue. An rvalue reference parameter that
-has a name can have its address taken. It is therefore not a temporary. So when it "has a name" the rvalue reference parameter itself is also an lvalue with the
-body of the method. This has implications for how move semantics must be implemented in derived classes:
+Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue. An rvalue reference parameter that has a name can have its address taken. It is therefore not a temporary.
+So when it "has a name" the rvalue reference parameter itself is also an lvalue with the body of the method. This has implications for how move semantics must be implemented in derived classes:
 
 .. code-block:: cpp
 
@@ -352,14 +439,12 @@ body of the method. This has implications for how move semantics must be impleme
          Derived(Derived&& d) : Base(std::move(d)) {}  
     };
 
-Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy
-constructor.
+Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy constructor.
 
-Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown
-below. Its argument is of generic type ``T&&``. This looks like an rvalue, but it works differently than an ordinary rvalue reference, say, ``std::string&&``, where the type is hard coded. 
-`T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves
-to the underlying nonreference type. We can see this by implementing a version of ``remove_reference`` and its partial template specializations that contains a static
-method called ``describe()``, which ``move()`` invokes: 
+Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown below. Its argument is of generic type ``T&&``. This looks
+like an rvalue reference, but it works differently than an ordinary rvalue reference, say, ``std::string&&``, where the type is hard coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves
+to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``remove_reference`` and its partial template specializations that contains a static method
+called ``describe()``, which ``move()`` invokes: 
 
 .. code-block:: cpp
 
@@ -406,7 +491,6 @@ method called ``describe()``, which ``move()`` invokes:
       return static_cast<typename remove_reference<T>::type&&>(arg);
     }
 
-    
     string a{"test"};
   
     string&& rval = move(a); 
@@ -479,21 +563,15 @@ And again as before, this casts arg to rvalue reference that does not have a nam
 Move Conclusion:
 ~~~~~~~~~~~~~~~~
 
-``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations
-provided by ``remove_reference<T>`` to do this.
-
-.. TODO: See
-.. 1. ~/Document/C++11/C++Rocks.pdf pp 103-109, p. 688 of TC++PL, and
-.. 2. Thomas Becker's article on Move Semantics and Perfect Forwarding: http://thbecker.net/articles/rvalue_references/section_07.html Perfect Forwarding article.
-.. 3. Perfect Forwarding by Stroutrup, Sutter and Dos Reis: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf
-
-.. TODO: See ~/cplus/4-perfect-forwarding.rst which has more thoughts.
+``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``remove_reference<T>`` to do this.
 
 Helpful Articles on Rvalue References and Move Semantics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. `C++ rvalue Reference Explained <http://www.thbecker.net/articles/rvalue_references/section_01.html>`_
-#. `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_
+* Thomas Becker's article `C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
+* `Move semantics and rvalue references in C++11 <https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html>`_.
+* `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
+* `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_
 
 Perfect Forwarding
 ------------------
@@ -509,8 +587,8 @@ A template function parameter of type ``T&&`` such as
 
    template<typename T> void sample(T&& t);
 
-is called a **forwarding reference**. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can
-have a reference to a reference. These reference collapsing rules apply to references to references:
+is called a **forwarding reference**. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can have a reference to a reference. These reference collapsing rules apply to
+references to references:
 
 * T& & becomes T&
 * T& && becomes T&
@@ -520,9 +598,9 @@ have a reference to a reference. These reference collapsing rules apply to refer
 The Purpose of Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const values. It can bind to mutable and
-volitale. When a lvalue, say, of type X is passed to a template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and ``T&&`` becomes ``X& &&``, which after 
-applying the reference collapsing rules is simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T`` becomes ``X``, and ``T&&`` becomes ``X&&``.
+Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const objects. It can bind to mutable and volitale. When a lvalue, say, of type X is passed to a
+template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules is simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
+becomes ``X``, and ``T&&`` becomes ``X&&``.
 
 So in general, an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can see this in the code below:
 
@@ -778,7 +856,12 @@ Below Vector now has a new template member function ``emplace_back`` that takes 
 
     template<class T> template<class... ARGS> void Vector<T>::emplace_back(ARGS&& ... args)
     {
-       new(p + current) T{std::forward<ARGS>(args)...}; 
+       if (current == size) { // If new value won't fit...
+          
+          grow();           // ...grow the vector
+       }
+
+       new(p + current) T{std::forward<ARGS>(args)...}; // Use placement new to construct the object in existing memory.
        
        current++; 
     }
