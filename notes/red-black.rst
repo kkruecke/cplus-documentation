@@ -8,7 +8,7 @@ The algorithms shown in :ref:`2-3-trees` and :ref:`2-3-4-trees` ensure a tree st
 A red black tree is a way of representing a 2 3 4 tree as a nearly\ |apos|\ balanced binary search tree. Each edge of a red black tree is colored red or black, where red edges represent the values within a 3- or 4-node, while black edges represent the children.
 Using these coloring conventions, the nodes of a 2 3 4 tree map map to the nodes of a red black tree as shown in the image below (taken from these `2 3 4 Tree Lecture Notes <http://faculty.cs.niu.edu/~freedman/340/340notes/340redblk.htm>`_):
 
-.. figure:: ../images/2-3-4-nodes-as-red-black-nodes.jpg
+.. figure:: ../images/2-3-4-nodes-as-red-black-nodes-2.jpg
    :align: center 
    :scale: 100 %
 
@@ -27,7 +27,7 @@ A red black tree also conforms to these invariants:
 
 Other sources:
 
-`USC lecture slides on B-Trees (2-3, 2 - 3 - 4) and Red/Black Trees <http://ee.usc.edu/~redekopp/cs104/slides/L19b_BalancedBST_BTreeRB.pdf>`_. Discussion of red black trees starts on p. 44. Also see this University of Michigan
-`Lecture on Red-Black Trees <http://web.eecs.umich.edu/~sugih/courses/eecs281/f11/lectures/11-Redblack.pdf>`_.
+* `USC lecture slides on B-Trees (2-3, 2 - 3 - 4) and Red/Black Trees <http://ee.usc.edu/~redekopp/cs104/slides/L19b_BalancedBST_BTreeRB.pdf>`_. 
+* `Lecture on Red-Black Trees <http://web.eecs.umich.edu/~sugih/courses/eecs281/f11/lectures/11-Redblack.pdf>`_. Discussion of red black trees starts on p. 44. Also see this University of Michigan
 
 .. todo: add the codeblack condition - every path from the root to a leaf node has the same number of black links/nodes
