@@ -19,7 +19,7 @@ rather than the successor for the deletion algorithm.
 
 This link contains java code for insertion into a 2 3 4 tree.
 
-3. `2 3 Trees and 2 3 4 Trees <www.serc.iisc.ernet.in/~viren/Courses/2009/SE286/2-3Trees-Mod.ppt>`_  
+3. `2 3 Trees and 2 3 4 Trees <http://www.serc.iisc.ernet.in/~viren/Courses/2009/SE286/2-3Trees-Mod.ppt>`_  
 
 This link has a excellent working example and discusses how delete works, using descent restructuring. It uses the swap-with-successor for deletion of internal keys.
 It contains a working tree example. It shows that when converting 2-nodes, we first check if we can rotation else we do a merge (since both siblings are 2-nodes).
@@ -109,8 +109,8 @@ When the root is split, the tree also remains balanced, but grows upward by one 
 Deletion
 ^^^^^^^^
 
-To delete a key we "swap" the item to be deleted with its in-order successor. We then delelte the key from its new temporary "successor" position. The successor key of any internal node is found in the nodes\ |apos|\ s right subtree: it is the first key of the left
-most leaf node of its right subtree; for example, given this tree
+To delete a key we "swap" the item to be deleted with its in-order successor. We then delete the key from its new temporary "successor" position. The successor key of any internal node is the first key of the left most leaf node of its first right subtree; for example,
+given this tree
 
 .. figure:: ../images/inorder-successor-1.jpg
    :alt: Tree with 4-node root
@@ -119,9 +119,9 @@ most leaf node of its right subtree; for example, given this tree
 
    **Figure: Internal Node in-order successor**
 
-the in order successor of 23 is 27, of 50 is 51, of 60 is 62, and so on\ |ndash|\ all successors of these internal nodes are the first key of the left most child leaf node of the right subtree. "Swap" above means we overwrite the item
-to be deleted with its in-order successor and then remove the in-order successor from the leaf node. But what if the in order successor is in a 2-node, or similarly what if the key to be deleted is itself a 2-node leaf? This would result in
-an empty node, and an unbalanced tree. To prevent this, as we descend the tree we turn 2-nodes into 3-nodes. The two techniques for converting 2-nodes into 3-nodes are:  
+the in order successor of 23 is 27, of 50 is 51, of 60 is 62, and so on\ |mdash|\ all successors of these internal nodes are the first key of the left most child leaf node of the right subtree. "Swap" above means we overwrite the item
+to be deleted with its in-order successor and then remove the in-order successor from the leaf node. But what if the in order successor is in a 2-node? This would result in an empty node, and an unbalanced tree. To prevent this, as we descend the tree we
+turn 2-nodes into 3-nodes. The two techniques for converting 2-nodes into 3-nodes are:  
 
 Case 1: If an adjacent sibling of the 2-node is a 3- or 4-node, we "steal" an item from the sibling by rotating items and moving the subtree. For example, if 4 is to be deleted from this tree
 
@@ -177,6 +177,8 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
 
 .. code-block:: cpp
 
+    #ifndef TREE234_H
+    #define	TREE234_H
     #include <utility>
     #include <algorithm>
     #include <stdexcept>
@@ -272,7 +274,8 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
             * Returns true if key is found in node and sets index so pNode->keys_values[index] == key
             * Returns false if key is if not found, and sets next to the next in-order child.
             */
-           bool SearchNode(Key key, int& index, int& child_index, const Node *&next) const noexcept;
+           bool SearchNode(Key key, int& index, const Node *&next) const noexcept;
+           std::pair<bool, const Node *> SearchNode(Key key) const noexcept;
         
            void insert(KeyValue&& key_value, std::shared_ptr<Node>& newChild) noexcept;
     
@@ -725,6 +728,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
        for (auto& x: il) { // simply call insert(x)
              
            insert(x.first, x.second);
+      
        }
     }
     
@@ -1297,20 +1301,41 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            children[childIndex]->parent = this; 
       }
     }
+    /*
+     * Returns {true, *this} if key is found in node.
+     * Returns {false, point to next child with which to continue the descent search downward (toward a leaf node)} if key not found. 
+     */
+    template<class Key, class Value> inline std::pair<bool, const typename tree234<Key, Value>::Node *> tree234<Key, Value>::Node::SearchNode(Key lhs_key) const noexcept 
+    {
+      for(auto i = 0; i < totalItems; ++i) {
     
+         if (lhs_key < key(i)) {
+                
+             //next = children[i].get(); 
+             return {false, children[i].get() };
+    
+         } else if (key(i) == lhs_key) {
+    
+             //next = nullptr;
+             return {true, this};
+         }
+      }
+    
+      // It must be greater than the last key (because it is not less than or equal to it).
+      //next = children[totalItems].get(); 
+      return {false, children[totalItems].get()};
+    }
     /*
      * Returns true if key is found in node, and it set index so that this->keys_values[index] == key.
-     * Returns false if key is if not found, and it sets next to point to next child with which to continue the descent search downward (toward a leaf node), and
-     * it sets child_index such that next->parent->children[child_index] == next.
+     * Returns false if key is if not found, and it sets next to point to next child with which to continue the descent search downward (toward a leaf node)
      */
-    template<typename Key, typename Value> inline bool tree234<Key, Value>::Node::SearchNode(Key lhs_key, int& index, int& child_index, const Node *&next) const noexcept 
+    template<typename Key, typename Value> inline bool tree234<Key, Value>::Node::SearchNode(Key lhs_key, int& index, const Node *&next) const noexcept 
     {
       for(auto i = 0; i < totalItems; ++i) {
     
          if (lhs_key < key(i)) {
                 
              next = children[i].get(); 
-             child_index = i;  // index is such that: this->children[index] == next
              return false;
     
          } else if (key(i) == lhs_key) {
@@ -1321,12 +1346,9 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
       }
     
       // It must be greater than the last key (because it is not less than or equal to it).
-      child_index = totalItems; // new: see 'new code' comment just above.
       next = children[totalItems].get(); 
-    
       return false;
     }
-    
     /*
      * Require: childIndex is within the range for the type of node.
      * Returns: child pointer.
@@ -1479,15 +1501,22 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     {
        // make sure tree has at least one element    
        if (root == nullptr) return false;
-    
-       else {
-           int index;  
-           const Node *location;
-           return DoSearch(key, location, index);
+          
+       for(const Node *current = root.get(); current != nullptr;)  { 
+           
+           auto pair = current->SearchNode(key);
+           
+           if (pair.first) return true;
+           
+           current = pair.second;
        }
-    }   
-    
-    template<typename Key, typename Value>  bool tree234<Key, Value>::DoSearch(Key key, const Node *&location, int& index) noexcept // ok
+       
+       return false;
+    }
+    /*
+     * TODO: DoSearch ignores its third parameter completely--that is base coding.
+     */
+    template<typename Key, typename Value>  bool tree234<Key, Value>::DoSearch(Key key, const Node *&location, int& index) noexcept // TODO: See what  code calls this method, and maybe change it based on its client's needs and better C++17 compatibility.
     {
       if (!root) { // <--> if (root.get() == nullptr)
     
@@ -1495,10 +1524,9 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
       }
     
       const Node *next;
-      int child_index;
       const Node *current = root.get();
       
-      for(; !current->SearchNode(key, index, child_index, next); current = next) {  
+      for(; !current->SearchNode(key, index, next); current = next) {  
     
           if (current->isLeaf()) { 
     
@@ -1518,6 +1546,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
      * The two left most children of the former 4-node are assigned to the smaller 2-node, and the two right most children, likewise, are assigned to the larger 
      * two node. The parent of the former 4-node adopts the two new 2-nodes. Note: the smaller 2-node is simply the original 4-node downsized to a 2-node.
      */
+    /*
     template<typename Key, typename Value> void tree234<Key, Value>::insert(Key key, const Value& value) noexcept 
     { 
        if (root == nullptr) {
@@ -1541,9 +1570,8 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            } 
     
            const Node *next;
-           int index;
     
-           if (current->SearchNode(key, index, child_index, next) ) {// return if key is already in tree
+           if (auto [rc, next] = current->SearchNode(key); rc ) {// return if key is already in tree
                  
               return;
     
@@ -1554,6 +1582,50 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
            // set current to next   
            current = next;  
+        }
+     
+        // current node is now a leaf and it is not full (because we split all four nodes while descending). We cast away constness in order to change the node.
+        const_cast<Node *>(current)->insertKeyValue(key, value); 
+        ++tree_size;
+    }
+    */
+    
+    template<typename Key, typename Value> void tree234<Key, Value>::insert(Key key, const Value& value) noexcept 
+    { 
+       if (root == nullptr) {
+               
+          root = std::make_shared<Node>(key, value); 
+          ++tree_size;
+          return; 
+       } 
+    
+       const Node *current = root.get();
+    
+       // Descend until a leaf node is found, splitting four nodes as they are encountered 
+       int child_index;
+    
+        while(true) {
+          
+           if(current->isFourNode()) {// if four node encountered, split it, moving a value up to parent.
+    
+              split(const_cast<Node *>(current)); // split needs to modify the tree.
+              current = current->parent;
+           } 
+    
+           //const Node *next;
+           std::pair<bool, const Node *> pair;
+    
+           if (pair = current->SearchNode(key); pair.first) {// return if key is already in tree
+                 
+              return;
+    
+           } else if (current->isLeaf()) {
+    
+              break;
+           } 
+    
+           // set current to next   
+           current = pair.second;  
         }
      
         // current node is now a leaf and it is not full (because we split all four nodes while descending). We cast away constness in order to change the node.
@@ -1675,7 +1747,6 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     {
        const Node *pfound_node = nullptr; 
        int key_index;
-       int child_index;
     
        // Search, looking for key, converting 2-nodes encountered into 3- or 4-nodes. After the conversion, the node is searched for the key and, if not found,
        // We continue down the tree. 
@@ -1690,7 +1761,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
            const Node *next = nullptr;
     
-           if (current->SearchNode(key, key_index, child_index, next)) { // ...search for item in current node. 
+           if (current->SearchNode(key, key_index, next)) { // ...search for item in current node. 
     
                pfound_node = const_cast<Node *>(current); // We found it.  
     
@@ -2590,3 +2661,4 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         }
         return true; // All Nodes were balanced.
     }
+    #endif
