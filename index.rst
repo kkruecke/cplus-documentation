@@ -15,4 +15,4 @@ Notes on Data Structures and Algorithms in C++
    notes/bst.rst
    notes/tree23.rst
    notes/tree234.rst
-   notes/red-black.rst
+   notes/rb-tree.rst
