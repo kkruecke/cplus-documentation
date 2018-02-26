@@ -195,16 +195,15 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     #include <string>
     #include <iostream>
     
-    // fwd declarations
-    template<typename Key, typename Value> class tree234;    
-    //template<typename Key, typename Value> class Node; 
+    
+    template<typename Key, typename Value> class tree234;  // Forward declaration
     
     class DebugPrinter; 
         
     template<typename Key, typename Value> class tree234 {
         
-       union KeyValue { // This union is used to hold to two types of pairs: one where first, of type Key, is const; the other pair where first is non-const.
-                        // It implements various move constructors and assignment constructors
+       union KeyValue { // This union is used to hold to two types of pairs: one where pair::first (of type Key) is const; the other, in which pair::first is not const.
+                        // To make it easier to use, it implements a move constructor and move assignment constructor, as well as the usual constructors.
        
            std::pair<Key, Value>        _pair;  // ...this pair eliminates constantly having to do: const_cast<Key>(p.first) = some_noconst_key;
            std::pair<const Key, Value>  _constkey_pair; 
@@ -237,7 +236,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
                    
            constexpr const std::pair<const Key, Value>& constkey_pair() const { return _constkey_pair; }
     
-           constexpr       std::pair<const Key, Value>& constkey_pair() { return _constkey_pair; }
+           constexpr std::pair<const Key, Value>& constkey_pair() { return _constkey_pair; }
     
            friend std::ostream& operator<<(std::ostream& ostr, const KeyValue& key_value)
            {
@@ -246,7 +245,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            }
        };
        class Node; // Forward feference. 
-       class Node { 
+       class Node { // The tree node class. 
          private:  
            friend class tree234<Key, Value>;             
            friend class DebugPrinter;
@@ -255,11 +254,11 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            enum class NodeType : int { two_node=1, three_node=2, four_node=3 };
         
            Node *parent; /* parent is only used for navigation of the tree. It does not own the memory
-                               it points to. */
+                            it points to. */
         
            int totalItems; /* If 1, two node; if 2, three node; if 3, four node. */   
         
-           std::array<KeyValue, 3> keys_values; // This implementation does not have an associated value for the key.
+           std::array<KeyValue, 3> keys_values; 
            
            /*
             * For 2-nodes, children[0] is left pointer, children[1] is right pointer.
@@ -275,7 +274,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         
            /* 
             * Returns true if key is found in node and sets {Node * pnode, int index} such that pnode->keys_values[index] == key
-            * Returns false if key is if not found, and sets {Node * pnode, int index} such that pnode->keys_values[index] is the next Node in insert search order.
+            * Returns false if key is if not found, and sets {Node * pnode, int index} such that pnode->keys_values[index] is the next prospective node one level lower to be searched next.
             */
            std::tuple<bool, typename tree234<Key, Value>::Node *, int>  find(Key key) const noexcept;
         
@@ -418,7 +417,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
         int  tree_size; // adjusted by insert(), remove(), operator=(const tree234...), move ctor
     
-        // implementations of the public depth-frist traversal methods    
+        // Implementations of the public depth-frist traversal methods    
         template<typename Functor> void DoInOrderTraverse(Functor f, const Node *proot) const noexcept;
     
         template<typename Functor> void DoPostOrderTraverse(Functor f,  const Node *proot) const noexcept;
@@ -427,7 +426,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
     
         void CloneTree(const std::shared_ptr<Node>& src_node, std::shared_ptr<Node>& dest_node, const Node *parent) const noexcept; 
     
-        void split(Node *node) noexcept;  // called during insert(Key key) to split 4-nodes encountered.
+        void split(Node *node) noexcept;  // called during insert(Key key) to split 4-nodes when encountered.
     
         // Called during remove(Key key)
         bool remove(Node *location, Key key); 
@@ -446,6 +445,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         std::pair<const Node *, int> getSuccessor(const Node *current, int key_index) const noexcept;
         std::pair<const Node *, int> getPredecessor(const Node *current, int key_index) const noexcept;
     
+        // Subroutines of the two methods above.
         std::pair<const Node *, int> getInternalNodeSuccessor(const Node *pnode,  int index_of_key) const noexcept;
         std::pair<const Node *, int> getInternalNodePredecessor(const Node *pnode,  int index_of_key) const noexcept;
     
@@ -461,13 +461,14 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
         int  depth(const Node *pnode) const noexcept;
         bool isBalanced(const Node *pnode) const noexcept;
     
-        bool find_(const Node *current, Key key) const noexcept;
+        bool find_(const Node *current, Key key) const noexcept; // called by 'bool find(Key keu) const'
     
-        std::pair<bool, Node *> split_find(Node *pnode, Key key) noexcept; 
+        std::pair<bool, Node *> split_find(Node *pnode, Key key) noexcept;  // Called during insert
     
-        Node *convert_findmin(Node *pnode) noexcept;
+        Node *convert_findmin(Node *pnode) noexcept; // Called during remove()
     
       public:
+        // Basic STL-required types:
     
         using value_type      = std::pair<const Key, Value>; 
         using difference_type = long int;
@@ -531,6 +532,7 @@ The template class tree234 implements the 2 3 4 tree. `unique_ptr<Node>` manages
            return ostr;
         }
     
+        // Bidirectional stl-compatible constant iterator
         class iterator : public std::iterator<std::bidirectional_iterator_tag, typename tree234<Key, Value>::value_type> { 
                                                      
            friend class tree234<Key, Value>;   
