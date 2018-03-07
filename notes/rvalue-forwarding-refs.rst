@@ -4,34 +4,12 @@
 Rvalue References and Forwarding References in C++
 ==================================================
 
-Basic Concepts
---------------
-
-#. `Default Constructable <http://en.cppreference.com/w/cpp/concept/DefaultConstructible>`_	specifies that an object of the type can be default constructed
-#. `Destructable <http://en.cppreference.com/w/cpp/concept/Destructible>`_ specifies that an object of the type can be destroyed
-#. `Copy Constructable <http://en.cppreference.com/w/cpp/concept/CopyConstructible>`_ 	specifies that an object of the type can be constructed from an lvalue
-#. `Copy Assignable <http://en.cppreference.com/w/cpp/concept/CopyAssignable>`_ 	specifies that an object of the type can be assigned from  an lvalue
-#. `Copy Insertable <http://en.cppreference.com/w/cpp/concept/CopyInsertable>`_
-#. `Move Constructable <http://en.cppreference.com/w/cpp/concept/MoveConstructible>`_	specifies that an object of the type can be constructed from an rvalue
-#. `Move Assignable <http://en.cppreference.com/w/cpp/concept/MoveAssignable>`_ 	specifies that an object of the type can be assigned from an rvalue
-
-Container Element Concepts
---------------------------
-
-See http://en.cppreference.com/w/cpp/concept
-
-#. DefaultInsertable element can be default-constructed in uninitialized storage
-#. CopyInsertable element can be copy-constructed in uninitialized storage
-#. MoveInsertable element can be move-constructed in uninitialized storage
-#. EmplaceConstructible element can be constructed in uninitialized storage
-#. Erasable element can be destroyed using an allocator 
-
 Move Semantics
 --------------
 
-This Vector class serves as a motivating example for move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). Such
-overloaded methods allow the compiler to always chose the a more effecient constructor or assignment operator when an rvalue is passed as input. Here is template class ``Vector``.
-It has the usual copy constructor and assignment operator as well as an addend method called ``void push_back(const Vector<T>)`` that take an ``const Vector&``:
+This Vector class serves as a motivating example for explaining rvalues and move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). This allows
+the compiler to always chose the most effecient constructor or assignment operator when an rvalue is passed as input. Below is template ``Vector`` class.  It has the usual copy constructor and assignment operator as well as ``void push_back(const T&)``
+that take an ``const T&``:
 
 .. code-block:: cpp
 
@@ -169,9 +147,8 @@ It has the usual copy constructor and assignment operator as well as an addend m
 rvalue references and their role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To understand move semantics we first need to understand rvalue references. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\ |ndash|\ as
-oppossed to an lvalue, which is an object whose address we can always take. See in-depth details see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. 
-Some example of rvalue and lvalues:
+An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an rvalue. An lvalue on the other hand is an object whose address can always be taken. For an in-depth details see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. 
+Below are some example of rvalue and lvalues:
 
 .. code-block:: cpp
 
@@ -188,14 +165,15 @@ Some example of rvalue and lvalues:
     X f4(); // returns rvalue
     X& f5(); // returns lvalue
 
-An rvalue variable is declared using ``&&``: 
+An rvalue reference is declared using ``&&``: 
 
 .. code-block:: cpp
 
     int&& j = 8;
+    int&& f3(); // f3() returns an rvalue
     int&& k = f3();
     int v = 9;
-    int&& l = v; // error: cannot bind to rvlue reference l to lvalue v.
+    int&& l = v; // error: cannot bind rvlue reference l to lvalue v.
 
 The rvalue reference j above is not really of any value. While we can change the value of a literal, using this trick
  
@@ -205,20 +183,20 @@ The rvalue reference j above is not really of any value. While we can change the
     j = 9;
     cout << j;  // prints: 9
 
-The temporay is deleted once j goes out of scope, and this technique has not real applicability. The real value of rvalues simply lie in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
-rvalue, is there method that takes an rvalue reference"? It there is, it invokes it. 
+The temporay is deleted once j goes out of scope, and this technique has no real applicability. The real value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
+rvalue, is there method that takes an rvalue reference"?, and if there is, it invokes it. 
 
 Implications for constructors and assignment operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references.  The compiler can will now branch at compiler time depending on whether the constructor (or assignment operator) is
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references.  This allows the compiler to now branch at compiler time depending on whether the constructor (or assignment operator) is
 being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
 
 Implementation of move constructor and move assignment operator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The move constructor and move assignment both read from and write to the rvalue reference parameter. They perform a shallow copy of its resourses, and then, in the example below, set the rvalue object\ |apos|\ s ``length`` to 0 and it\ |apos|\ s
-pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's destructor is called. 
+The move constructor and move assignment, both of which take rvalue references, both read from and write to the rvalue reference parameter. They perform a shallow copy of its resourses, and then, as in the example below, set the rvalue object\ |apos|\ s
+``length`` to 0 and it\ |apos|\ s pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's destructor is called. 
  
 .. code-block:: cpp
 
