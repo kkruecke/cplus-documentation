@@ -60,11 +60,12 @@ Given a one dimensional array such as ``int a[]  {1, 2, 3, 4, 5}``, the address 
 .. code-block:: cpp
 
     int a[] = {1, 2, 3, 4, 5};
-    int *p = &a[0];      // p point to the first int in the block of elements comprising a  
+    int *p1 = &a[0]; // p point to the first int in the block of elements comprising a  
+    int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-Adding one to the pointer ``int *p`` above advances it to point to the next element in the array or ``a[1]``. In fact ``a[1]`` is equivalent to ``*(a + 1)``. In general ``p + n``, where ``n`` is an int advances to the n + 1\ :sup:th element (since arrays use
-zero-base indexing).
+Adding one to a pointer does not increase the address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer. Adding one to the pointer ``int *p1`` above advances it to point to the next element in the array or ``a[1]``.
+In fact ``a[1]`` is equivalent to ``*(a + 1)``. In general ``p + n``, where ``n`` is an int advances to the n + 1\ :sup:th element (since arrays use zero-base indexing).
 
 .. code-block:: cpp
 
@@ -83,24 +84,67 @@ The name of the array itself, here ``a``, is synomous with ``&a[0]``. Thus we ca
        
         cout << *(p + i) << ",";
     }
+    // The above is equivalent to
+    for (int i = 0; i < sizeof(a)/sizeof(int); ++i) {
+       
+        cout << a[i] << ",";
+    }
 
-Higher Dimensional Arrays
-^^^^^^^^^^^^^^^^^^^^^^^^^ 
+Passing One Dimensional Arrays
+++++++++++++++++++++++++++++++
 
-This code illustrates the pointer usage and meaning for higher dimesional arrays.
+One dimensional array can be passed using either syntax below.
 
 .. code-block:: cpp
 
-    template<class T> void print_ptr(const T& pointer, const std::string& msg1,  const std::string& msg2)
+    int a[] = {1, 2, 3, 4, 5};
+    int *p = &a[0]; // p point to the first int in the block of elements comprising a  
+
+    void print_array1(int a[], int size) // passes the address of the array not the entire array.
     {
-        cout << "pointer is " << msg1 << ". pointer type is '" << msg2 << "'.\n";
-        
-        cout << "pointer = " << pointer << ".  pointer + 1 = " << pointer + 1 << "\n";
-       
-        cout << "The difference in bytes between pointer and (pointer + 1) = " <<reinterpret_cast<unsigned long>(pointer + 1) - reinterpret_cast<unsigned long>(pointer) << "\n\n";;
+        for (int i = 0; i < size; ++i) {
+           
+            cout << a[i] << ",";
+        }
+    }
+ 
+    void print_array2(int *p, int size)
+    {
+        for (int i = 0; i < size; ++i) {
+           
+            cout << p[i] << ",";
+        }
     }
     
+Higher Dimensional Arrays
+^^^^^^^^^^^^^^^^^^^^^^^^^ 
+
+Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block of values, with the first row or block of values followed by the next row or block of values.
+This code illustrates how pointers work with two and higher dimesional arrays.
+
+.. code-block:: cpp
+
+     // abi::__cxa_demangle() is a GCC special extension to convert mangled name to real name
+    // See https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html for details.
+    template<class T> string get_typeof(const T& t)
+    {
+      const std::type_info  &ti = typeid(t);
+      
+      int status;
+    
+      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);   
+      
+      return string{realname};
+    }
+   
     int a[2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; // Same as: int a[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
+
+Array ``a`` is laid out in memory as a linear block of 10 integers. ``a[0]`` points to the first row of the 2-dimensional array and ``a[1]`` points to the second row of ``a``. 
+
+.. todo:: 1. Continue working from https://www.cse.msu.edu/~cse251/lecture11.pdf, slide 26, and 2.) change the print_ptr() to be get_typeinof(). Copy and past code from ~/NetBeansProject/test/
+ 
+
+.. code-block:: cpp
     
     int *p1 = &a[0][0]; 
     int (*p2)[5] = &a[0]; 
@@ -124,24 +168,23 @@ produces the the output below:
   
     <pre>
     This size of 'int' is 4. 
-    
-    pointer is "&a[0][0]", and type is "int *"
-    pointer = 0x7ffd9c507b60.  pointer + 1 = 0x7ffd9c507b64
+    pointer p1 is '&a[0][0]', and type is 'int *'.
+    pointer = 0x7ffcbf5ad7e0.  pointer + 1 = 0x7ffcbf5ad7e4
     The difference in bytes between pointer and (pointer + 1) = 4
     
-    pointer is '&a[0]', and type is 'int (*)[5]'.
-    pointer = 0x7ffd9c507b60.  pointer + 1 = 0x7ffd9c507b74
+    pointer p2 is '&a[0]', and type is 'int (*)[5]'.
+    pointer = 0x7ffcbf5ad7e0.  pointer + 1 = 0x7ffcbf5ad7f4
     The difference in bytes between pointer and (pointer + 1) = 20
     
-    pointer is 'a', and type is 'int (*)[5]'.
-    pointer = 0x7ffd9c507b60.  pointer + 1 = 0x7ffd9c507b74
+    pointer p3 is 'a', and type is 'int (*)[5]'.
+    pointer = 0x7ffcbf5ad7e0.  pointer + 1 = 0x7ffcbf5ad7f4
     The difference in bytes between pointer and (pointer + 1) = 20
     
-    pointer is '&a', and type is 'int (*)[2][5]'.
-    pointer = 0x7ffd9c507b60.  pointer + 1 = 0x7ffd9c507b88
+    pointer p4 is '&a', and type is 'int (*)[2][5]'.
+    pointer = 0x7ffcbf5ad7e0.  pointer + 1 = 0x7ffcbf5ad808
     The difference in bytes between pointer and (pointer + 1) = 40
     </pre>
-
+    
 This shows that for a two dimensional array:
 
 1. ``&a[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer ``sizeof(int)`` bytes (or four bytes) to the next int ``a[0][1]``. 
@@ -178,26 +221,24 @@ whose output is:
 .. raw:: html
 
     <pre>
-    This size of 'int' is 4.
-    
-    pointer is '&b[0][0][0]', and type is 'int *'.
-    pointer = 0x7fffffffe380.  pointer + 1 = 0x7fffffffe384
+    pointer ptr1 is '&b[0][0][0]', and type is 'int *'.
+    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad814
     The difference in bytes between pointer and (pointer + 1) = 4
     
-    pointer is '&b[0][0]', and type is 'int (*)[5]'.
-    pointer = 0x7fffffffe380.  pointer + 1 = 0x7fffffffe394
+    pointer ptr2 is '&b[0][0]', and type is 'int (*)[5]'.
+    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad824
     The difference in bytes between pointer and (pointer + 1) = 20
     
-    pointer is '&b[0]', and type is 'int (*)[2][5]'.
-    pointer = 0x7fffffffe380.  pointer + 1 = 0x7fffffffe3a8
+    pointer ptr3 is '&b[0]', and type is 'int (*)[2][5]'.
+    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad838
     The difference in bytes between pointer and (pointer + 1) = 40
     
-    pointer is 'b', and type is 'int (*)[2][5]'.
-    pointer = 0x7fffffffe380.  pointer + 1 = 0x7fffffffe3a8
+    pointer ptr4 is 'b', and type is 'int (*)[2][5]'.
+    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad838
     The difference in bytes between pointer and (pointer + 1) = 40
     
-    pointer is '&b', and type is 'int (*)[3][2][5]'.
-    pointer = 0x7fffffffe380.  pointer + 1 = 0x7fffffffe3f8
+    pointer ptr5 is '&b', and type is 'int (*)[3][2][5]'.
+    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad888
     The difference in bytes between pointer and (pointer + 1) = 120
     </pre>
 
@@ -205,7 +246,7 @@ which show that for a three dimensional array:
 
 1. ``&b[0][0][0]`` is an ``int *``, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int ``&b[0][0][1]``.
 2. ``&b[0][0]`` is of ``int (*)[5]``, or pointer to a block of five consecutive integers, and adding one to such a pointer advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five integers ``&b[0][1]``
-3. ``&b[0]`` is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of "a block of five integers"
+3. ``&b[0]`` is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of **a block of five integers**
    or ``&b[1]``.  
 4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each, and likewise adding one to such a pointer advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two
     blocks of a block of five integers each or ``&b[1]``.
