@@ -55,6 +55,53 @@ A const point to const data is declared:
 Pointers, Arrays and Multidimensional Arrays
 --------------------------------------------
 
+Array Addressess in General
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For a array named, say, ``some_array``, both **&some_array[0]** and **some_array** are pointers of identical type and identical initial values. This is true regardless of the dimensions of ``som_array``\ {ndash}\ one, two, three, or higher dimensions. 
+The code below illustartes this:
+
+.. code-block:: cpp
+
+    template<class T> string ptr_diff(T&& ptr)
+    {
+      ostringstream ostr;
+      
+      ostr << "When the pointer is '" << get_typeof(forward<T>(ptr)) << "', (pointer + 1) - pointer in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+      
+      return ostr.str(); 	
+    }
+
+    int a1[3] = { 1, 2, 3};
+    
+    int b2[2][3] = {{ 1, 2, 3}, {4, 5, 6}};
+    
+    int c[2][2][3] = {  {{ 1, 2, 3}, {4, 5, 6}}, {{ 7, 8, 9}, {10, 11, 12}} };
+
+    cout << ptr_diff("a1", a1) << '\n';
+    cout << ptr_diff("&a1[0]", &a1[0]) << "\n\n";
+
+    cout << ptr_diff("b2", b2) << '\n';
+    cout << ptr_diff("&b2[0]", &b2[0]) <<  "\n\n";
+
+    cout << ptr_diff("c", c) << '\n';
+    cout << ptr_diff("&c[0]", &c[0]) <<  "\n\n";
+
+whose ouput is:
+
+.. raw:: html
+
+    <pre>
+    Pointer a1 is of type 'int [3]', and (pointer + 1) - pointer in bytes is: 4
+    Pointer &a1[0] is of type 'int*', and (pointer + 1) - pointer in bytes is: 4
+    
+    Pointer b2 is of type 'int [2][3]', and (pointer + 1) - pointer in bytes is: 12
+    Pointer &b2[0] is of type 'int (*) [3]', and (pointer + 1) - pointer in bytes is: 12
+    
+    Pointer c is of type 'int [2][2][3]', and (pointer + 1) - pointer in bytes is: 24
+    Pointer &c[0] is of type 'int (*) [2][3]', and (pointer + 1) - pointer in bytes is: 24
+    </pre>    
+
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -92,6 +139,7 @@ The name of the array itself, here **a**, is synomous with **&a[0]**. Thus we ca
        
         cout << a[i] << ",";
     }
+
 
 Passing One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -437,13 +485,17 @@ Indexing: **myMatrix[i][j]** is same as:
 .. todo:: Add explanations to each of these. Read `Multidimensional Pointer Arithmetic in C/C+ <https://www.geeksforgeeks.org/multidimensional-pointer-arithmetic-in-cc/>`_ and compare it with the output of ~/test code, keeping in my that when get_typeof() returns
     'int [4]' is actually refers to the array of the array, with the info in the first link below
 
-* **\*((*(myMatrix + i)) + j)**       
- 
-* **\*(&myMatrix[0][0] + 4*i + j)**
+* **\*((*(myMatrix + 1)) + 2)**       
 
-* **\*(myMatrix[i] + j)**
+  **myMatrix** is the same as **&myMatrix[0]**, which are of type **int (*4)**. This is the the address of the first row of **myMatrix**. Adding one **(myMatrix + 1)** advances the pointer to the second row of **myMatrix**. Deferencing 
+  **\*(myMatrix + 1)** returns an **int \*** to the first element of the one-dimensional array **{5, 6, 7, 8}**. **\*(myMatrix + 1)** is equivalent to **int *p = &myMatrix[1][0]**. Then adding 2, **(*(myMatrix + 1)) + 2**, advances the **int \*** to the third element
+  of the array **{5, 6, 7, 8}** , and then deferencing it **\*((*(myMatrix + 1)) + 2)** returns the integer at that position **7**.
 
-* **(*(myMatrix + i))[j]**
+* **\*(&myMatrix[0][0] + 4 * i + j)** where i = 1 and j = 2; 
+
+* **\*(myMatrix[1] + 2)**
+
+* **(*(myMatrix + 1))[2]**
 
 
 In passing a multi‐dimensional array, the first array size does not have to be specified. The second (and any subsequent) dimensions must be given:  **int myFun(int list[][10]);**
