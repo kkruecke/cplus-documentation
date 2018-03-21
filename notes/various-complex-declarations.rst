@@ -63,44 +63,57 @@ The code below illustartes this:
 
 .. code-block:: cpp
 
-    template<class T> string ptr_diff(T&& ptr)
+    template<class T> string get_typeof(const string& str, const T& t)
+    {
+      const std::type_info  &ti = typeid(t);
+      
+      int status;
+    
+      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status); 
+      
+      return string{"The type of '"} + str + "' is '" + realname + "'. ";
+    }
+    
+    template<class T> std::string ptr_diff(const std::string& str, T&& ptr)
     {
       ostringstream ostr;
-      
-      ostr << "When the pointer is '" << get_typeof(forward<T>(ptr)) << "', (pointer + 1) - pointer in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+       
+      ostr << get_typeof(str, forward<T>(ptr)) << "', and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
     }
-
+    
     int a1[3] = { 1, 2, 3};
     
-    int b2[2][3] = {{ 1, 2, 3}, {4, 5, 6}};
+    int b1[2][3] = {{ 1, 2, 3}, {4, 5, 6}};
     
-    int c[2][2][3] = {  {{ 1, 2, 3}, {4, 5, 6}}, {{ 7, 8, 9}, {10, 11, 12}} };
+    int c1[2][2][3] = {  {{ 1, 2, 3}, {4, 5, 6}}, {{ 7, 8, 9}, {10, 11, 12}} };
 
     cout << ptr_diff("a1", a1) << '\n';
     cout << ptr_diff("&a1[0]", &a1[0]) << "\n\n";
 
-    cout << ptr_diff("b2", b2) << '\n';
-    cout << ptr_diff("&b2[0]", &b2[0]) <<  "\n\n";
+    cout << ptr_diff("b1", b1) << '\n';
+    cout << ptr_diff("&b1[0]", &b1[0]) <<  "\n\n";
 
-    cout << ptr_diff("c", c) << '\n';
-    cout << ptr_diff("&c[0]", &c[0]) <<  "\n\n";
-
+    cout << ptr_diff("c1", c1) << '\n';
+    cout << ptr_diff("&c1[0]", &c1[0]) <<  "\n\n";
+        
 whose ouput is:
 
 .. raw:: html
 
     <pre>
-    Pointer a1 is of type 'int [3]', and (pointer + 1) - pointer in bytes is: 4
-    Pointer &a1[0] is of type 'int*', and (pointer + 1) - pointer in bytes is: 4
+    The type of 'a1' is 'int [3]'. ', and (a1 + 1) - a1 in bytes is: 4
+    The type of '&a1[0]' is 'int*'. ', and (&a1[0] + 1) - &a1[0] in bytes is: 4
     
-    Pointer b2 is of type 'int [2][3]', and (pointer + 1) - pointer in bytes is: 12
-    Pointer &b2[0] is of type 'int (*) [3]', and (pointer + 1) - pointer in bytes is: 12
+    The type of 'b1' is 'int [2][3]'. ', and (b1 + 1) - b1 in bytes is: 12
+    The type of '&b1[0]' is 'int (*) [3]'. ', and (&b1[0] + 1) - &b1[0] in bytes is: 12
     
-    Pointer c is of type 'int [2][2][3]', and (pointer + 1) - pointer in bytes is: 24
-    Pointer &c[0] is of type 'int (*) [2][3]', and (pointer + 1) - pointer in bytes is: 24
+    The type of 'c1' is 'int [2][2][3]'. ', and (c1 + 1) - c1 in bytes is: 24
+    The type of '&c1[0]' is 'int (*) [2][3]'. ', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
+
+Note: While the types of **c** and **&c[0]** appear different above, they actually are not. When **c** is used as a pointer, it is no different than **&c1[0]**.  
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -182,23 +195,23 @@ It uses the GCC extension __cxa_demanage() from the header <cxxabi.h> to demangl
     #include <sstream>
     #include <utility>
     using namespace std;
-    
-    template<class T> string get_typeof(const T& t)
+
+    template<class T> string get_typeof(const string& str, const T& t)
     {
       const std::type_info  &ti = typeid(t);
       
       int status;
     
-      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);   
+      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status); 
       
-      return string{realname};
+      return string{"The type of "} + str + " is '" + realname + "'. ";
     }
     
-    template<class T> string ptr_diff(T&& ptr)
+    template<class T> std::string ptr_diff(const std::string& str, T&& ptr)
     {
       ostringstream ostr;
-      
-      ostr << "When the pointer is '" << get_typeof(forward<T>(ptr)) << "', (pointer + 1) - pointer in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+       
+      ostr << get_typeof(str, forward<T>(ptr)) << "', and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
     }
