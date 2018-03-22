@@ -6,6 +6,8 @@
 Understanding Vaious Complex Declarations and Expressions
 =========================================================
 
+.. todo:: proof read and correct.
+
 const and const Pointers
 ------------------------
 
@@ -260,8 +262,6 @@ Produces this output:
  
 The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types. 
 
-.. todo:: Correct all text below to the end of the document so that it reflects the current code in ~/test/main.cpp
-    
 This code:
 
 .. code-block:: cpp
@@ -290,6 +290,8 @@ This code:
       
     cout << ptr_diff("&b[0][0]", &b[0][0]) << '\n';   
     
+    cout << ptr_diff("b[0][0]", b[0][0]) << '\n';   // TODO: ???????????????????????????????????
+
     cout << ptr_diff("&b[0]", &b[0]) << '\n';   
     
     cout << ptr_diff("b", b) << '\n';  
@@ -330,86 +332,71 @@ produces this output:
     The type of *b is: int [5]
     The type of *&b is: int [2][5]
     </pre>
-
-.. todo:: Add comments on above
-
-.. todo:: 1. Continue working from https://www.cse.msu.edu/~cse251/lecture11.pdf, slide 26.
  
 Preliminary Summary of 2-dimensional array pointers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
 This shows that for a two dimensional array:
 
-1. ``a[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **a[0][1]**. 
-2. Both ``&a[0]`` and ``a`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to it advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
-3. ``&a`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers'.
+1. ``b[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **b[0][1]**. 
+2. Both ``&b[0]`` and ``a`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to it advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
+3. ``&b`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers'.
 
 The same logic holds for higher dimensional arrays:
 
 .. code-block:: cpp
 
-    int b[3][2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; // Same as: int a[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
-    
+    int b[2][3][2] = { {{1, 2}, {3, 4}, {5, 6}},   {{7, 8}, {9, 10}, {11, 12}}  }; 
+     
     int *ptr1 = &b[0][0][0]; 
-    int (*ptr2)[5] = &b[0][0];
-    int (*ptr3)[2][5] = &b[0]; 
-    int (*ptr4)[2][5] = b;
     
-    int (*ptr5)[3][2][5] = &b;
+    int (*ptr2)[2] = &b[0][0];
+    
+    int (*ptr3)[3][2] = &b[0]; 
+    
+    int (*ptr4)[3][2] = b;
+    
+    int (*ptr5)[2][3][2] = &b;
 
     cout << "This size of 'int' is " << sizeof(int) << ".\n\n"; 
 
-    print_ptr(ptr1, "&b[0][0][0]", "int *");
+    cout << ptr_diff("&b[0][0][0]", &b[0][0][0]) << "\n";
     
-    print_ptr(ptr2, "&b[0][0]", "int (*)[5]");
+    cout << ptr_diff("&b[0][0]", &b[0][0]) << "\n";
 
-    print_ptr(ptr3, "&b[0]", "int (*)[2][5]");
+    cout << ptr_diff("&b[0]", &b[0]) << "\n";
     
-    print_ptr(ptr4, "b", "int (*)[2][5]");
+    cout << ptr_diff("b", b) << "\n";
     
-    print_ptr(ptr5, "&b", "int (*)[3][2][5]");
+    cout << ptr_diff("&b", &b) << "\n"; 
 
 whose output is: 
 
 .. raw:: html
 
     <pre>
-    pointer ptr1 is '&b[0][0][0]', and type is 'int *'.
-    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad814
-    The difference in bytes between pointer and (pointer + 1) = 4
+    This size of 'int' is 4.
     
-    pointer ptr2 is '&b[0][0]', and type is 'int (*)[5]'.
-    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad824
-    The difference in bytes between pointer and (pointer + 1) = 20
-    
-    pointer ptr3 is '&b[0]', and type is 'int (*)[2][5]'.
-    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad838
-    The difference in bytes between pointer and (pointer + 1) = 40
-    
-    pointer ptr4 is 'b', and type is 'int (*)[2][5]'.
-    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad838
-    The difference in bytes between pointer and (pointer + 1) = 40
-    
-    pointer ptr5 is '&b', and type is 'int (*)[3][2][5]'.
-    pointer = 0x7ffcbf5ad810.  pointer + 1 = 0x7ffcbf5ad888
-    The difference in bytes between pointer and (pointer + 1) = 120
+    The type of '&b[0][0][0]' is 'int*', and (&b[0][0][0] + 1) - &b[0][0][0] in bytes is: 4
+    The type of '&b[0][0]' is 'int (*) [2]', and (&b[0][0] + 1) - &b[0][0] in bytes is: 8
+    The type of '&b[0]' is 'int (*) [3][2]', and (&b[0] + 1) - &b[0] in bytes is: 24
+    The type of 'b' is 'int [2][3][2]', and (b + 1) - b in bytes is: 24
+    The type of '&b' is 'int (*) [2][3][2]', and (&b + 1) - &b in bytes is: 48
     </pre>
 
 which show that for a three dimensional array:
 
-1. ``&b[0][0][0]`` is an ``int *``, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int ``&b[0][0][1]``.
-2. ``&b[0][0]`` is of ``int (*)[5]``, or pointer to a block of five consecutive integers, and adding one to such a pointer advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five integers ``&b[0][1]``
-3. ``&b[0]`` is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two blocks of **a block of five integers**
-   or ``&b[1]``.  
-4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each, and likewise adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two
-   blocks of a block of five integers each or ``&b[1]``.
-5. ``&b`` is of type ``int (*)[3][2][5]``, a pointer to three blocks of two block of a block five integers each. So adding one to such a pointer advances its address **3 x (2 x (4 x sizeof(int)))** or 120 bytes to the next block of three blocks of two blocks of
-   a block of five integers each, which is the address of one beyond ``b[1][1][4]``, the last element in the array.
+1. ``&b[0][0][0]`` is an ``int *``, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int, whose address is  ``&b[0][0][1]``.
+2. ``&b[0][0]`` is of ``int (*)[2]``, or pointer to a block of two consecutive integers, and adding one to such a pointer advances the pointer ``2 x sizeof(int)`` or 8 bytes to the next block of two integers at ``&b[0][1]``, which is the array ``{3, 4}``.
+3. ``&b[0]`` is of type ``int (*)[3][2]``, a pointer to three blocks of a block of two integers each. So adding one to such a pointer advances its address **3 x (2 x sizeof(int))** or 24 bytes to the next block of three blocks of **a block of two integers**
+   or ``&b[1]``, which is the array ``{{7, 8}, {9, 10}, {11, 12}}``.  
+4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[3][2]``, a pointer to three blocks of a block of two integers each, and likewise adding one to such a pointer advances its address **3 x (2 x sizeof(int))** or 24 bytes to the next block of three
+   blocks of a block of two integers each or ``&b[1]``, which is the array ``{{7, 8}, {9, 10}, {11, 12}}``.  
+5. ``&b`` is of type ``int (*)[2][3][2]``, a pointer to two blocks of three blocks of a block two integers each. So adding one to such a pointer advances its address **2 x (3 x (2 x sizeof(int)))** or 48 bytes to the next block of two blocks of three blocks of
+   a block of two integers each, whose physical address is ``sizeof(int) + &b[1][2][1]``, four bytes beyond the last entry in ``b``.
 
 Summary of Pointers and Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Notes from `Pointer, Arrays and Multidimensional Arrays <https://www.cse.msu.edu/~cse251/lecture11.pdf>`_:
 
 Given
 
@@ -417,44 +404,35 @@ Given
 
     int myMatrix[2][4] = { {1,2,3,4},{5,6,7,8} };
 
-.. todo:: Add explanations to each of these:
+``myMatrix[0]`` is a pointer to the first row of the 2D array. ``(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``(&myMatirx[0] + 0)``. To actually access elements of
+ the first inner array it must be deferenced: ``*(myMatrix + 0)``, which yields an ``int *`` to the first element of the array. Adding two to it, ``(*(myMatrix +0)) + 2``, moves the pointer to the third value in the first inner array. Since dereferencing
+ is always applied before any pointer arithmetic, ``(*(myMatrix +0)) + 2`` can be simplified as ``*(myMatrix +0) + 2``, and dereferencing it ``*(*(myMatrix +0) + 2)`` returns the int ``3``.
 
-* ``myMatrix[0]``: pointer to the first row of the 2D array
-  ``\*(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``&myMatirx[0] + 0``. To actually access an element of the first inner array it must be deferenced: ``\*(*(myMatrix +0 )``,
-  which yields and ``int *`` to the first element of the array. Adding, say, two to it,  ``(*(*(myMatrix +0 )) + 2`` moves the pointer to the third value in the first inner array, and dereferencing it ``\*((*(*(myMatrix +0 )) + 2)`` returns the it.
+``myMatrix[1]`` is likewise a pointer to the second row of the 2D array, and ``*myMatrix[1]`` is  of type ``int (*)[4]``. It is a pointer to the entire second inner array of four integers. It is equivalent to ``&myMatirx[0] + 1``.
 
-* ``myMatrix[1]``: pointer to the second row of the 2D array
-  ``\*myMatrix[1]`` is  of type ``int (*)[4]``. It is a pointer to the entire second inner array of four integers. It is equivalent to ``&myMatirx[0] + 1``.
+``*((*(myMatrix + 1)) + 2)``       
 
-Indexing: **myMatrix[i][j]** is same as:
+``myMatrix`` is the same as ``&myMatrix[0]``, which are of type ``int (*4)``. This is the the address of the first row of ``myMatrix``. Adding one ``(myMatrix + 1)`` advances the pointer to the second row of ``myMatrix``. Deferencing 
+``*(myMatrix + 1)`` returns an ``int *`` to the first element of the one-dimensional array ``{5, 6, 7, 8}``. ``*(myMatrix + 1)`` is equivalent to ``int *p = &myMatrix[1][0]``. Then adding 2, ``(*(myMatrix + 1)) + 2``, advances the ``int *`` to the third element
+of the array ``{5, 6, 7, 8}`` , and then deferencing it ``*((*(myMatrix + 1)) + 2)`` returns the integer at that position ``7``.
 
-.. todo:: Add explanations to each of these. Read `Multidimensional Pointer Arithmetic in C/C+ <https://www.geeksforgeeks.org/multidimensional-pointer-arithmetic-in-cc/>`_ and compare it with the output of ~/test code, keeping in my that when get_typeof() returns
-    'int [4]' is actually refers to the array of the array, with the info in the first link below
+``*(&myMatrix[0][0] + 4 * 1 + 2)`` ... add explanation. 
 
-* **\*((*(myMatrix + 1)) + 2)**       
+``*(myMatrix[1] + 2)`` ... add explanation. 
 
-  **myMatrix** is the same as **&myMatrix[0]**, which are of type **int (*4)**. This is the the address of the first row of **myMatrix**. Adding one **(myMatrix + 1)** advances the pointer to the second row of **myMatrix**. Deferencing 
-  **\*(myMatrix + 1)** returns an **int \*** to the first element of the one-dimensional array **{5, 6, 7, 8}**. **\*(myMatrix + 1)** is equivalent to **int *p = &myMatrix[1][0]**. Then adding 2, **(*(myMatrix + 1)) + 2**, advances the **int \*** to the third element
-  of the array **{5, 6, 7, 8}** , and then deferencing it **\*((*(myMatrix + 1)) + 2)** returns the integer at that position **7**.
+``(*(myMatrix + 1))[2]`` ... add explanation. 
 
-* **\*(&myMatrix[0][0] + 4 * i + j)** where i = 1 and j = 2; 
-
-* **\*(myMatrix[1] + 2)**
-
-* **(*(myMatrix + 1))[2]**
-
-
-In general, index operators are equivlant to pointer arithmetic and dereferencing following this pattern (using a 3-dimensional array as the example): the expxression **a[i][j][k]** is equivalent to **\*(*(*(a + i) + j) + k)**. Forr example:
+In general, index operators are equivlant to pointer arithmetic and dereferencing following this pattern, here using a 3-dimensional array as the example: the expxression **a[i][j][k]** is equivalent to **\*(*(*(a + i) + j) + k)**. For example:
 
 .. code-block:: cpp
 
     int a[2][2][3] = {  {{ 1, 2, 3}, {4, 5, 6}}, {{ 7, 8, 9}, {10, 11, 12}} };
-    cout << "a[0][1][2] = " <<  a[0][1][2] << ", and *( (*(*(a + 0) + 1))   + 2) = " <<   *((*(*(a + 0) + 1)) + 2);
+    cout << "a[0][1][2] = " <<  a[0][1][2] << ", and *( (*(*(a + 0) + 1)) + 2) = " <<   *((*(*(a + 0) + 1)) + 2);
 
 .. raw:: html 
 
     <pre>
-    a[0][1][2] = 6, and *( (*(*(a + 0) + 1))   + 2) = 6
+    a[0][1][2] = 6, and *( (*(*(a + 0) + 1)) + 2) = 6
     </pre>
 
 ``a`` is of type ``int (*)[2][3]``. ``(a + 0)`` therefore points to the first of the two inner 2  x 3 arrays. Dereferencing it yields a pointer of type ``int (*) [3]`` that points to the first array (of the first of the two inner 2 x 3 array of ``a``), namely {1, 2, 3}. 
