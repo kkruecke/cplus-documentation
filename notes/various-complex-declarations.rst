@@ -397,14 +397,14 @@ whose output is:
 
 which show that for a three dimensional array:
 
-1. ``&b[0][0][0]`` is an ``int \``*, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int ``&b[0][0][1]``.
+1. ``&b[0][0][0]`` is an ``int *``, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int ``&b[0][0][1]``.
 2. ``&b[0][0]`` is of ``int (*)[5]``, or pointer to a block of five consecutive integers, and adding one to such a pointer advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five integers ``&b[0][1]``
 3. ``&b[0]`` is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two blocks of **a block of five integers**
    or ``&b[1]``.  
 4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each, and likewise adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two
-    blocks of a block of five integers each or ``&b[1]``.
+   blocks of a block of five integers each or ``&b[1]``.
 5. ``&b`` is of type ``int (*)[3][2][5]``, a pointer to three blocks of two block of a block five integers each. So adding one to such a pointer advances its address **3 x (2 x (4 x sizeof(int)))** or 120 bytes to the next block of three blocks of two blocks of
-    a block of five integers each, which is the address of one beyond ``b[1][1][4]``, the last element in the array.
+   a block of five integers each, which is the address of one beyond ``b[1][1][4]``, the last element in the array.
 
 Summary of Pointers and Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
