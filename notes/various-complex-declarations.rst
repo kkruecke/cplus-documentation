@@ -419,9 +419,12 @@ Given
 
 .. todo:: Add explanations to each of these:
 
-* **myMatrix[0]**: pointer to the first row of the 2D array
-* **myMatrix[1]**: pointer to the second row of the 2D array
-* **\*myMatrix[1]** is the address of element **myMatrix[1][0]**
+* ``myMatrix[0]``: pointer to the first row of the 2D array
+  ``\*(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``&myMatirx[0] + 0``. To actually access an element of the first inner array it must be deferenced: ``\*(*(myMatrix +0 )``,
+  which yields and ``int *`` to the first element of the array. Adding, say, two to it,  ``(*(*(myMatrix +0 )) + 2`` moves the pointer to the third value in the first inner array, and dereferencing it ``\*((*(*(myMatrix +0 )) + 2)`` returns the it.
+
+* ``myMatrix[1]``: pointer to the second row of the 2D array
+  ``\*myMatrix[1]`` is  of type ``int (*)[4]``. It is a pointer to the entire second inner array of four integers. It is equivalent to ``&myMatirx[0] + 1``.
 
 Indexing: **myMatrix[i][j]** is same as:
 
