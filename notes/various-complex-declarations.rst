@@ -58,27 +58,34 @@ Pointers, Arrays and Multidimensional Arrays
 Array Addressess in General
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For a array named, say, ``some_array``, both **&some_array[0]** and **some_array** are pointers of identical type and identical initial values. This is true regardless of the dimensions of ``som_array``\ {ndash}\ one, two, three, or higher dimensions. 
-The code below illustartes this:
+For a array named, say, ``some_array``, both ``some_array[0]`` and ``some_array`` are pointers of identical type and have identical initial values. This holds true regardless of the dimensions of ``some_array``\ |Mdash|\ be it one, two, three, or even higher dimensions. 
+The code below, compiled using **g++ -std=c++1z**, illustrates this:
 
 .. code-block:: cpp
 
+    #include <cxxabi.h>
+    #include <string>
+    #include <utility>
+    #include <iostream>
+    #include <sstream>
+ 
     template<class T> string get_typeof(const string& str, const T& t)
     {
       const std::type_info  &ti = typeid(t);
       
       int status;
     
-      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status); 
+      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);// GCC extension __cxa_demanage() is from the header <cxxabi.h>
+                                                                     // and is used to demangle the output of **typeid()**. 
       
-      return string{"The type of '"} + str + "' is '" + realname + "'. ";
+      return string{"The type of '"} + str + "' is '" + realname + "'";
     }
     
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr)
     {
       ostringstream ostr;
        
-      ostr << get_typeof(str, forward<T>(ptr)) << "', and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+      ostr << get_typeof(str, forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
     }
@@ -103,22 +110,22 @@ whose ouput is:
 .. raw:: html
 
     <pre>
-    The type of 'a1' is 'int [3]'. ', and (a1 + 1) - a1 in bytes is: 4
-    The type of '&a1[0]' is 'int*'. ', and (&a1[0] + 1) - &a1[0] in bytes is: 4
+    The type of 'a1' is 'int [3]', and (a1 + 1) - a1 in bytes is: 4
+    The type of '&a1[0]' is 'int*', and (&a1[0] + 1) - &a1[0] in bytes is: 4
     
-    The type of 'b1' is 'int [2][3]'. ', and (b1 + 1) - b1 in bytes is: 12
-    The type of '&b1[0]' is 'int (*) [3]'. ', and (&b1[0] + 1) - &b1[0] in bytes is: 12
+    The type of 'b1' is 'int [2][3]', and (b1 + 1) - b1 in bytes is: 12
+    The type of '&b1[0]' is 'int (*) [3]', and (&b1[0] + 1) - &b1[0] in bytes is: 12
     
-    The type of 'c1' is 'int [2][2][3]'. ', and (c1 + 1) - c1 in bytes is: 24
-    The type of '&c1[0]' is 'int (*) [2][3]'. ', and (&c1[0] + 1) - &c1[0] in bytes is: 24
+    The type of 'c1' is 'int [2][2][3]', and (c1 + 1) - c1 in bytes is: 24
+    The type of '&c1[0]' is 'int (*) [2][3]', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
 
-Note: While the types of **c** and **&c[0]** appear different above, they actually are not. When **c** is used as a pointer, it is no different than **&c1[0]**.  
+Note: While the types of ``c1`` and ``&c1[0]`` appear different above, they actually are not. When ``c1`` is used as a pointer in code, it is no different than using ``&c1[0]``.  
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Given a one dimensional array such as **int a[]  {1, 2, 3, 4, 5}**, the address of its first element **&a[0]** is of type **int \*** as the code below illustrates. **a** is equivalent to **&a[0]**:
+Given a one dimensional array such as ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \*** as the code below illustrates. ``a`` is equivalent to ``&a[0]``:
 
 .. code-block:: cpp
 
@@ -127,8 +134,8 @@ Given a one dimensional array such as **int a[]  {1, 2, 3, 4, 5}**, the address 
     int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-Adding one to a pointer does not increase the pointer's address by one but rather advances the address by **sizeof(int)** bytes, advancing it to the next integer, so adding one to the pointer **int *p1** above advances it to the next element in the array **a[1]**.
-In fact, **a[1]** is equivalent to **\*(a + 1)**. In general **p + n**, where **n** is an int advances to the n + 1 :sup:`th` element (recall: arrays use zero-base indexing).
+Adding one to a pointer does not increase the pointer's address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer, so adding one to the pointer ``int *p1`` above advances it to the next element in the array ``a[1]``.
+In general, ``a[n]`` is equivalent to ``\*(a + b)``. ``p + n``, where ``n`` is an int, advances the pointer to the n + 1 :sup:`th` element (recall C/C++ arrays use zero-base indexing).
 
 .. code-block:: cpp
 
@@ -137,7 +144,7 @@ In fact, **a[1]** is equivalent to **\*(a + 1)**. In general **p + n**, where **
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-The name of the array itself, here **a**, is synomous with **&a[0]**. Thus we can loop through the array with this for loop:
+The name of the array itself, here ``a``, is synomous with ``&a[0]``. Thus we can loop through the array with this for loop:
 
 .. code-block:: cpp
 
@@ -152,7 +159,6 @@ The name of the array itself, here **a**, is synomous with **&a[0]**. Thus we ca
        
         cout << a[i] << ",";
     }
-
 
 Passing One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -185,7 +191,7 @@ Higher Dimensional Arrays
  
 Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row or block of values.
 The code below shows the types of various addresses of 2-dimensional arrays, the difference in bytes when using pointer addtion, and it shows the corresponding dereference types. 
-It uses the GCC extension __cxa_demanage() from the header <cxxabi.h> to demangle the output of **typeid()**.
+It uses the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle the output of ``typeid()``.
 
 .. code-block:: cpp
 
@@ -204,178 +210,102 @@ It uses the GCC extension __cxa_demanage() from the header <cxxabi.h> to demangl
     
       char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status); 
       
-      return string{"The type of "} + str + " is '" + realname + "'. ";
+      return string{"The type of '"} + str + "' is '" + realname + "'";
     }
     
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr)
     {
       ostringstream ostr;
        
-      ostr << get_typeof(str, forward<T>(ptr)) << "', and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+      ostr << get_typeof(str, forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
     }
-    
+
     int a[5] = {1, 2, 3, 4, 5};
     
-    cout << "Type of a is: int a[5]" << ". \n";
+    cout << ptr_diff("&a[0]", &a[0]) << '\n';   
     
-    cout << "The type of a is: " << get_typeof(a) << "\n";
+    cout << ptr_diff("&a", &a) << '\n';  
     
-    cout << "The type of &a[0] is: " << get_typeof(&a[0]) << '\n'; 
-    
-    cout << "The type of &a is: " << get_typeof(&a) << "\n";
-    
-    cout << "---------------------------------\n";
-    
-    cout << ptr_diff(&a[0]) << '\n';   
-    
-    cout << ptr_diff(&a) << '\n';  
-
-    cout << "---------------------------------\n";
-            
-    cout << "Below are the above types when dereferenced:\n\n";
-    
+    cout << "\n\n";
+       
+    cout << "Below are the above types when dereferenced:\n";
+ 
     cout << "a is: int a[5]\n";
     
-    cout << "The type of *a is: " << get_typeof(*a) << "\n";
+    cout << get_typeof("*a", *a) << "\n";
     
-    cout << "The type of *&a[0] is: " << get_typeof(*&a[0]) << '\n'; 
+    cout << get_typeof("*&a[0]", *&a[0]) << "\n"; 
       
-    cout << "The type of *&a is: " << get_typeof(*&a) << "\n";
-    
-    cout << "The type of **&a is: " << get_typeof(**&a) << "\n";
-  
-Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row or block of values.
-The code below shows the types of various addresses of 2-dimensional arrays (using a GCC extension to demangle the ouput of **typeid()**), the difference in bytes when using pointer addtion, and it shows the corresponding dereference types. 
+    cout << get_typeof("*&a", *&a) << "\n";
 
-.. code-block:: cpp
-
-    #include <string>
-    #include <iostream>
-    #include <cxxabi.h>
-    #include <sstream>
-    #include <utility>
-    using namespace std;
-    
-    // GCC special extension to convert mangled name to real name
-    // See https://gcc.gnu.org/onlinedocs/libstdc++/manual/ext_demangling.html
-    template<class T> string get_typeof(const T& t)
-    {
-      const std::type_info  &ti = typeid(t);
-      
-      int status;
-    
-      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);   
-      
-      return string{realname};
-    }
-    
-    template<class T> string ptr_diff(T&& ptr)
-    {
-      ostringstream ostr;
-      
-      ostr << "When the pointer is '" << get_typeof(forward<T>(ptr)) << "', (pointer + 1) - pointer in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
-      
-      return ostr.str(); 	
-    }
-    
-    int a[5] = {1, 2, 3, 4, 5};
-    
-    cout << "Type of a is: int a[5]" << ". \n";
-    
-    cout << "The type of a is: " << get_typeof(a) << "\n";
-    
-    cout << "The type of &a[0] is: " << get_typeof(&a[0]) << '\n'; 
-    
-    cout << "The type of &a is: " << get_typeof(&a) << "\n";
-    
-    cout << "---------------------------------\n";
-    
-    cout << ptr_diff(&a[0]) << '\n';   
-    
-    cout << ptr_diff(&a) << '\n';  
-
-    cout << "---------------------------------\n";
-            
-    cout << "Below are the above types when dereferenced:\n\n";
-    
-    cout << "a is: int a[5]\n";
-    
-    cout << "The type of *a is: " << get_typeof(*a) << "\n";
-    
-    cout << "The type of *&a[0] is: " << get_typeof(*&a[0]) << '\n'; 
-      
-    cout << "The type of *&a is: " << get_typeof(*&a) << "\n";
-    
-    cout << "The type of **&a is: " << get_typeof(**&a) << "\n";
-    
-Produces this output
+    cout <<  get_typeof("**&a", **&a) << "\n";
+ 
+Produces this output:
 
 .. raw:: html
 
     <pre>
-    Type of a is: int a[5]. 
-    The type of a is: int [5]
-    The type of &a[0] is: int*
-    The type of &a is: int (*) [5]
-    ---------------------------------
-    When the pointer is 'int*', (pointer + 1) - pointer in bytes is: 4
-    When the pointer is 'int (*) [5]', (pointer + 1) - pointer in bytes is: 20
-    ---------------------------------
+    The type of '&a[0]' is 'int*', and (&a[0] + 1) - &a[0] in bytes is: 4
+    The type of '&a' is 'int (*) [5]', and (&a + 1) - &a in bytes is: 20
+
+    Below are the above types when dereferenced:
     a is: int a[5]
-    The type of *a is: int
-    The type of *&a[0] is: int
-    The type of *&a is: int [5]
-    The type of **&a is: int
-    </pre> 
+    The type of '*a' is 'int'
+    The type of '*&a[0]' is 'int'
+    The type of '*&a' is 'int [5]'
+    The type of '**&a' is 'int'
+    </pre>
+ 
+The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types. 
 
-.. todo:: Add comments on above
-
+.. todo:: Correct all text below to the end of the document so that it reflects the current code in ~/test/main.cpp
+    
 This code:
 
 .. code-block:: cpp
     
-        int b[2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; // Same as: int a[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
-        
-        int *p1 = &b[0][0]; 
+    int b[2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; // Same as: int a[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
     
-        int (*p2)[5] = &b[0]; 
+    int *p1 = &b[0][0]; 
     
-        int (*p3)[5] = b;
-        
-        int (*p4)[2][5] = &b;
-        
-        cout << "b is: int b[2][5]\n";
-        
-        cout << "The type of &b[0][0] is: " << get_typeof(&b[0][0]) << '\n'; 
+    int (*p2)[5] = &b[0]; 
     
-        cout << "The type of &b[0] is: " << get_typeof(&b[0]) << '\n'; 
-          
-        cout << "The type of b is: " << get_typeof(b) << "\n";
-        
-        cout << "The type of &b is: " << get_typeof(&b) << "\n";
-        
-        cout << "----------------------------------\n\n";
-        
-        cout << ptr_diff(&b[0][0]) << '\n';   
+    int (*p3)[5] = b;
     
-        cout << ptr_diff(&b[0]) << '\n';   
+    int (*p4)[2][5] = &b;
+    
+    cout << "b is: int b[2][5]\n";
         
-        cout << ptr_diff(b) << '\n';  
-        
-        cout << ptr_diff(&b) << '\n';  
-             
-        cout << "----------------------------------\n\n";
-        
-        cout << "b is: int b[2][5]\n";
-        
-        cout << "The type of *&b[0] is: " << get_typeof(*&b[0]) << '\n'; 
-          
-        cout << "The type of *b is: " << get_typeof(*b) << "\n";
-        
-        cout << "The type of *&b is: " << get_typeof(*&b) << "\n";
+    cout << get_typeof("&b[0][0]", &b[0][0]) << '\n'; 
 
+    cout << get_typeof("&b[0]", &b[0]) << '\n'; 
+    
+    cout << get_typeof("b", b) << "\n";
+    
+    cout << get_typeof("&b", &b) << "\n";
+    
+    cout << "----------------------------------\nPointer addtion facts for array 'int b[2][5]'\n\n";
+      
+    cout << ptr_diff("&b[0][0]", &b[0][0]) << '\n';   
+    
+    cout << ptr_diff("&b[0]", &b[0]) << '\n';   
+    
+    cout << ptr_diff("b", b) << '\n';  
+    
+    cout << ptr_diff("&b", &b) << '\n';  
+
+    cout << "----------------------------------\n\n";
+    
+    cout << "b is: int b[2][5]. Dereferenced types:\n";
+    
+    cout << get_typeof("*&b[0]", *&b[0]) << '\n'; 
+      
+    cout << get_typeof("*b", *b) << "\n";
+    
+    cout << get_typeof("*&b", *&b) << "\n";
+        
 produces this output:
 
 .. raw:: html
@@ -410,9 +340,9 @@ Preliminary Summary of 2-dimensional array pointers
   
 This shows that for a two dimensional array:
 
-1. **&a[0][0]** is an **int \*** pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **a[0][1]**. 
-2. Both **&a[0]** and **a** are of type **int (*)[5]**, pointer to a block of five consecutive integers, and adding one to it advances the pointer **4 x sizeof(int)** or 20 bytes to the next block of five consecutive integers
-3. **&a** is of type **int (*)[2][5]**, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two blocks of 'a block of five integers'.
+1. ``a[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **a[0][1]**. 
+2. Both ``&a[0]`` and ``a`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to it advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
+3. ``&a`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers'.
 
 The same logic holds for higher dimensional arrays:
 
@@ -467,14 +397,14 @@ whose output is:
 
 which show that for a three dimensional array:
 
-1. **&b[0][0][0]** is an **int \***, pointing to **b[0][0][0]**, and adding one to it advances the pointer **sizeof(int)** or four byes to the next int **&b[0][0][1]**.
-2. **&b[0][0]** is of **int (*)[5]**, or pointer to a block of five consecutive integers, and adding one to such a pointer advances the pointer **4 x sizeof(int)** or 20 bytes to the next block of five integers **&b[0][1]**
-3. **&b[0]** is of type **int (*)[2][5]**, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two blocks of **a block of five integers**
-   or **&b[1]**.  
-4. **b** is also synonomous to **&b[0]** and so is of type **int (*)[2][5]**, a pointer to two blocks of a block of five integers each, and likewise adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two
-    blocks of a block of five integers each or **&b[1]**.
-5. **&b** is of type **int (*)[3][2][5]**, a pointer to three blocks of two block of a block five integers each. So adding one to such a pointer advances its address **3 x (2 x (4 x sizeof(int)))** or 120 bytes to the next block of three blocks of two blocks of
-    a block of five integers each, which is the address of one beyond **b[1][1][4]**, the last element in the array.
+1. ``&b[0][0][0]`` is an ``int \``*, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int ``&b[0][0][1]``.
+2. ``&b[0][0]`` is of ``int (*)[5]``, or pointer to a block of five consecutive integers, and adding one to such a pointer advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five integers ``&b[0][1]``
+3. ``&b[0]`` is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each. So adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two blocks of **a block of five integers**
+   or ``&b[1]``.  
+4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[2][5]``, a pointer to two blocks of a block of five integers each, and likewise adding one to such a pointer advances its address **2 x (4 x sizeof(int))** or 40 bytes to the next block of two
+    blocks of a block of five integers each or ``&b[1]``.
+5. ``&b`` is of type ``int (*)[3][2][5]``, a pointer to three blocks of two block of a block five integers each. So adding one to such a pointer advances its address **3 x (2 x (4 x sizeof(int)))** or 120 bytes to the next block of three blocks of two blocks of
+    a block of five integers each, which is the address of one beyond ``b[1][1][4]``, the last element in the array.
 
 Summary of Pointers and Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -510,6 +440,23 @@ Indexing: **myMatrix[i][j]** is same as:
 
 * **(*(myMatrix + 1))[2]**
 
+
+In general, index operators are equivlant to pointer arithmetic and dereferencing following this pattern (using a 3-dimensional array as the example): the expxression **a[i][j][k]** is equivalent to **\*(*(*(a + i) + j) + k)**. Forr example:
+
+.. code-block:: cpp
+
+    int a[2][2][3] = {  {{ 1, 2, 3}, {4, 5, 6}}, {{ 7, 8, 9}, {10, 11, 12}} };
+    cout << "a[0][1][2] = " <<  a[0][1][2] << ", and *( (*(*(a + 0) + 1))   + 2) = " <<   *((*(*(a + 0) + 1)) + 2);
+
+.. raw:: html 
+
+    <pre>
+    a[0][1][2] = 6, and *( (*(*(a + 0) + 1))   + 2) = 6
+    </pre>
+
+``a`` is of type ``int (*)[2][3]``. ``(a + 0)`` therefore points to the first of the two inner 2  x 3 arrays. Dereferencing it yields a pointer of type ``int (*) [3]`` that points to the first array (of the first of the two inner 2 x 3 array of ``a``), namely {1, 2, 3}. 
+``(*(a + 0) + 1)`` adds one to this pointer, and moves the pointer to the second array (of the first of two inner arrays of ``a``). Dereferencing it ``(*(*(a + 0) + 1))`` yields an ``int *`` pointer that points to ``{4, 5, 6}``, and adding two
+``((*(*(a + 0) + 1))   + 2)`` moves it to ``6``. Finally, deferencing the pointer yields the pointer-to value of ``6``.
 
 In passing a multi‐dimensional array, the first array size does not have to be specified. The second (and any subsequent) dimensions must be given:  **int myFun(int list[][10]);**
 
