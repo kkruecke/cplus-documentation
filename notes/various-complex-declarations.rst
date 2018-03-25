@@ -60,8 +60,8 @@ Pointers, Arrays and Multidimensional Arrays
 Array Addressess in General
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For a array named, say, ``some_array``, both ``some_array[0]`` and ``some_array`` are pointers of identical type and have identical initial values. This holds true regardless of the dimensions of ``some_array``\ |Mdash|\ be it one, two, three, or even higher dimensions. 
-The code below, compiled using **g++ -std=c++1z**, illustrates this:
+For a array named, say, ``some_array``, both ``&some_array[0]`` and ``some_array`` are pointers of identical type and value. This holds true regardless of the number of dimensions of ``some_array``. The code below, compiled using **g++ -std=c++1z**,
+illustrates this:
 
 .. code-block:: cpp
 
@@ -76,14 +76,18 @@ The code below, compiled using **g++ -std=c++1z**, illustrates this:
       const std::type_info  &ti = typeid(t);
       
       int status;
-    
-      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);// GCC extension __cxa_demanage() is from the header <cxxabi.h>
-                                                                     // and is used to demangle the output of **typeid()**. 
+
+      /*
+         GCC's extension __cxa_demanage() is from the header <cxxabi.h>
+         and is used to demangle the output of **typeid()**.
+       */
+      char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
       
       return string{"The type of '"} + str + "' is '" + realname + "'";
     }
-    
-    template<class T> std::string ptr_diff(const std::string& str, T&& ptr)
+
+    // Using T&& allows both rvalues an lvalues to be passed and then forwared to get_typeof()
+    template<class T> std::string ptr_diff(const std::string& str, T&& ptr) 
     {
       ostringstream ostr;
        
@@ -107,7 +111,7 @@ The code below, compiled using **g++ -std=c++1z**, illustrates this:
     cout << ptr_diff("c1", c1) << '\n';
     cout << ptr_diff("&c1[0]", &c1[0]) <<  "\n\n";
         
-whose ouput is:
+and the ouput is:
 
 .. raw:: html
 
@@ -122,12 +126,13 @@ whose ouput is:
     The type of '&c1[0]' is 'int (*) [2][3]', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
 
-Note: While the types of ``c1`` and ``&c1[0]`` appear different above, they actually are not. When ``c1`` is used as a pointer in code, it is no different than using ``&c1[0]``.  
+Note: While the types of, for example, ``c1`` and ``&c1[0]`` appear different above, actually they are not. When ``c1`` is used as a pointer in code (without index operators presents), it is no different than using ``&c1[0]``. It is of the same type as
+``&c1[0]`` (and has the same value).  
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Given a one dimensional array such as ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \*** as the code below illustrates. ``a`` is equivalent to ``&a[0]``:
+Given a one dimensional array such as ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \*** as the code below illustrates. And the use of simply ``a`` is equivalent to ``&a[0]``:
 
 .. code-block:: cpp
 
@@ -136,8 +141,10 @@ Given a one dimensional array such as ``int a[] = {1, 2, 3, 4, 5}``, the address
     int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-Adding one to a pointer does not increase the pointer's address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer, so adding one to the pointer ``int *p1`` above advances it to the next element in the array ``a[1]``.
-In general, ``a[n]`` is equivalent to ``\*(a + b)``. ``p + n``, where ``n`` is an int, advances the pointer to the n + 1 :sup:`th` element (recall C/C++ arrays use zero-base indexing).
+Adding one to a pointer does not increase the pointer's address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer, so addition is scaled based on the underlying pointed-to type.. In the case of ``*p1 + ```, the pointer 
+is advanced to the next element in the array ``a[1]``, to the address ``&a[1]``.
+
+In fact, ``a[n]`` is equivalent to ``*(a + b)``. ``a + n``, where ``n`` is an int, advances the pointer to the n + 1 :sup:`th` element (recall C/C++ arrays use zero-base indexing).
 
 .. code-block:: cpp
 
@@ -146,7 +153,7 @@ In general, ``a[n]`` is equivalent to ``\*(a + b)``. ``p + n``, where ``n`` is a
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-The name of the array itself, here ``a``, is synomous with ``&a[0]``. Thus we can loop through the array with this for loop:
+Again, the name of the array itself, here ``a``, is synomous with ``&a[0]``. Thus we can loop through the array with following for-loop:
 
 .. code-block:: cpp
 
@@ -179,8 +186,9 @@ One dimensional array can be passed using either syntax below.
             cout << a[i] << ",";
         }
     }
- 
-    void print_array2(int *p, int size)
+
+    // exactly equivalent to the function above
+    void print_array2(int *p, int size) 
     {
         for (int i = 0; i < size; ++i) {
            
@@ -191,9 +199,9 @@ One dimensional array can be passed using either syntax below.
 Higher Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^ 
  
-Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row or block of values.
-The code below shows the types of various addresses of 2-dimensional arrays, the difference in bytes when using pointer addtion, and it shows the corresponding dereference types. 
-It uses the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle the output of ``typeid()``.
+Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row or block of values. The code below shows the various address types possible for a
+2-dimensional arrays, and the difference in bytes when using pointer addition for each of these various pointer types. It also shows the corresponding dereference types. It uses the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle
+the output of ``typeid()``.
 
 .. code-block:: cpp
 
@@ -244,7 +252,7 @@ It uses the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> t
 
     cout <<  get_typeof("**&a", **&a) << "\n";
  
-Produces this output:
+and the output is:
 
 .. raw:: html
 
@@ -260,9 +268,7 @@ Produces this output:
     The type of '**&a' is 'int'
     </pre>
  
-The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types. 
-
-This code:
+The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types: 
 
 .. code-block:: cpp
     
@@ -308,7 +314,7 @@ This code:
     
     cout << get_typeof("*&b", *&b) << "\n";
         
-produces this output:
+The output is:
 
 .. raw:: html
 
@@ -339,8 +345,9 @@ Preliminary Summary of 2-dimensional array pointers
 This shows that for a two dimensional array:
 
 1. ``b[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **b[0][1]**. 
-2. Both ``&b[0]`` and ``a`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to it advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
-3. ``&b`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers'.
+2. Both ``&b[0]`` and ``b`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to them advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
+3. ``&b`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers(which in this
+   case does not exist).
 
 The same logic holds for higher dimensional arrays:
 
@@ -370,7 +377,7 @@ The same logic holds for higher dimensional arrays:
     
     cout << ptr_diff("&b", &b) << "\n"; 
 
-whose output is: 
+and the output is:
 
 .. raw:: html
 
@@ -386,8 +393,12 @@ whose output is:
 
 which show that for a three dimensional array:
 
+
 1. ``&b[0][0][0]`` is an ``int *``, pointing to ``b[0][0][0]``, and adding one to it advances the pointer ``sizeof(int)`` or four byes to the next int, whose address is  ``&b[0][0][1]``.
 2. ``&b[0][0]`` is of ``int (*)[2]``, or pointer to a block of two consecutive integers, and adding one to such a pointer advances the pointer ``2 x sizeof(int)`` or 8 bytes to the next block of two integers at ``&b[0][1]``, which is the array ``{3, 4}``.
+
+..   Note:: ``b[0][0]`` is not of the same type as ``&b[0][0]``, although ``&b[0][0][0]`` and ``b`` are, when ``b`` is used as a pointer and without any accompanying array index operators.
+
 3. ``&b[0]`` is of type ``int (*)[3][2]``, a pointer to three blocks of a block of two integers each. So adding one to such a pointer advances its address **3 x (2 x sizeof(int))** or 24 bytes to the next block of three blocks of **a block of two integers**
    or ``&b[1]``, which is the array ``{{7, 8}, {9, 10}, {11, 12}}``.  
 4. ``b`` is also synonomous to ``&b[0]`` and so is of type ``int (*)[3][2]``, a pointer to three blocks of a block of two integers each, and likewise adding one to such a pointer advances its address **3 x (2 x sizeof(int))** or 24 bytes to the next block of three
@@ -395,34 +406,40 @@ which show that for a three dimensional array:
 5. ``&b`` is of type ``int (*)[2][3][2]``, a pointer to two blocks of three blocks of a block two integers each. So adding one to such a pointer advances its address **2 x (3 x (2 x sizeof(int)))** or 48 bytes to the next block of two blocks of three blocks of
    a block of two integers each, whose physical address is ``sizeof(int) + &b[1][2][1]``, four bytes beyond the last entry in ``b``.
 
-Summary of Pointers and Arrays
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Summary Example of Various Pointer Types for Arrays
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Given
 
 .. code-block:: cpp
 
-    int myMatrix[2][4] = { {1,2,3,4},{5,6,7,8} };
+    int myMatrix[2][4] = { {10,20,30,40},{50,60,70,80} };
 
 ``myMatrix[0]`` is a pointer to the first row of the 2D array. ``(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``(&myMatirx[0] + 0)``. To actually access elements of
- the first inner array it must be deferenced: ``*(myMatrix + 0)``, which yields an ``int *`` to the first element of the array. Adding two to it, ``(*(myMatrix +0)) + 2``, moves the pointer to the third value in the first inner array. Since dereferencing
- is always applied before any pointer arithmetic, ``(*(myMatrix +0)) + 2`` can be simplified as ``*(myMatrix +0) + 2``, and dereferencing it ``*(*(myMatrix +0) + 2)`` returns the int ``3``.
+ the first inner array it must be deferenced: ``*(myMatrix + 0)``, which yields an ``int *`` to the first element of the array. Adding two to it, ``(*(myMatrix +0)) + 2``, moves the pointer to the third value in the first inner array. 
 
-``myMatrix[1]`` is likewise a pointer to the second row of the 2D array, and ``*myMatrix[1]`` is  of type ``int (*)[4]``. It is a pointer to the entire second inner array of four integers. It is equivalent to ``&myMatirx[0] + 1``.
+.. todo:: Read these links below and incorporate any relevant points:
+
+* `Order of operations for dereference and bracket-ref in C <https://stackoverflow.com/questions/3552844/order-of-operations-for-dereference-and-bracket-ref-in-c>`_ 
+* `C Pointers <http://www.cs.yale.edu/homes/aspnes/pinewiki/C(2f)Pointers.html>`_ 
+* `Everything you Need to Know about Pointers in C <https://edoras.sdsu.edu/doc/c/pointers-1.2.2/>`_
+
+.. todo:: The statement below is wrong--I believe--in the sense that it might not be a pointer.
 
 ``*((*(myMatrix + 1)) + 2)``       
 
 ``myMatrix`` is the same as ``&myMatrix[0]``, which are of type ``int (*4)``. This is the the address of the first row of ``myMatrix``. Adding one ``(myMatrix + 1)`` advances the pointer to the second row of ``myMatrix``. Deferencing 
 ``*(myMatrix + 1)`` returns an ``int *`` to the first element of the one-dimensional array ``{5, 6, 7, 8}``. ``*(myMatrix + 1)`` is equivalent to ``int *p = &myMatrix[1][0]``. Then adding 2, ``(*(myMatrix + 1)) + 2``, advances the ``int *`` to the third element
-of the array ``{5, 6, 7, 8}`` , and then deferencing it ``*((*(myMatrix + 1)) + 2)`` returns the integer at that position ``7``.
+of the array ``{5, 6, 7, 8}`` , and then deferencing it ``*((*(myMatrix + 1)) + 2)`` returns the integer at that position ``7`` 
 
-``*(&myMatrix[0][0] + 4 * 1 + 2)`` ... add explanation. 
+``*(&myMatrix[0][0] + 4 * 1 + 2)``\ |mdash|\ ``&myMatrix[0][0]`` is of type ``int *``.... finish explanation.
 
 ``*(myMatrix[1] + 2)`` ... add explanation. 
 
 ``(*(myMatrix + 1))[2]`` ... add explanation. 
 
-In general, index operators are equivlant to pointer arithmetic and dereferencing following this pattern, here using a 3-dimensional array as the example: the expxression **a[i][j][k]** is equivalent to **\*(*(*(a + i) + j) + k)**. For example:
+In general, index operators are equivlant to pointer arithmetic and dereferencing following the pattern used here with a 3-dimensional array but applicable to arrays of any higher dimensions. Given an array ``a`` of three dimensions, say, ``a[n][m][n]``,
+the expxression **a[i][j][k]** is always equivalent to **\*(*(*(a + i)) + j) + k)**. For example:
 
 .. code-block:: cpp
 
@@ -440,19 +457,3 @@ In general, index operators are equivlant to pointer arithmetic and dereferencin
 ``((*(*(a + 0) + 1))   + 2)`` moves it to ``6``. Finally, deferencing the pointer yields the pointer-to value of ``6``.
 
 In passing a multi‐dimensional array, the first array size does not have to be specified. The second (and any subsequent) dimensions must be given:  **int myFun(int list[][10]);**
-
-.. todo::
-
-     Synthesize the material in these articles with code examples that illustrate the main points. Copy and past the appropriate code, adding my own commnet, and including the output.
-
-* `Multidimensional Pointer Arithmetic in C/C+ <https://www.geeksforgeeks.org/multidimensional-pointer-arithmetic-in-cc/>`_.
-* `Pointer to an Array | Array Pointer <https://www.geeksforgeeks.org/pointer-array-array-pointer/>`_.
-
-Deciphering Complex C/C++ Declarations
---------------------------------------
-
-`How to interpret complex C/C++ declarations <https://www.codeproject.com/Articles/7042/How-to-interpret-complex-C-C-declarations>`_
-
-https://news.ycombinator.com/item?id=12775735
-
-`Reading Types in C Using the Right Left Walk Method <http://www.cs.uml.edu/%7Ecanning/101/RLWM.pdf>`_.
