@@ -296,7 +296,7 @@ The code below shows the types of various pointer types of 2-dimensional arrays 
       
     cout << ptr_diff("&b[0][0]", &b[0][0]) << '\n';   
     
-    cout << ptr_diff("b[0][0]", b[0][0]) << '\n';   // TODO: ???????????????????????????????????
+    cout << ptr_diff("b[0][0]", b[0][0]) << '\n';   // TODO: ??
 
     cout << ptr_diff("&b[0]", &b[0]) << '\n';   
     
