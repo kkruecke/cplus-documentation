@@ -126,8 +126,8 @@ and the ouput is:
     The type of '&c1[0]' is 'int (*) [2][3]', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
 
-Note: While the types of, for example, ``c1`` and ``&c1[0]`` appear different above, actually they are not. When ``c1`` is used as a pointer in code (without index operators presents), it is no different than using ``&c1[0]``. It is of the same type as
-``&c1[0]`` (and has the same value).  
+.. note: While the types of, for example, ``c1`` and ``&c1[0]`` appear different above, actually they are not. When ``c1`` is used as a pointer in code without any index operators present, it is no different than using ``&c1[0]``. It is of the same type as
+   ``&c1[0]`` and has the same pointer value.  
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^

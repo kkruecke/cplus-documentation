@@ -5,6 +5,7 @@ Notes on Data Structures and Algorithms in C++
    :maxdepth: 2
 
    notes/various-complex-declarations.rst
+   notes/observing-deduced-types.rst
    notes/rvalue-forwarding-refs.rst
    notes/regex.rst
    notes/merge-sort.rst
