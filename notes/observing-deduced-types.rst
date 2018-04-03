@@ -6,14 +6,17 @@
 Observing Deduced Types
 =======================
 
-Scott Meyer's presentation ` <>`_ on youtube and in his book "Effective Modern C++" shows a trick for forcing the compiler to display how it is deducing a type.
+Scott Meyer's presentation `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ at **CPPCon 2014** (starting around minute 43) shows a technique for forcing the compiler to display the type it has deduced. The code, shown  below, results
+in two compile errors that display the deduced type of ``T`` and the deduced type of ``param``:
 
 .. code-block:: cpp
+
+    template<typename T> TD;   // Declaration for TD. TD == "Type Displayer"
 
     template<typename T> void f(T& param)  // template w/types of interest
     {
       TD<T> tType;                      // cause T to be shown
-      TD<decltype(param)>  paramType;  // ditto for param's type     
+      TD<decltype(param)>  paramType;   // ditto for param's type     
     }
 
 Examples:
@@ -38,11 +41,11 @@ Output is:
 Output is:
 
 
-If we change ``f`` to take a ``const &&`` and use the same variables as above:
+Now if change ``f`` to take a ``const &&`` and run the same examples, we get the results show below.
  
 .. code-block:: cpp
 
-    template<typename T> void f2(const T& param)  // template w/types of interest
+    template<typename T> void f(const T& param)  // template w/types of interest
     {
       TD<T> tType;                    // cause T to be shown
       TD<decltype(param)>  paramType; // ditto for param's type     
