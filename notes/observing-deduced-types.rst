@@ -6,8 +6,8 @@
 Observing Deduced Types
 =======================
 
-Scott Meyer's presentation `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ at **CPPCon 2014** (starting around minute 43) shows a technique for forcing the compiler to display the type it has deduced. The code, shown  below, results
-in two compile errors that display the deduced type of ``T`` and the deduced type of ``param``:
+Scott Meyer's presentation `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ at **CPPCon 2014** (starting around minute 43) shows a technique for forcing the compiler to display the type it has
+deduced either when 1.) a function template is instantiated or 2.) an auto variable is defined. The code, shown  below, results in two compile errors that display the deduced type of ``T`` and the deduced type of ``param``:
 
 .. code-block:: cpp
 
