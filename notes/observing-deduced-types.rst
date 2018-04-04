@@ -26,7 +26,7 @@ Examples:
    int x = 27;  
    f(x);  // main.cpp line 69
 
-Output is:
+Using g++ version 7.2.0, the output is:
 
 .. raw:: html
 
@@ -46,7 +46,7 @@ Output is:
    int& rx = x;
    f(rx); // main.cpp line 73
 
-Output is:
+Using g++ version 7.2.0, the output is:
 
 .. raw:: html
 
@@ -65,7 +65,7 @@ Output is:
    const int& crx = x;
    f(crx); // main.cpp line 75
 
-Output is:
+Using g++ version 7.2.0, the output is:
 
 .. raw:: html
 
@@ -93,7 +93,7 @@ Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples,
    int x = 27;  
    f(x);
 
-Output is:
+Using g++ version 7.2.0, the output is:
 
 .. todo:: complete
  
@@ -102,7 +102,7 @@ Output is:
    int& rx = x;
    f(rx);
 
-Output is:
+Using g++ version 7.2.0, the output is:
  
 .. todo:: complete
  
@@ -111,6 +111,6 @@ Output is:
    const int& crx = x;
    f(crx);
 
-Output is:
+Using g++ version 7.2.0, the output is:
 
 .. todo:: complete
