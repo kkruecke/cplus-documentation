@@ -24,24 +24,63 @@ Examples:
 .. code-block:: cpp
 
    int x = 27;  
-   f(x);
+   f(x);  // main.cpp line 69
 
 Output is:
- 
+
+.. raw:: html
+
+    <pre>
+    main.cpp: In instantiation of ‘void f(T&) [with T = int]’:
+    main.cpp:69:6:   required from here
+    main.cpp:53:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:54:24: error: ‘TD<int&> paramType’ has incomplete type
+      TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
+   </pre>
+
 .. code-block:: cpp
 
    int& rx = x;
-   f(rx);
+   f(rx); // main.cpp line 73
+
+Output is:
+
+.. raw:: html
+
+    <pre>
+    main.cpp: In instantiation of ‘void f(T&) [with T = int]’:
+    main.cpp:73:7:   required from here
+    main.cpp:53:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:54:24: error: ‘TD<int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+    </pre>
 
 .. code-block:: cpp
  
    const int& crx = x;
-   f(crx);
+   f(crx); // main.cpp line 75
 
 Output is:
 
+.. raw:: html
 
-Now if change ``f`` to take a ``const &&`` and run the same examples, we get the results show below.
+    <pre>
+    main.cpp: In instantiation of ‘void f(T&) [with T = const int]’:
+    main.cpp:75:8:   required from here
+    main.cpp:53:9: error: ‘TD<const int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:54:24: error: ‘TD<const int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
+    </pre>
+
+Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples, we get the results show below.
  
 .. code-block:: cpp
 
@@ -55,6 +94,8 @@ Now if change ``f`` to take a ``const &&`` and run the same examples, we get the
    f(x);
 
 Output is:
+
+.. todo:: complete
  
 .. code-block:: cpp
 
@@ -63,10 +104,13 @@ Output is:
 
 Output is:
  
+.. todo:: complete
+ 
 .. code-block:: cpp
  
    const int& crx = x;
    f(crx);
 
 Output is:
- 
+
+.. todo:: complete
