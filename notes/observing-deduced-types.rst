@@ -6,14 +6,14 @@
 Observing Deduced Types
 =======================
 
-Scott Meyer's presentation `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ at **CPPCon 2014** (starting around minute 43) shows a technique for forcing the compiler to display the type it has
-deduced either when 1.) a function template is instantiated or 2.) an auto variable is defined. The code, shown  below, results in two compile errors that display the deduced type of ``T`` and the deduced type of ``param``:
+Scott Meyer's presentation at  at **CPPCon 2014** on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ demonstates a technique(starting around minute 43) to force the compiler to display the types it has
+deduced when 1.) a function template is instantiated or when 2.) an auto variable is defined. The code shown  below results forces two compile errors that display both the deduced type of ``T`` and the deduced type of ``param``:
 
 .. code-block:: cpp
 
     template<typename T> TD;   // Declaration for TD. TD == "Type Displayer"
 
-    template<typename T> void f(T& param)  // template w/types of interest
+    template<typename T> void f(T& param)  // A template w/types of interest
     {
       TD<T> tType;                      // cause T to be shown
       TD<decltype(param)>  paramType;   // ditto for param's type     
@@ -80,7 +80,7 @@ Using g++ version 7.2.0, the output is:
                             ^~~~~~~~~
     </pre>
 
-Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples, we get the results show below.
+Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples, we get:
  
 .. code-block:: cpp
 
@@ -93,7 +93,7 @@ Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples,
    int x = 27;  
    f(x);
 
-Using g++ version 7.2.0, the output is:
+the output is:
 
 .. todo:: complete
  
@@ -102,7 +102,7 @@ Using g++ version 7.2.0, the output is:
    int& rx = x;
    f(rx);
 
-Using g++ version 7.2.0, the output is:
+the output is:
  
 .. todo:: complete
  
@@ -111,6 +111,6 @@ Using g++ version 7.2.0, the output is:
    const int& crx = x;
    f(crx);
 
-Using g++ version 7.2.0, the output is:
+the output is:
 
 .. todo:: complete
