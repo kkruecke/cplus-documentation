@@ -6,6 +6,8 @@
 Observing Deduced Types
 =======================
 
+.. todo:: The ^~~~~~~~~~~~~~~~~ seems to be in the wrong place for the paramType. Just use blockquote instead of 'raw:: html'
+
 Scott Meyer's presentation at  at **CPPCon 2014** on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ demonstates (at around minute 43) how to force the compiler to display the types it has
 deduced when 1.) a function template is instantiated or when 2.) an auto variable is defined. The code below forces two compile errors that display both the deduced type of ``T`` and ``param``:
 
