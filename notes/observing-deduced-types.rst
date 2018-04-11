@@ -6,10 +6,8 @@
 Observing Deduced Types
 =======================
 
-.. todo:: The ^~~~~~~~~~~~~~~~~ seems to be in the wrong place for the paramType. Just use blockquote instead of 'raw:: html'
-
-Scott Meyer's presentation at  at **CPPCon 2014** on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ demonstates (at around minute 43) how to force the compiler to display the types it has
-deduced when 1.) a function template is instantiated or when 2.) an auto variable is defined. The code below forces two compile errors that display both the deduced type of ``T`` and ``param``:
+Scott Meyers lecture on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ (at around minute 43) gives a technique to force the compiler to display the types it has
+deduced when 1.) a function template is instantiated or when 2.) an auto variable is defined. This code
 
 .. code-block:: cpp
 
@@ -21,68 +19,57 @@ deduced when 1.) a function template is instantiated or when 2.) an auto variabl
       TD<decltype(param)>  paramType;   // ditto for param's type     
     }
 
-Examples:
+forces two compile errors that will display both the deduced type for  ``T`` and ``param``.  Examples:
 
 .. code-block:: cpp
 
-   int x = 27;  
-   f(x);  // main.cpp line 69
+   int x = 27;  // x is an int
+   f(x);  // main.cpp line 67
 
-Using g++ version 7.2.0, the output is:
+Using g++ version 7.2.0, the output is::
 
-.. raw:: html
-
-    <pre>
     main.cpp: In instantiation of ‘void f(T&) [with T = int]’:
-    main.cpp:69:6:   required from here
-    main.cpp:53:9: error: ‘TD<int> tType’ has incomplete type
-       TD<T> tType;               // cause T to be shown
-             ^~~~~
-    main.cpp:54:24: error: ‘TD<int&> paramType’ has incomplete type
-      TD<decltype(param)>  paramType; // ditto for param's type
-                            ^~~~~~~~~
-   </pre>
-
-.. code-block:: cpp
-
-   int& rx = x;
-   f(rx); // main.cpp line 73
-
-Using g++ version 7.2.0, the output is:
-
-.. raw:: html
-
-    <pre>
-    main.cpp: In instantiation of ‘void f(T&) [with T = int]’:
-    main.cpp:73:7:   required from here
+    main.cpp:67:6:   required from here
     main.cpp:53:9: error: ‘TD<int> tType’ has incomplete type
        TD<T> tType;               // cause T to be shown
              ^~~~~
     main.cpp:54:24: error: ‘TD<int&> paramType’ has incomplete type
        TD<decltype(param)>  paramType; // ditto for param's type
-    </pre>
+                            ^~~~~~~~~
 
+.. code-block:: cpp
+
+   int& rx = x;  // rx is a reference to an int
+   f(rx); // main.cpp line 70
+
+Using g++ version 7.2.0, the output is::
+
+    main.cpp: In instantiation of ‘void f(T&) [with T = int]’:
+    main.cpp:70:6:   required from here
+    main.cpp:60:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:61:24: error: ‘TD<int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
+    
 .. code-block:: cpp
  
-   const int& crx = x;
-   f(crx); // main.cpp line 75
+   const int& crx = x;  // crx is a reference to a const int
+   f(crx); // main.cpp line 74
 
-Using g++ version 7.2.0, the output is:
+Using g++ version 7.2.0, the output is::
 
-.. raw:: html
-
-    <pre>
     main.cpp: In instantiation of ‘void f(T&) [with T = const int]’:
-    main.cpp:75:8:   required from here
-    main.cpp:53:9: error: ‘TD<const int> tType’ has incomplete type
+    main.cpp:74:8:   required from here
+    main.cpp:60:9: error: ‘TD<const int> tType’ has incomplete type
        TD<T> tType;               // cause T to be shown
              ^~~~~
-    main.cpp:54:24: error: ‘TD<const int&> paramType’ has incomplete type
+    main.cpp:61:24: error: ‘TD<const int&> paramType’ has incomplete type
        TD<decltype(param)>  paramType; // ditto for param's type
                             ^~~~~~~~~
-    </pre>
 
-Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples, we get:
+Now if ``f`` is changed to take a ``const &``, and we re-run the same examples, we get:
  
 .. code-block:: cpp
 
@@ -92,27 +79,50 @@ Now if ``f`` is changed to take a ``const &&``, and we re-run the same examples,
       TD<decltype(param)>  paramType; // ditto for param's type     
     }
 
-   int x = 27;  
-   f(x);
-
-the output is:
-
-.. todo:: complete
- 
 .. code-block:: cpp
 
-   int& rx = x;
-   f(rx);
+   int x = 27;
+   f(rx);   // line 67
 
-the output is:
- 
-.. todo:: complete
- 
+the output is::
+
+    main.cpp: In instantiation of ‘void f(const T&) [with T = int]’:
+    main.cpp:67:6:   required from here
+    main.cpp:60:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:61:24: error: ‘TD<const int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
+     
 .. code-block:: cpp
  
-   const int& crx = x;
-   f(crx);
+   int& rx = x; // rx is a reference to an int
+   f(rx);  // line 70
 
-the output is:
+the output is::
 
-.. todo:: complete
+    main.cpp: In instantiation of ‘void f(const T&) [with T = int]’:
+    main.cpp:70:7:   required from here
+    main.cpp:60:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:61:24: error: ‘TD<const int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
+      
+.. code-block:: cpp
+ 
+   const int& crx = x; // crx is a reference to a const int.
+   f(crx); // line 74
+
+the output is::
+
+    main.cpp: In instantiation of ‘void f(const T&) [with T = int]’:
+    main.cpp:74:8:   required from here
+    main.cpp:60:9: error: ‘TD<int> tType’ has incomplete type
+       TD<T> tType;               // cause T to be shown
+             ^~~~~
+    main.cpp:61:24: error: ‘TD<const int&> paramType’ has incomplete type
+       TD<decltype(param)>  paramType; // ditto for param's type
+                            ^~~~~~~~~
