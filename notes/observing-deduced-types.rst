@@ -6,8 +6,8 @@
 Observing Deduced Types
 =======================
 
-Scott Meyers lecture on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ (at around minute 43) gives a technique to force the compiler to display the types it has
-deduced when 1.) a function template is instantiated or when 2.) an auto variable is defined. This code
+Scott Meyers lecture on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ (at around minute 43) explains a technique to force compilers to display the types it deduces when a function template is instantiated or when an auto variable
+is defined. Here is the code 
 
 .. code-block:: cpp
 
@@ -19,7 +19,7 @@ deduced when 1.) a function template is instantiated or when 2.) an auto variabl
       TD<decltype(param)>  paramType;   // ditto for param's type     
     }
 
-forces two compile errors that will display both the deduced type for  ``T`` and ``param``.  Examples:
+that forces two compile errors that will display both the deduced type for  ``T`` and ``param``.  Examples:
 
 .. code-block:: cpp
 
