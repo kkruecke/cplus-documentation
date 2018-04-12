@@ -1,6 +1,9 @@
 Use of auto and decltype
 ========================
 
+How auto deduces types
+-----------------------
+
 When auto sets the type of a declared variable from its initializing expression, it proceeds as follows:
 
 1. First, if an auto vairable is assigned from a reference, the reference is ignored in determing the type of the auto variable. For example,
@@ -30,7 +33,7 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
     const auto& a = crx; // The type of a is 'const int&' 
 
 Further Examples
-^^^^^^^^^^^^^^^^
+----------------
 
 To further clarify the use of ``auto&``. What happens when a ``auto& rc`` is assigned from a ``const int``?
 
@@ -43,7 +46,7 @@ To further clarify the use of ``auto&``. What happens when a ``auto& rc`` is ass
 Obviously, ``c`` cannot be changed because it is ``const``. Therefore ``rc`` must be  a ``const int&``. Note: This example still adheres to the two rules above (since c was not a reference).
 
 Use of auto&&
-^^^^^^^^^^^^^
+-------------
 
 ``auto&&`` behaves like template functions parameters that are declared using ``&&``:
 
