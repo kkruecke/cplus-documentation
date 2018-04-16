@@ -81,6 +81,25 @@ Use of auto&&
    T t1{  f(example1) };
    T t2{ f(Example{} );  // rvalue
 
+decltype(expression)
+--------------------
+
+**decltype** means 'the declared type'. If you use decltype with a name, it will give you the declared type of that name:
+
+.. code-block:: cpp
+
+    int x = 10;
+    decltype(x); //  decltype(x) = int
+
+    const auto& rx = x;
+    decltype(rx); //  decltype(x) = const int&
+
+If you have an expression instead of a name, then ``decltype(expr)`` is either an lvalue or an rvalue. If it an lvalue, then decltype will add a reference to it.
+
+.. todo:: complete this will examples. This is based on `Scott Meyers Lecture <https://www.youtube.com/watch?v=wQxj20X-tIU>`_, starting at minute 52.
+
+
+
 Template Functions Returning ``auto`` versus ``decltype(auto)``
 ----------------------------------------------------------------
 
