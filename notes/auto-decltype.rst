@@ -94,7 +94,13 @@ decltype(expression)
     const auto& rx = x;
     decltype(rx); //  decltype(x) = const int&
 
-If you have an expression instead of a name, then ``decltype(expr)`` is either an lvalue or an rvalue. If it an lvalue, then decltype will add a reference to it.
+If you have an expression instead of a name, then ``decltype(expr)`` is either an lvalue or an rvalue. If it an lvalue, then decltype will add a reference to it. Below we add parenthesis to ``x``, making it an expression not a name
+
+.. code-block:: cpp
+
+    decltype((x));
+
+and the resul of ``decltype((x))`` is ``int &``. Again, because ``(x)`` is an expression not a name, decltype adds a reference to the type of lvalue expression.
 
 .. todo:: complete this will examples. This is based on `Scott Meyers Lecture <https://www.youtube.com/watch?v=wQxj20X-tIU>`_, starting at minute 52.
 
