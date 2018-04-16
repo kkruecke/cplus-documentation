@@ -690,9 +690,7 @@ Note the output of the code below, where first an lvalue then an rvlaue is passe
 
     shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };
 
-The output is:    
-
-.. code-block:: cpp
+The output is::    
 
     In partial template specialization of struct state_type<T&>
      A::A(std::string& lhs) invoked.
@@ -728,8 +726,7 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
     } 
 
 If you use just ``S&`` instead of ``remove_reference<S>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
-"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to
-force us to do so." 
+"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." 
 
 .. code-block:: cpp
 
