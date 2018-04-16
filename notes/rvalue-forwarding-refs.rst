@@ -543,6 +543,7 @@ Move Conclusion:
 
 ``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``remove_reference<T>`` to do this.
 
+
 Helpful Articles on Rvalue References and Move Semantics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -860,7 +861,54 @@ Below Vector now has a new template member function ``emplace_back`` that takes 
     v.push_back(Employee{"John Doe", 15, 0});
     v.emplace_back("Bob Smith", 45, 80000);
 
-See:
+Overloading involving both rvalues and forwarding references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What happens when a function template is overloaded with two versions: one taking an lvalue reference and the other a forwarding reference? For example:
+
+.. code-block:: cpp
+
+    template<typename T> void g(T& param) noexcept
+    {
+      cout << "In g(T& param)" << endl;
+    }
+    
+    template<typename T> void g(T&& param) noexcept
+    {
+      cout << "In g(T&& param)" << endl;
+    }
+    
+    int x = 20;
+    g(11);
+    g(x);
+
+In this case, the lvalue reference version always wins, so the output would be::
+
+    In g(T&& param)
+    In g(T& param)
+ 
+However, if we remove the overload on the lvalue reference
+See these links for move above forwarding references:
+
+.. code-block:: cpp
+
+    template<typename T> void g(T&& param) noexcept
+    {
+      cout << "In g(T&& param)" << endl;
+    }
+    
+    int x = 20;
+    g(11);
+    g(x);
+
+Then the output is::
+
+    In g(T&& param)
+    In g(T&& param)
+
+as one would expect.
+
+Further articles on forwarding references:
 
 #. `Modern C++ Features -- in place construction <https://arne-mertz.de/2016/02/modern-c-features-in-place-construction/>`_
 #. https://www.youtube.com/watch?v=ECoLo17nG5c
