@@ -6,8 +6,6 @@
 Understanding const and const Correctness
 =========================================
 
-.. todo:: proof read and correct.
-
 const and const Pointers
 ------------------------
 
@@ -44,7 +42,7 @@ A const pointer whose assigned address value cannot be reassigned is declared an
      cpint = &z; // Error, pint is read-only
      *cpint = 20; // o.k., *pint is not const. It is read/write  
 
-A const point to const data is declared:
+A const pointer to const data is declared:
 
 .. code-block:: cpp
 
@@ -52,4 +50,4 @@ A const point to const data is declared:
     int y = 11; 
     const int * const cpintc = &x;
     *cpintc = 20; // Error: *cpintc is read only
-    cpintc = &y;   // Error: cpintc is read only 
+    cpintc = &y;   // Error: cpintc is read only, too 
