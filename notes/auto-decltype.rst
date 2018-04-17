@@ -1,5 +1,5 @@
-Use of auto and decltype
-========================
+Use of auto, decltype(), and decltype(auto)
+===========================================
 
 How auto deduces types
 -----------------------
@@ -103,9 +103,6 @@ it is not longer solely a name:
 
 and the result of ``decltype((x))`` is ``int &`` because ``(x)`` is an expression not a name, and thus decltype adds a reference to the type of the lvalue expression.
 
-.. todo:: complete this will examples. This is based on `Scott Meyers Lecture <https://www.youtube.com/watch?v=wQxj20X-tIU>`_, starting at minute 52.
-
-
 Template Functions Returning ``auto`` versus ``decltype(auto)``
 ----------------------------------------------------------------
 
@@ -134,7 +131,9 @@ template ``get_value()`` is ``auto``, instead of returning ``in&``, ``int`` is r
     vector<int> v{1 ,2 ,3 ,4 5};
     auto y = v[3]; // y is of type 'int' not 'int&'
 
-To return the desired ``int&`` return type, the type identical to ``c[i]``, we must use ``decltype(auto)``.  This will retun the same type as ``y`` and ``z`` below:
+
+This is because the ``auto`` return type uses **template (not auto) type deduction rules** and not the normal auto type deduction rules for objects. But, again, when auto is used as a return type, it uses template type deduction rules. Therefore,
+to return the desired ``int&`` return type above, the type identical to ``c[i]``, we must use ``decltype(auto)``, which will retun the same type as ``y`` and ``z`` below
 
 .. code-block:: cpp
 
@@ -150,11 +149,11 @@ To return the desired ``int&`` return type, the type identical to ``c[i]``, we m
     
     cout << "v[3] = " << v[3] << ", x = " << x << ", y = " << y << ", and z = " << z << endl;
     
-Produces this output::
+The output is::
 
     v[3] = 10, x = 4, y = 10, and z = 10
 
-Therefore, we must reimplement get_values as:
+because the **decltype(auto)** means 'automatically deduce the return type using the decltype type deduction rules'. So we must reimplement ``get_values()`` as
 
 .. code-block:: cpp
 
@@ -181,3 +180,9 @@ which produces:
     {
         return c[i];
     }
+
+In summary, we need to know the use case for your function: do you want template type deduction rules, then use ``auto`` for the return type; if you want the decltype type deduction, then use ``decltype(auto)``. It often boils down to whether you want
+an lvalue reference return or an rvalue. In general, ``decltype(auto)`` will return the type of the actual expression or object being returned. So in general it is the first choice to always consider.
+rules described above.
+
+Finally, the same comments about template returns types apply to lambdas.
