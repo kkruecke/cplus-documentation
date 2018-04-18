@@ -861,7 +861,7 @@ Below Vector now has a new template member function ``emplace_back`` that takes 
     v.push_back(Employee{"John Doe", 15, 0});
     v.emplace_back("Bob Smith", 45, 80000);
 
-``emplace_back()`` creates the new vector element in-place, in the vector itself, eliminating the need for creating and them move'ing the temporary.
+``emplace_back()`` creates the new vector element in-place, in the vector itself, using the object's forwarded parameters, and thus eliminating the creation and moving of a temporary object into the vector.
 
 Overloading involving both rvalues and forwarding references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
