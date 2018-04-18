@@ -713,8 +713,8 @@ reference, if it has a name, is an lvalue. So we need to remove the name with a 
        return std::shared_ptr<T>{ new T( static_cast<ARG&&>(arg) ) };  // Cast returns a nameless parameter.
     }
 
-Now when ``lvaluestr`` is passed, ``ARG&&`` becomes ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an rvalue is passed, however, the lvalue ``arg`` is  cast
-to a nameless rvalue. 
+Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string&&&``, and after applying the reference collapsing rules is simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an rvalue is passed, however,
+the lvalue ``arg`` is cast to a nameless rvalue. 
 
 The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do the static_cast, which looks like:
 
@@ -816,8 +816,8 @@ which will cause the ``A::A(string&&)`` constructor will be invoked!
 
 .. _in_place_construction:
 
-In-Place Construction using Perfect Forwarding
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Application of Perfect Forwarding
+---------------------------------
 
 Below Vector now has a new template member function ``emplace_back`` that takes variadic `forwarding references`_.
 
@@ -860,6 +860,8 @@ Below Vector now has a new template member function ``emplace_back`` that takes 
 
     v.push_back(Employee{"John Doe", 15, 0});
     v.emplace_back("Bob Smith", 45, 80000);
+
+``emplace_back()`` creates the new vector element in-place, in the vector itself, eliminating the need for creating and them move'ing the temporary.
 
 Overloading involving both rvalues and forwarding references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
