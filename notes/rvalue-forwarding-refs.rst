@@ -7,9 +7,9 @@ Rvalue References and Forwarding References in C++
 Move Semantics
 --------------
 
-This Vector class serves as a motivating example for explaining rvalues and move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with an rvalue reference (see :ref:`rvalue-reference`). This allows
-the compiler to always chose the most effecient constructor or assignment operator when an rvalue is passed as input. Below is template ``Vector`` class.  It has the usual copy constructor and assignment operator as well as ``void push_back(const T&)``
-that take an ``const T&``:
+This Vector class serves as a motivating example for explaining rvalues and move semantics. As of C++11 move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference, an rvalue reference 
+(see :ref:`rvalue-reference`). Doing so allows the compiler to always chose the more effecient constructor (or assignment operator) when an rvalue is passed. Below is template ``Vector`` class. It has the usual copy constructor and assignment operator as well as
+``void push_back(const T&)`` that take an ``const T&``:
 
 .. code-block:: cpp
 
@@ -147,8 +147,8 @@ that take an ``const T&``:
 rvalue references and their role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an rvalue. An lvalue on the other hand is an object whose address can always be taken. For an in-depth details see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. 
-Below are some example of rvalue and lvalues:
+An lvalue is object that has name, an object whose address can be taken. If an object is not an lvalue it is called an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
+rvalue. The address of an lvalue on the other hand can always be taken. For more in-depth details see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some example of rvalue and lvalues:
 
 .. code-block:: cpp
 
@@ -183,13 +183,13 @@ The rvalue reference j above is not really of any value. While we can change the
     j = 9;
     cout << j;  // prints: 9
 
-The temporay is deleted once j goes out of scope, and this technique has no real applicability. The real value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
-rvalue, is there method that takes an rvalue reference"?, and if there is, it invokes it. 
+The temporay is deleted once j goes out of scope, and thus this technique has no real applicability. The real value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
+rvalue, is there method that takes an rvalue reference", and if there is, it invokes it. 
 
 Implications for constructors and assignment operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references.  This allows the compiler to now branch at compiler time depending on whether the constructor (or assignment operator) is
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references. This allows the compiler to now branch at compiler time depending on whether the constructor (or assignment operator) is
 being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
 
 Implementation of move constructor and move assignment operator
@@ -231,11 +231,11 @@ The move constructor and move assignment, both of which take rvalue references, 
         
          Vector(const Vector<T>& lhs);
          
-         Vector(Vector<T>&& lhs); 
+         Vector(Vector<T>&& lhs); // move constructor
     
          Vector& operator=(const Vector<T>& lhs);
         
-         Vector& operator=(Vector<T>&& lhs);
+         Vector& operator=(Vector<T>&& lhs); // move assignment operator
         
          void push_back(const T& t);
         
@@ -265,7 +265,6 @@ The move constructor and move assignment, both of which take rvalue references, 
     template<class T> inline Vector<T>::Vector(const Vector& lhs) : p{new T[lhs.size]}, size{lhs.size}, current{lhs.current}
     {
       std::copy(p.get(), lhs.p, lhs.p + lhs.size); 
-      
     }
     
     template<class T> inline Vector<T>::Vector(Vector<T>&& lhs) : p(std::move(lhs.p)), size{lhs.size}, current{lhs.current}
@@ -391,7 +390,7 @@ Rvalue References and Derived classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue. An rvalue reference parameter that has a name can have its address taken. It is therefore not a temporary.
-So when it "has a name" the rvalue reference parameter itself is also an lvalue with the body of the method. This has implications for how move semantics must be implemented in derived classes:
+So when it "has a name" the rvalue reference parameter itself is also an lvalue within the scope of the method. This has implications for how move semantics must be implemented in derived classes:
 
 .. code-block:: cpp
 
@@ -411,17 +410,15 @@ So when it "has a name" the rvalue reference parameter itself is also an lvalue 
     }; 
 
     Derived : public Base {
-
        public:
-
          Derived(Derived&& d) : Base(std::move(d)) {}  
     };
 
 Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy constructor.
 
 Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown below. Its argument is of generic type ``T&&``. This looks
-like an rvalue reference, but it works differently than an ordinary rvalue reference, say, ``std::string&&``, where the type is hard coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves
-to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations that contains a static method
+like an rvalue reference, but it works differently than an ordinary rvalue reference, say, for example, ``std::string&&``, where the type is specified or hard-coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an
+lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations that contains a static method
 called ``describe()``, which ``move()`` invokes: 
 
 .. code-block:: cpp
@@ -557,7 +554,7 @@ Helpful Articles on Rvalue References and Move Semantics
 Perfect Forwarding
 ------------------
 
-This section discusses the use of forwarding references to implement perfect forwarding of parameters orechnique used to do in_place_construction_.
+This section discusses the use of forwarding references to implement perfect forwarding of parameters used to do in_place_construction_.
 
 Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~
@@ -633,7 +630,7 @@ For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and th
 
     void sample(vector<int>& && arg)
     {
-       state_type<vector<int>&>::describe();
+       state_type<vector<int&>::describe();
     }
     
 Applying reference collapsing rules for references this becomes
@@ -642,7 +639,7 @@ Applying reference collapsing rules for references this becomes
 
     void sample(vector<int>& arg)
     {
-       state_type<vector<int>&>::describe();
+       state_type<vector<int&>::describe();
     }
  
 So we see arg binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample looks like
