@@ -421,52 +421,52 @@ Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` require
 
 Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown below. Its argument is of generic type ``T&&``. This looks
 like an rvalue reference, but it works differently than an ordinary rvalue reference, say, ``std::string&&``, where the type is hard coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves
-to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``remove_reference`` and its partial template specializations that contains a static method
+to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations that contains a static method
 called ``describe()``, which ``move()`` invokes: 
 
 .. code-block:: cpp
 
-    template<typename T> constexpr typename std::remove_reference<T>::type&& move(T&& __t) noexcept
+    template<typename T> constexpr typename std::Remove_reference<T>::type&& move(T&& __t) noexcept 
     { 
-      return static_cast<typename std::remove_reference<T>::type&&>(__t); 
+      return static_cast<typename std::Remove_reference<T>::type&&>(__t); 
     }
 
-    // remove_reference defined
+    // Remove_reference defined
     template<typename _Tp>
-      struct remove_reference
+      struct Remove_reference
       {
         static void describe()
         {
-          cout << "In non-specialization remove_reference<_Tp> constructor" << endl;
+          cout << "In non-specialization Remove_reference<_Tp> constructor" << endl;
         } 
         typedef _Tp   type; 
     };
       
-    // remove_reference partial template specializations
+    // Remove_reference partial template specializations
     template<typename _Tp>
-      struct remove_reference<_Tp&> { 
+      struct Remove_reference<_Tp&> { 
         static void describe()
         {
-          cout << "In partial template specialization remove_reference<_Tp&> constructor" << endl;
+          cout << "In partial template specialization Remove_reference<_Tp&> constructor" << endl;
         }
         typedef _Tp   type; 
     };
     
     template<typename _Tp>
-      struct remove_reference<_Tp&&> { 
+      struct Remove_reference<_Tp&&> { 
         static void describe()
         {  
-         cout << "In partial template specialization remove_reference<_Tp&&> constructor" << endl;
+         cout << "In partial template specialization Remove_reference<_Tp&&> constructor" << endl;
         }
          typedef _Tp  type; 
     };
     
     template<typename T>
-    constexpr typename remove_reference<T>::type&& move(T&& arg) 
+    constexpr typename Remove_reference<T>::type&& move(T&& arg) 
     {
-      remove_reference<T>::describe();
+      Remove_reference<T>::describe();
     
-      return static_cast<typename remove_reference<T>::type&&>(arg);
+      return static_cast<typename Remove_reference<T>::type&&>(arg);
     }
 
     string a{"test"};
@@ -477,18 +477,18 @@ called ``describe()``, which ``move()`` invokes:
 
 This results in the output::
 
-    In partial template specialization remove_reference<_Tp&> constructor
-    In non-specialization remove_reference<_Tp> constructor
+    In partial template specialization Remove_reference<_Tp&> constructor
+    In non-specialization Remove_reference<_Tp> constructor
 
 In the case of ``string {move(string{"xyz"})};``, **T** resolves to ``std::string``. This is what is instantiated step-by-step:
 
 .. code-block:: cpp
 
-    constexpr typename remove_reference<std::string>::type&& move(std::string&& arg) 
+    constexpr typename Remove_reference<std::string>::type&& move(std::string&& arg) 
     {
-      remove_reference<std::string>::describe();
+      Remove_reference<std::string>::describe();
     
-      return static_cast<typename remove_reference<std::string>::type&&>(arg);
+      return static_cast<typename Remove_reference<std::string>::type&&>(arg);
     }
 
 which simplies to:
@@ -497,7 +497,7 @@ which simplies to:
 
     constexpr typename std::string&& move(std::string&& arg) 
     {
-      remove_reference<std::string>::describe();
+      Remove_reference<std::string>::describe();
     
       return static_cast<typename std::string&&>(arg);
     }
@@ -507,22 +507,22 @@ step by step:
 
 .. code-block:: cpp
 
-    constexpr typename remove_reference<std::string&>::type&& move(std::string&  && arg) 
+    constexpr typename Remove_reference<std::string&>::type&& move(std::string&  && arg) 
     {
-      remove_reference<std::string&>::describe();
+      Remove_reference<std::string&>::describe();
     
-      return static_cast<typename remove_reference<std::string&>::type&&>(arg);
+      return static_cast<typename Remove_reference<std::string&>::type&&>(arg);
     }
 
 If we applying the reference collapsing rules of C++11, this becomes:
 
 .. code-block:: cpp
 
-    constexpr typename remove_reference<std::string&>::type&& move(std::string& arg) 
+    constexpr typename Remove_reference<std::string&>::type&& move(std::string& arg) 
     {
-      remove_reference<std::string&>::describe();
+      Remove_reference<std::string&>::describe();
     
-      return static_cast<typename remove_reference<std::string&>::type&&>(arg);
+      return static_cast<typename Remove_reference<std::string&>::type&&>(arg);
     }
 
 which simplies to
@@ -531,7 +531,7 @@ which simplies to
 
     constexpr std::string&&  move(std::string& arg) 
     {
-      remove_reference<std::string>::describe();
+      Remove_reference<std::string>::describe();
     
       return static_cast<typename std::string&&>(arg);
     }
@@ -541,7 +541,7 @@ And again as before, this casts arg to rvalue reference that does not have a nam
 Move Conclusion:
 ~~~~~~~~~~~~~~~~
 
-``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``remove_reference<T>`` to do this.
+``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``Remove_reference<T>`` to do this.
 
 
 Helpful Articles on Rvalue References and Move Semantics
@@ -720,13 +720,13 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
 
 .. code-block:: cpp
 
-    template<class S>
-    S&& forward(typename remove_reference<S>::type& a) noexcept
+    template<class T>
+    T&& forward(typename remove_reference<T>::type& a) noexcept
     {
-      return static_cast<S&&>(a);
+      return static_cast<T&&>(a);
     } 
 
-If you use just ``S&`` instead of ``remove_reference<S>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
+If you use just ``T&`` instead of ``remove_reference<T>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
 "it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." 
 
 .. code-block:: cpp
@@ -734,7 +734,9 @@ If you use just ``S&`` instead of ``remove_reference<S>::type&`` in the defintio
     template<typename _Tp>
       constexpr _Tp&&
     forward(typename std::remove_reference<_Tp>::type& __t) noexcept
-    { return static_cast<_Tp&&>(__t); }
+    {
+      return static_cast<_Tp&&>(__t); 
+    }
 
 We now use forward in our factory() function: 
 
@@ -750,7 +752,7 @@ We now use forward in our factory() function:
     {
        state_type<ARG>::describe();
 
-       return std::shared_ptr<T>{ new T( std::forward(arg) ) };  // forward returns a nameless parameter.
+       return std::shared_ptr<T>{ new T( std::forward<T>(arg) ) };  // forward returns a nameless parameter.
     }
 
 When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&`` and applying reference collapsing, we have this instantiation of factory: 
@@ -759,7 +761,7 @@ When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&``
 
     std::shared_ptr<A> factory(string& arg)
     {
-       return std::shared_ptr<A>{ new A( std::forward(arg) ) }; 
+       return std::shared_ptr<A>{ new A( std::forward<T>(arg) ) }; 
     }
 
 For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type& `` resolves to ``string&``
