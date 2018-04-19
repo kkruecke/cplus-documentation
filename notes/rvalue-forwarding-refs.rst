@@ -543,6 +543,9 @@ Move Conclusion:
 
 ``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``Remove_reference<T>`` to do this.
 
+.. note:: The C++ standard library's Remove_reference does not have an uppercase R. It is simply ``remove_reference``. The version above used the uppercase R, ``Remove_reference`` so that it would not conflict with version in the standard library,
+   which will happen if <iostream> methods, as above, are used. 
+
 
 Helpful Articles on Rvalue References and Move Semantics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
