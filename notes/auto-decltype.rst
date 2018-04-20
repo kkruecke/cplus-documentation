@@ -12,7 +12,7 @@ When auto sets the type of a declared variable from its initializing expression,
 
     int x = 10;
     int& rx = x;
-    auto y = crx; // The type of y is 'int'
+    auto y = rx; // The type of y is 'int'
 
 2. Next, if, after the step above has been performed, any const and/or volatile qualifier is also ignored. For example:
 
@@ -21,7 +21,7 @@ When auto sets the type of a declared variable from its initializing expression,
     int x = 10;
     const int& rx = x;
     *crx = 11; // error: *crx is read only
-    auto y = crx; // The type of y is 'int' 
+    auto y = rx; // The type of y is 'int' 
 
 The type of ``y`` above is ``int``. Both the reference and const are ignored. To make ``y`` a reference you simply use ``auto&`` or ``const auto&&``:
 
@@ -29,8 +29,36 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
 
     int x = 10;
     const int& rx = x;
-    auto& y = crx; // The type of y is 'int&' 
-    const auto& a = crx; // The type of a is 'const int&' 
+    auto& y = rx; // The type of y is 'int&' 
+    const auto& a = rx; // The type of a is 'const int&' 
+
+Use of auto with const pointers
+-------------------------------
+
+If a pointer of type ``some_type *const``, is assigned to a variable declared ``auto``, the type will be ``some_type *``:
+
+.. code-block:: cpp
+
+  auto x = 10;       // x is 'int'
+  int *const p = &x; // *p is read/write, but p is read-only
+  *p  = 20;          // x is now 20
+  auto y = 50;       // y is 'int'
+  p = y;             // error p is const, read-only
+
+  auto pauto1 = p;       // pauto1 is 'int *'
+  const auto pauto2 = p; // pauto2 is 'int *const' just like p
+
+If a pointer of type ``const some_type *``, is assigned to a variable declared ``auto``, the type will be ``const some_type *``:
+
+.. code-block:: cpp
+
+  auto x = 10;       // x is 'int'
+  const int *p = &x; // *p is read/write, but p is read-only
+
+  auto pauto = p;        // pauto1 is 'const int *'
+  const auto pauto = p; // pauto1 is 'const int * const'
+
+The auto deduced types for pointer involving const follow common sense rules: they preserve const when it is necessary; otherwise, they ignore it.
 
 Further Examples
 ----------------
