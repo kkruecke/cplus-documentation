@@ -7,9 +7,9 @@ Rvalue References and Forwarding References in C++
 Move Semantics
 --------------
 
-This Vector class serves as a motivating example for explaining rvalues and move semantics. As of C++11 move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference, an rvalue reference 
-(see :ref:`rvalue-reference`). Doing so allows the compiler to always chose the more effecient constructor (or assignment operator) when an rvalue is passed. Below is template ``Vector`` class. It has the usual copy constructor and assignment operator as well as
-``void push_back(const T&)`` that take an ``const T&``:
+To explain lvalues, rvlaues and move semantics, we use the Vector class below as a motivating example. In C++11 move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
+(see :ref:`rvalue-reference`). As we will see, this allows the compiler to always chose the more effecient constructor or assignment operator when an rvalue is passed. Below is template ``Vector`` class with the usual copy constructor and assignment operator as well
+as ``void push_back(const T&)`` that take an ``const T&``:
 
 .. code-block:: cpp
 
@@ -147,8 +147,17 @@ This Vector class serves as a motivating example for explaining rvalues and move
 rvalue references and their role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An lvalue is object that has name, an object whose address can be taken. If an object is not an lvalue it is called an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
-rvalue. The address of an lvalue on the other hand can always be taken. For more in-depth details see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some example of rvalue and lvalues:
+An lvalue is object that has name, an object whose address can be taken. Examples of lvalues would be:
+
+.. code-block:: cpp
+
+    int i; // lvalue
+    int j = 8; // lvalue assigned rvalue
+
+    int& f2(); // f2() returns an lvalue
+
+If an object is not an lvalue, an object whose address can be taken, it is termed an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
+rvalue. The address of an lvalue on the other hand can always be taken. For an in-depth explanation see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some example of rvalue and lvalues:
 
 .. code-block:: cpp
 
@@ -183,13 +192,13 @@ The rvalue reference j above is not really of any value. While we can change the
     j = 9;
     cout << j;  // prints: 9
 
-The temporay is deleted once j goes out of scope, and thus this technique has no real applicability. The real value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
+The temporay is deleted once j goes out of scope, and thus this technique has no real applicability. The value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
 rvalue, is there method that takes an rvalue reference", and if there is, it invokes it. 
 
 Implications for constructors and assignment operators
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references. This allows the compiler to now branch at compiler time depending on whether the constructor (or assignment operator) is
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, and this allows the compiler to now branch at compiler time depending on whether the constructor or assignment operator is
 being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
 
 Implementation of move constructor and move assignment operator
@@ -389,8 +398,8 @@ Obviously the constructor and assignment operator overloaded to take an rvalue r
 Rvalue References and Derived classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue. An rvalue reference parameter that has a name can have its address taken. It is therefore not a temporary.
-So when it "has a name" the rvalue reference parameter itself is also an lvalue within the scope of the method. This has implications for how move semantics must be implemented in derived classes:
+Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue because an rvalue reference parameter that has a name can have its address taken. It is therefore not a temporary.
+So when it "has a name" the rvalue reference parameter itself is an lvalue within the scope of the method. This has implications for how move semantics must be implemented in derived classes:
 
 .. code-block:: cpp
 

@@ -1,9 +1,9 @@
+.. include:: <isonum.txt>
+
 A red-black tree is a binary tree representation of a 2-3-4 tree. The child pointer of a node is either red or black. If the child pointer was present in the original 2-3-4 tree, it
 is a black pointer; otherwise, it is a red pointer.
 
 A 2-, 3- and 4-nodes is transformed into its red-black representation as follows:
-
-.. include:: <isonum.txt>
 
 Red Black Trees (under develpment)
 ==================================
