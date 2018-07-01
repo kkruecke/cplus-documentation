@@ -3,8 +3,8 @@
 .. role:: cpp(code)
    :language: cpp
 
-Observing Deduced Types
-=======================
+Observing Compiler Deduced Types
+================================
 
 Scott Meyers lecture on `Type Deduction and Why You Care <https://www.youtube.com/watch?v=wQxj20X-tIU>`_ (at around minute 43) explains a technique to force compilers to display the types it deduces when a function template is instantiated or when an auto variable
 is defined. Here is the code 

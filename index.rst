@@ -2,9 +2,8 @@ Notes on Data Structures and Algorithms in C++
 ==============================================
 
 .. toctree::
-   :maxdepth: 2
-
-   notes/understanding-const.rst
+   :maxdepth: 3
+   
    notes/arrays-multi-arrays.rst 
    notes/auto-decltype.rst
    notes/observing-deduced-types.rst
