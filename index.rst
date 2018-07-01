@@ -2,7 +2,7 @@ Notes on Data Structures and Algorithms in C++
 ==============================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    
    notes/arrays-multi-arrays.rst 
    notes/auto-decltype.rst
