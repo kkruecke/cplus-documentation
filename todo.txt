@@ -1,10 +1,22 @@
 TODO
-----
+====
+
+Links to Template specialization and partial specialization
+-----------------------------------------------------------
+
+* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.2.0/com.ibm.zos.v2r2.cbclx01/templates.htm 
+* http://www.bogotobogo.com/cplusplus/templates.php
+* https://en.cppreference.com/w/cpp/language/partial_specialization 
+* https://www.cprogramming.com/tutorial/template_specialization.html 
+* http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/* 
+
+Style Issues
+------------
 
 The notes/regex.rst needs the output of the code blocks added. It is missing.
 
 CSS Techniques
---------------
+++++++++++++++
 
 How to add custom css for inline code to sphinx-generated html. Seehttp://stackoverflow.com/questions/10870719/inline-code-highlighting-in-restructuredtext
 which says:
