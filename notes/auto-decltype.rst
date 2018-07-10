@@ -214,3 +214,45 @@ an lvalue reference return or an rvalue. In general, ``decltype(auto)`` will ret
 rules described above.
 
 Finally, the same comments about template returns types apply to lambdas.
+
+Using decltype(declval<some_type>()) 
+------------------------------------
+
+The cplusplus.com entry for `decval <http://www.cplusplus.com/reference/utility/declval/>`_ explains:
+
+    Returns an rvalue reference to type T without referring to any object.
+    
+    This function shall only be used in unevaluated operands (such as the operands of sizeof and decltype).
+    
+    T may be an incomplete type.
+    
+    This is a helper function used to refer to members of a class in unevaluated operands, especially when either the constructor signature is unknown or when no objects of that type can be constructed (such as for abstract base classes).
+
+And it gives this example:
+     
+.. code-block:: cpp
+
+    // declval example
+    #include <utility>      // std::declval
+    #include <iostream>     // std::cout
+    
+    struct A {              // abstract class
+      virtual int value() = 0;
+    };
+    
+    class B : public A {    // class with specific constructor
+      int val_;
+    public:
+      B(int i,int j):val_(i*j){}
+      int value() {return val_;}
+    };
+    
+    int main() {
+      decltype(std::declval<A>().value()) a;  // int a
+      decltype(std::declval<B>().value()) b;  // int b
+      decltype(B(0,0).value()) c;   // same as above (known constructor)
+      a = b = B(10,2).value();
+      std::cout << a << '\n';
+      return 0;
+    }
+
