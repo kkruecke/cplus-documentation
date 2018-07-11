@@ -8,3 +8,4 @@ Notes on Features of C++-17
    notes/auto-decltype.rst
    notes/observing-deduced-types.rst
    notes/rvalue-forwarding-refs.rst
+   notes/templates.rst
