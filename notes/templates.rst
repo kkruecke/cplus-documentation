@@ -1,7 +1,7 @@
 .. include:: <isopub.txt>
 
-Template and Specializations
-============================
+Templates and Specializations
+=============================
 
 Links to Template specialization and partial specialization
 -----------------------------------------------------------
@@ -15,6 +15,9 @@ Other links:
 * http://www.bogotobogo.com/cplusplus/templates.php
 * https://www.cprogramming.com/tutorial/template_specialization.html 
 * http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/
+
+Partial Template Specializations examples
+-----------------------------------------
 
 This modified example is from the `en.cppreference.com article on partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows how a template can be partially specialized:
 
