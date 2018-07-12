@@ -93,18 +93,18 @@ and this code shows when the the primary template or its specializations is inst
                           //        matches #4 (X=int*, T=int, I=2)
                           // neither one is more specialized than the other
 
-The output will be:
+Comments
+--------
+
+The output from the above will be:
 
      In primary template 'class A<T1, T2, I>'
      In partial template specialization #1 'class A<T, T*, I>'
      In partial template specialization #3 'class A<int, T*, 5>'
      In partial template specialization #4 'class A<X, T*, I>'
 
-Comments
---------
-
-For ``a1`` no specialization exists, so the primary template is used. For ``a2`` the second parameter is ``int *`` and the first parameter is ``int``, which makes #1 specialized than #4. in #1 the pointer points to the type of the first parameter, which #4 
-does not require.  Thus #1 is preferred over #4. For ``a3`` TODO: CONTINUE..... 
+For ``a1`` no specializations exist that match the template parameters, so the primary template is used. In the case of ``a2``, where the second parameter is ``int *`` and the first parameter is ``int``, partial specialization #1 is more specialized than the primary
+template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``....
 For ``a5`` above no most specialized template cannot be found. Since ``a5`` matches #2 and #4 equally, a error is generated.
 
 An example from the GNU implementation of the C++ standard library. GNU g++ defines the ``std::vector`` template like:
