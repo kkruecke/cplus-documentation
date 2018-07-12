@@ -16,6 +16,12 @@ Other links:
 * https://www.cprogramming.com/tutorial/template_specialization.html 
 * http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/
 
+
+Full Template Specializations
+-----------------------------
+
+.. todo:: use links above to complete this section
+
 Partial Template Specializations examples
 -----------------------------------------
 
