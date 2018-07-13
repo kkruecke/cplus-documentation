@@ -108,6 +108,8 @@ Comments
 
 The output from the above will be:
 
+::
+
      A<int, int, 1> a1 uses primary template.
      A<int, int *, 1> a2 uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'.
      A<int, char *, 5> a3 uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5
