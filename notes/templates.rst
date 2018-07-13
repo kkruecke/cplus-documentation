@@ -16,16 +16,10 @@ Other links:
 * https://www.cprogramming.com/tutorial/template_specialization.html 
 * http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/
 
+Partial Template Specialization Examples
+----------------------------------------
 
-Full Template Specializations
------------------------------
-
-.. todo:: use links above to complete this section
-
-Partial Template Specializations examples
------------------------------------------
-
-This modified example is from the en.cppreference.com article on `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows how a template can be partially specialized:
+This modified example is from the http://en.cppreference.com article on `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows by example how a template can be partially specialized:
 
 .. code-block:: cpp
 
@@ -142,10 +136,8 @@ and it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool
        //... 
        };
 
+Full Template Specializations
+-----------------------------
 
+.. todo:: usehttps://en.cppreference.com/w/cpp/language/template_specialization 
 
-
-
-
-
-     
