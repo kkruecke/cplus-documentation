@@ -30,47 +30,53 @@ This modified example is from the en.cppreference.com article on `partial templa
 .. code-block:: cpp
 
      template<class T1, class T2, int I>
-     class A {};            // primary template
-      
-     template<class T, int I>
-     class A<T, T*, I> { // #1: partial specialization in which the 2nd parameter is a pointer to 'type of the first parameter.' 
-
+     class A {
+         public:
         void describe()
         {
-          cout << "In partial template specialization #1 'class A<T, T*, I>'. The 2nd parameter is a pointer to 'type of the first parameter'." << endl;
-
+          cout << "uses primary template." << endl;
+     
+        } 
+     };            // primary template
+      
+     template<class T, int I> class A<T, T*, I> { // #1: partial specialization in which the 2nd parameter is a pointer to 'type of the first parameter.' 
+     public:
+        void describe()
+        {
+          cout << "uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'." << endl;
+     
         } 
      }; 
       
      template<class T, class T2, int I>
      class A<T*, T2, I> { // #2: partial specialization in which the first parameter is a pointer.
-
+     public:
         void describe()
         {
-          cout << "In partial template specialization #2 'class A<T*, T2, I>'. The first parameter is a pointer." << endl;
+          cout << "uses partial template specialization #2 'class A<T*, T2, I>', in which the first parameter is a pointer." << endl;
         } 
-
+     
      };
       
      template<class T>
      class A<int, T*, 5> { // #3: partial specialization in which first parameter is an int, 2nd is a pointer and the third is the scalar 5
-
+     public:
         void describe()
         {
-          cout << "In partial template specialization #3 'class A<int, T*, 5>'. First parameter is an int, 2nd is a pointer and the third is the scalar 5" << endl;
+          cout << "uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5." << endl;
         } 
-  
+     
      }; 
       
      template<class X, class T, int I>
      class A<X, T*, I> {  // #4: partial specialization in which the second parameter is a pointer.
-
+     public:
         void describe()
         {
-          cout << "In partial template specialization #4 'class A<X, T*, I>'. The second parameter is a pointer." << endl;
+          cout << "uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer." << endl;
         } 
      }; 
-
+     
 and this code shows when the the primary template or its specializations is instantiated:
 
 .. code-block:: cpp
@@ -78,15 +84,19 @@ and this code shows when the the primary template or its specializations is inst
      // given the template A as defined above and its partial specializations:
 
      A<int, int, 1> a1;   // no specializations match, uses primary template
+     cout << "A<int, int, 1> a1 ";
      a1.describe();
 
      A<int, int *, 1> a2;  // uses partial specialization #1 (T=int, I=1)
+     cout << "A<int, int *, 1> a2 ";
      a2.describe();
 
      A<int, char *, 5> a3; // uses partial specialization #3, (T=char)
+     cout << "A<int, char *, 5> a3 ";
      a3.describe();
 
      A<int, char *, 1> a4; // uses partial specialization #4, (X=int, T=char, I=1)
+     cout << "A<int, char *, 1> a4 ";
      a4.describe();
 
      A<int*, int*, 2> a5; // error: matches #2 (T=int, T2=int*, I=2)
@@ -98,11 +108,11 @@ Comments
 
 The output from the above will be:
 
-     In primary template 'class A<T1, T2, I>'
-     In partial template specialization #1 'class A<T, T*, I>'
-     In partial template specialization #3 'class A<int, T*, 5>'
-     In partial template specialization #4 'class A<X, T*, I>'
-
+     A<int, int, 1> a1 uses primary template.
+     A<int, int *, 1> a2 uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'.
+     A<int, char *, 5> a3 uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5
+     A<int, char *, 1> a4 uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer.
+     
 For ``a1`` no specializations exist that match the template parameters, so the primary template is used. In the case of ``a2``, where the second parameter is ``int *`` and the first parameter is ``int``, partial specialization #1 is more specialized than the primary
 template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``, the third parameter of ``5`` and the second parameter of pointer type, make #3 the only template partial specialization that matches.
 For ``a5`` above, no most-specialized template can be found since ``a5`` matches #2 and #4 equally.
