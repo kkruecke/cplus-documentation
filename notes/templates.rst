@@ -104,10 +104,13 @@ The output from the above will be:
      In partial template specialization #4 'class A<X, T*, I>'
 
 For ``a1`` no specializations exist that match the template parameters, so the primary template is used. In the case of ``a2``, where the second parameter is ``int *`` and the first parameter is ``int``, partial specialization #1 is more specialized than the primary
-template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``....
-For ``a5`` above no most specialized template cannot be found. Since ``a5`` matches #2 and #4 equally, a error is generated.
+template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``, the third parameter of ``5`` and the second parameter of pointer type, make #3 the only template partial specialization that matches.
+For ``a5`` above, no most-specialized template can be found since ``a5`` matches #2 and #4 equally.
 
-An example from the GNU implementation of the C++ standard library. GNU g++ defines the ``std::vector`` template like:
+std::vector Example of Partial Template Specializaition
+-------------------------------------------------------
+
+Another, real-world example of partial template specialization comes from the GNU implementation of the C++ standard library container ``std::vector``. GNU g++ defines the primary ``std::vector`` template container like:
 
 .. code-block:: cpp
 
@@ -117,7 +120,7 @@ An example from the GNU implementation of the C++ standard library. GNU g++ defi
     //...
     };
 
-And it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool`` like this:
+and it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool`` like this:
 
 .. code-block:: cpp
 
