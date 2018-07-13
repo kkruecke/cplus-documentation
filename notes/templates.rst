@@ -9,7 +9,7 @@ Links to Template specialization and partial specialization
 * https://en.cppreference.com/w/cpp/language/partial_specialization 
 
 Other links:
-------------
+++++++++++++
 
 * https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.2.0/com.ibm.zos.v2r2.cbclx01/templates.htm 
 * http://www.bogotobogo.com/cplusplus/templates.php
@@ -98,7 +98,7 @@ and this code shows when the the primary template or its specializations is inst
                           // neither one is more specialized than the other
 
 Comments
---------
+++++++++
 
 The output from the above will be:
 
@@ -114,7 +114,7 @@ template. To say  "A is more specialized than B" means "A accepts a subset of th
 For ``a5`` above, no most-specialized template can be found since ``a5`` matches #2 and #4 equally.
 
 std::vector Example of Partial Template Specializaition
--------------------------------------------------------
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Another, real-world example of partial template specialization comes from the GNU implementation of the C++ standard library container ``std::vector``. GNU g++ defines the primary ``std::vector`` template container like:
 
@@ -136,8 +136,8 @@ and it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool
        //... 
        };
 
-Full Template Specializations
------------------------------
+Explicit (Full) Template Specializations examples
+-------------------------------------------------
 
-.. todo:: usehttps://en.cppreference.com/w/cpp/language/template_specialization 
+These examples are from the http://en.cppreference.com article `explicit (full) template specialization <https://en.cppreference.com/w/cpp/language/template_specialization>`_. 
 
