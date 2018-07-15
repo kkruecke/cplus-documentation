@@ -214,4 +214,61 @@ You can use the name of an explicit specialization that has been declared but no
     X<int> i;
     // X<char> j;
         
-The compiler does not allow the declaration X<char> j because the explicit specialization of X<char> is not defined.
+The compiler does not allow the declaration X<char> j because the explicit specialization of ``X<char>`` is not defined.
+
+You define members of an explicitly specialized template class as you would normal classes, without the ``template<>`` prefix. In addition, you can define the members of an explicit specialization inline; no special template
+syntax is used in this case. The following example demonstrates a class template specialization:
+
+.. code-block:: cpp
+
+    template<class T> class A {
+       public:
+          void f(T);
+    };
+    
+    template<> class A<int> {
+       public:
+          int g(int);
+    };
+    
+    int A<int>::g(int arg) { return 0; }
+    
+    int main() {
+       A<int> a;
+       a.g(1234);
+    }
+
+.. note:: The explicit specialization ``A<int>`` contains the member function ``g()``, **which the primary template does not**. So specializations
+
+Explicit specialization of function templates
++++++++++++++++++++++++++++++++++++++++++++++
+
+In a function template specialization, a template argument is optional if the compiler can deduce it from the type of the function arguments. The following example demonstrates this:
+
+.. code-block:: cpp
+
+    template<class T> class X { };
+    template<class T> void f(X<T>);
+    template<> void f(X<int>);
+    
+The explicit specialization ``template<> void f(X<int>)`` is equivalent to ``template<> void f<int>(X<int>)``.
+
+You cannot specify default function arguments in a declaration or a definition for any of the following cases:
+
+    Explicit specialization of a function template
+    Explicit specialization of a member function template
+
+For example, the compiler will not allow the following code:
+
+.. code-block:: cpp
+
+    template<class T> void f(T a) { };
+    template<> void f<int>(int a = 5) { };
+    
+    template<class T> class X {
+      void f(T a) { }
+    };
+
+    template<> void X<int>::f(int a = 10) { };
+
+
