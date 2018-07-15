@@ -145,7 +145,7 @@ This material is from IBM Knowledge Base article on template `Explicit specializ
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The declaration of full template specialization is preceeded by ``template<>``, as the example of ``template<> class Sample<int>;`` below shows:
+The declaration of full template specialization must be preceeded by ``template<>``, as the example of ``template<> class Sample<int>;`` below illustrates:
 
 .. code-block:: cpp
 
@@ -168,7 +168,8 @@ The declaration of full template specialization is preceeded by ``template<>``, 
     {
        return ostr << "Primary Sample template. t = " << t << std::endl;
     } 
-    
+
+    // Note: template<> does not preceed member definition
     std::ostream& Sample<int>::print(std::ostream& ostr) const
     {
        return ostr << "Sample<int>. i1 = = " << i1 << " and i2 = " << i2 << std::endl;
@@ -194,7 +195,7 @@ Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to define the primary
-template). See the following example:
+template). In this example:
 
 .. code-block:: cpp
 
@@ -203,8 +204,9 @@ template). See the following example:
     
     template<> class A<int> { /* ... */ };
     
-The primary template is not defined, but the explicit specialization is.
-You can use the name of an explicit specialization that has been declared but not defined the same way as an incompletely defined class. The following example demonstrates this:
+the primary template A above is not defined, but the explicit specialization for type **int** is.
+
+You can also use the name of an explicit specialization that has been declared but not defined in the same way as an incompletely defined class. The following example demonstrates this:
     
 .. code-block:: cpp
 
@@ -214,10 +216,10 @@ You can use the name of an explicit specialization that has been declared but no
     X<int> i;
     // X<char> j;
         
-The compiler does not allow the declaration X<char> j because the explicit specialization of ``X<char>`` is not defined.
+The compiler does not allow the declaration ``X<char> j`` because the explicit specialization ``X<char>`` is not defined(only declared).
 
-You define members of an explicitly specialized template class as you would normal classes, without the ``template<>`` prefix. In addition, you can define the members of an explicit specialization inline; no special template
-syntax is used in this case. The following example demonstrates a class template specialization:
+You define members of an explicitly specialized template class as you would normal classes, without the ``template<>`` prefix. In addition, you can define the members of an explicit specialization inline; no special template syntax is used in this case. The following
+example demonstrates a class template specialization:
 
 .. code-block:: cpp
 
@@ -238,7 +240,7 @@ syntax is used in this case. The following example demonstrates a class template
        a.g(1234);
     }
 
-.. note:: The explicit specialization ``A<int>`` contains the member function ``g()``, **which the primary template does not**. So specializations
+.. note:: The explicit specialization ``A<int>`` contains the member function ``g()``, **which the primary template does not**. So specializations can exclude functions found in the primary template, and it can include extra methods not in the primary template.
 
 Explicit specialization of function templates
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -263,12 +265,10 @@ For example, the compiler will not allow the following code:
 .. code-block:: cpp
 
     template<class T> void f(T a) { };
-    template<> void f<int>(int a = 5) { };
+    template<> void f<int>(int a = 5) { }; // error: default arguments not allowed in function template specialization
     
     template<class T> class X {
       void f(T a) { }
     };
 
-    template<> void X<int>::f(int a = 10) { };
-
-
+    template<> void X<int>::f(int a = 10) { };// error: default arguments not allowed in member function of full template specialization
