@@ -7,11 +7,12 @@ Links to Template specialization and partial specialization
 -----------------------------------------------------------
 
 * https://en.cppreference.com/w/cpp/language/partial_specialization 
+* https://en.cppreference.com/w/cpp/language/template_specialization
+* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm
 
 Other links:
 ++++++++++++
 
-* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.2.0/com.ibm.zos.v2r2.cbclx01/templates.htm 
 * http://www.bogotobogo.com/cplusplus/templates.php
 * https://www.cprogramming.com/tutorial/template_specialization.html 
 * http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/
