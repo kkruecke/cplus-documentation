@@ -121,24 +121,97 @@ Another, real-world example of partial template specialization comes from the GN
 
 .. code-block:: cpp
 
- template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
-    class vector : protected _Vector_base<_Tp, _Alloc>
-    {
-    //...
-    };
+    template<typename _Tp, typename _Alloc = std::allocator<_Tp> >
+      class vector : protected _Vector_base<_Tp, _Alloc>
+      {
+      //...
+      };
 
 and it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool`` like this:
 
 .. code-block:: cpp
 
-     template<typename _Alloc>
-       class vector<bool, _Alloc> : protected _Bvector_base<_Alloc>
-       {
-       //... 
-       };
+    template<typename _Alloc>
+      class vector<bool, _Alloc> : protected _Bvector_base<_Alloc>
+      {
+      //... 
+      };
 
 Explicit (Full) Template Specializations examples
 -------------------------------------------------
 
-These examples are from the http://en.cppreference.com article `explicit (full) template specialization <https://en.cppreference.com/w/cpp/language/template_specialization>`_. 
+This material is from IBM Knowledge Base article on template `Explicit specialization <https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/explicit_specialization.htm>`_.
 
+Definition and declaration of explicit specializations
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The declaration of full template specialization in introduced with ``template<>`` as the example of ``template<> class Sample<int>;`` below shows:
+
+.. code-block:: cpp
+
+    template<class T> class Sample {
+       T t;
+     public: 
+       Sample() {}
+       std::ostream& print(std::ostream&) const;
+    };
+     
+    template<> class Sample<int> {
+       int i1;
+       int i2;
+     public: 
+       Sample() : i1{10}, i2{20} {}
+       std::ostream& print(std::ostream&) const;
+    };
+    
+    template<class T> std::ostream& Sample<T>::print(std::ostream& ostr) const
+    {
+       return ostr << "Primary Sample template. t = " << t << std::endl;
+    } 
+    
+    std::ostream& Sample<int>::print(std::ostream& ostr) const
+    {
+       return ostr << "Sample<int>. i1 = = " << i1 << " and i2 = " << i2 << std::endl;
+    }
+    using namespace std;
+    
+    int main(int argc, char** argv) 
+    {
+        Sample<float> s1;
+        s1.print(cout);
+        Sample<int>  s2;
+     
+        s2.print(cout);
+        
+        return 0;
+    }
+ 
+.. note:: 
+
+   Note: ``template<>`` does not preceeded the definiton of ``std::ostream& Sample<int>::print(std::ostream& ostr) const``
+
+Definition and declaration of explicit specializations
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to define the primary
+template). See the following example:
+
+.. code-block:: cpp
+
+    template<class T> class A;
+    template<> class A<int>;
+    
+    template<> class A<int> { /* ... */ };
+    
+The primary template is not defined, but the explicit specialization is.
+You can use the name of an explicit specialization that has been declared but not defined the same way as an incompletely defined class. The following example demonstrates this:
+    
+.. code-block:: cpp
+
+    template<class T> class X { };
+    template<>  class X<char>;
+    X<char>* p;
+    X<int> i;
+    // X<char> j;
+        
+The compiler does not allow the declaration X<char> j because the explicit specialization of X<char> is not defined.
