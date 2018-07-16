@@ -240,7 +240,7 @@ example demonstrates a class template specialization:
        a.g(1234);
     }
 
-.. note:: The explicit specialization ``A<int>`` contains the member function ``g()``, **which the primary template does not**. So specializations can exclude functions found in the primary template, and it can include extra methods not in the primary template.
+.. note:: Explicit specialization ``A<int>`` contains member function ``g()``, **not in the primary template**. So full template specializations can exclude functions found in the primary template, and they can include extra methods not found in the primary template.
 
 Explicit specialization of function templates
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -260,15 +260,16 @@ You cannot specify default function arguments in a declaration or a definition f
     Explicit specialization of a function template
     Explicit specialization of a member function template
 
-For example, the compiler will not allow the following code:
+As an example the compiler will not allow the following code:
 
 .. code-block:: cpp
 
     template<class T> void f(T a) { };
-    template<> void f<int>(int a = 5) { }; // error: default arguments not allowed in function template specialization
+    template<> void f<int>(int a = 5) { }; // error: default argument(s) not permitted in function template specialization
     
     template<class T> class X {
       void f(T a) { }
     };
 
-    template<> void X<int>::f(int a = 10) { };// error: default arguments not allowed in member function of full template specialization
+    template<> void X<int>::f(int a = 10) { };// error: default argument(s) not allowed in member function of full
+                                              // template specialization
