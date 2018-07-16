@@ -330,14 +330,16 @@ cannot explicitly specialize a class template unless its enclosing class templat
 .. code-block:: cpp
 
     #include <iostream>
+    #include <string>
+    
     using namespace std;
     
     template<class T> class X {
-
+    
        public:
-
+    
          template<class U> class Y {
-
+    
             public:
                template<class V> void f(U,V);
                void g(U);
@@ -345,48 +347,86 @@ cannot explicitly specialize a class template unless its enclosing class templat
     };
     
     template<class T> template<class U> template<class V>
-      void X<T>::Y<U>::f(U, V) { cout << "Primary definition of template member function ``template<class V> void f(U, V)`` of nested template X<T>::Y<U>,
-                                         " which is defined like this: template<class T> template<class U> template<class V> void X<T>::Y<U>::f(U, V) {//...} " <<   endl; }
-   
-.. todo:: resume reworking the code below to be more explanatory. Add comments as to what each of these definitions is.
-
-.. code-block:: cpp
- 
-    template<class T> template<class U>
-      void X<T>::Y<U>::g(U) { cout << "In method: template<class T> template<class U> void X<T>::Y<U>::g(U)" << endl; }
+      void X<T>::Y<U>::f(U, V) 
+      { 
+        cout << "Primary method definition:\n\n\t'template<class T> template<class U> template<class V> void X<T>::Y<U>::f(U, V) {//...}' \n\n"; 
+      }
     
+    template<class T> template<class U>
+      void X<T>::Y<U>::g(U) 
+      {
+        cout << "Primary method definition:\n\n\t'template<class T> template<class U> void X<T>::Y<U>::g(U)'\n\n"; 
+      }
+       
     template<> template<>
-      void X<int>::Y<int>::g(int) { cout << "In explicit specialization of nested template method: template<> template<> void X<int>::Y<int>::g(int) " << endl; }
-   
-    // TODO Resmue here 
+      void X<int>::Y<int>::g(int) 
+      {
+        cout << "Explicit specialization of void X<T>::Y<U>::g(U):\n\n\t'template<> void X<int>::Y<int>::g(int)'\n\n";
+      }
+    
     template<> template<> template<class V>
-      void X<int>::Y<int>::f(int, V) { cout << "Template 4" << endl; }
+      void X<int>::Y<int>::f(int, V)
+      {
+        cout << "Explicit specialization of void X<T>::Y<U>::f(U, V):\n\n\t'template<> template<class V> void X<int>::Y<int>::f(int, V)'\n\n";
+      }
     
     template<> template<> template<>
-      void X<int>::Y<int>::f<int>(int, int) { cout << "Template 5" << endl; }
-    
+      void X<int>::Y<int>::f<int>(int, int)
+      {
+        cout << "Explicit specialization of void X<T>::Y<U>::f(U, V):\n\n\t'template<> template<> template<> void X<int>::Y<int>::f<int>(int, int)'\n\n"; 
+      }
+       
     // template<> template<class U> template<class V>
-    //    void X<char>::Y<U>::f(U, V) { cout << "Template 6" << endl; }
+    //    void X<char>::Y<U>::f(U, V) { cout << "Template 6" << "\n\n"; }
     
     // template<class T> template<>
-    //    void X<T>::Y<float>::g(float) { cout << "Template 7" << endl; }
+    //    void X<T>::Y<float>::g(float) { cout << "Template 7" << "\n\n"; }
     
-    int main() {
+    int main() 
+    {
       X<int>::Y<int> a;
+    
       X<char>::Y<char> b;
+    
       a.f(1, 2);
+    
       a.f(3, 'x');
+    
       a.g(3);
+    
       b.f('x', 'y');
+    
       b.g('z');
+    
+      return 0; 
     }
     
 See the output of the above program:
 
 ::
    
-    To be done later.  
-      
+    Explicit specialization of void X<T>::Y<U>::f(U, V):
+    
+            'template<> template<> template<> void X<int>::Y<int>::f<int>(int, int)'
+    
+    Explicit specialization of void X<T>::Y<U>::f(U, V):
+    
+            'template<> template<class V> void X<int>::Y<int>::f(int, V)'
+    
+    Explicit specialization of void X<T>::Y<U>::g(U):
+    
+            'template<> void X<int>::Y<int>::g(int)'
+    
+    Primary method definition:
+    
+            'template<class T> template<class U> template<class V> void X<T>::Y<U>::f(U, V) {//...}' 
+    
+    Primary method definition:
+    
+            'template<class T> template<class U> void X<T>::Y<U>::g(U)'
+
+.. todo:: correct text below.
+    
 The compiler would not allow the template specialization definition that would output "Template 6" because it is attempting to specialize a member (function f()) without specialization of its containing class (Y).
 The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
 
