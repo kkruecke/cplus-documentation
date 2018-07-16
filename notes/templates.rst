@@ -304,7 +304,7 @@ Each instantiated class template specialization has its own copy of any static m
        cout << "x, which is X<int>, has X<int>::v = " << X<int>::v << '\n';
     
        X<string> a, b;
-       cout << "a and b are X<std::string*>, and X<std::string>::v = " << X<string>::v << '\n';
+       cout << "a and b are X<std::string>, and X<std::string>::v = " << X<string>::v << '\n';
     
        X<float> c;
        cout << "c is X<float>, and X<float>::v = " << X<float>::v << '\n';
@@ -317,6 +317,6 @@ yields this output:
 ::
 
     x, which is X<int>, has X<int>::v = 0
-    a and b are X<char*>, and X<char*>::v = Hello
+    a and b are X<std::string>, and X<std::string>::v = Hello
     c is X<float>, and X<float>::v = 0
     After c.f(10), X<float>::v = 20
