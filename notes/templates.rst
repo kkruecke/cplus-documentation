@@ -320,3 +320,64 @@ yields this output:
     a and b are X<std::string>, and X<std::string>::v = Hello
     c is X<float>, and X<float>::v = 0
     After c.f(10), X<float>::v = 20
+
+Explicit Specialization of Nested Templates
++++++++++++++++++++++++++++++++++++++++++++
+
+If you explicitly specialize a template nested within several enclosing class templates, you must prefix the declaration with ``template<>`` for every enclosing class template you specialize. You may leave some enclosing class templates unspecialized, however you cannot explicitly specialize a class template unless its enclosing class templates are also explicitly specialized. The following example demonstrates explicit specialization of nested member templates:
+
+#include <iostream>
+using namespace std;
+
+template<class T> class X {
+public:
+  template<class U> class Y {
+  public:
+    template<class V> void f(U,V);
+    void g(U);
+  };
+};
+
+template<class T> template<class U> template<class V>
+  void X<T>::Y<U>::f(U, V) { cout << "Template 1" <<   endl; }
+
+template<class T> template<class U>
+  void X<T>::Y<U>::g(U) { cout << "Template 2" <<   endl; }
+
+template<> template<>
+  void X<int>::Y<int>::g(int) { cout << "Template 3"   << endl; }
+
+template<> template<> template<class V>
+  void X<int>::Y<int>::f(int, V) { cout << "Template 4" << endl; }
+
+template<> template<> template<>
+  void X<int>::Y<int>::f<int>(int, int) { cout << "Template 5" << endl; }
+
+// template<> template<class U> template<class V>
+//    void X<char>::Y<U>::f(U, V) { cout << "Template 6" << endl; }
+
+// template<class T> template<>
+//    void X<T>::Y<float>::g(float) { cout << "Template 7" << endl; }
+
+int main() {
+  X<int>::Y<int> a;
+  X<char>::Y<char> b;
+  a.f(1, 2);
+  a.f(3, 'x');
+  a.g(3);
+  b.f('x', 'y');
+  b.g('z');
+}
+
+See the output of the above program:
+
+Template 5
+Template 4
+Template 3
+Template 1
+Template 2
+
+    The compiler would not allow the template specialization definition that would output "Template 6" because it is attempting to specialize a member (function f()) without specialization of its containing class (Y).
+    The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
+
+A friend declaration cannot declare an explicit specialization
