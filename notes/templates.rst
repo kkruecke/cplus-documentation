@@ -273,3 +273,50 @@ As an example the compiler will not allow the following code:
 
     template<> void X<int>::f(int a = 10) { };// error: default argument(s) not allowed in member function of full
                                               // template specialization
+
+Explicit specialization of members of class templates
+-----------------------------------------------------
+
+Each instantiated class template specialization has its own copy of any static members. You may explicitly specialize static members. The following example demonstrates this:
+
+.. code-block:: cpp
+
+    template<class T> class X {
+    public:
+       static T v;
+       static void f(T);
+    };
+
+    // primary template static member definitions
+    template<class T> T X<T>::v = 0; 
+
+    template<class T> void X<T>::f(T arg) { v = arg; } 
+
+    // Specializaions of X<char*>::v and X<float>::f(float arg) require
+    // separate definitions of the static member 
+    
+    template<> std::string X<std::string>::v{"Hello"};
+    template<> void X<float>::f(float arg) { v = arg * 2; }
+    
+    int main() 
+    {
+        X<int> x;
+       cout << "x, which is X<int>, has X<int>::v = " << X<int>::v << '\n';
+    
+       X<string> a, b;
+       cout << "a and b are X<std::string*>, and X<std::string>::v = " << X<string>::v << '\n';
+    
+       X<float> c;
+       cout << "c is X<float>, and X<float>::v = " << X<float>::v << '\n';
+       c.f(10);
+       cout << "After c.f(10), X<float>::v = " <<  X<float>::v << '\n';
+    }
+
+yields this output:
+
+::
+
+    x, which is X<int>, has X<int>::v = 0
+    a and b are X<char*>, and X<char*>::v = Hello
+    c is X<float>, and X<float>::v = 0
+    After c.f(10), X<float>::v = 20
