@@ -425,7 +425,7 @@ See the output of the above program:
     
             'template<class T> template<class U> void X<T>::Y<U>::g(U)'
 
-.. todo:: correct text below.
+.. todo:: correct text below adding 'Template #'.
     
 The compiler would not allow the template specialization definition that would output "Template 6" because it is attempting to specialize a member (function f()) without specialization of its containing class (Y).
 The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
