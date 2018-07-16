@@ -384,7 +384,8 @@ cannot explicitly specialize a class template unless its enclosing class templat
 See the output of the above program:
 
 ::
-
+   
+    To be done later.  
       
 The compiler would not allow the template specialization definition that would output "Template 6" because it is attempting to specialize a member (function f()) without specialization of its containing class (Y).
 The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
