@@ -20,13 +20,13 @@ Other links:
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example is from the http://en.cppreference.com article on `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows by example how a template can be partially specialized:
+This modified example is from the `en.cppreference.com <http://en.cppreference.com>`_ article on `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows how to partially specialize a template:
 
 .. code-block:: cpp
 
      template<class T1, class T2, int I>
      class A {
-         public:
+        public:
         void describe()
         {
           cout << "uses primary template." << endl;
@@ -35,7 +35,7 @@ This modified example is from the http://en.cppreference.com article on `partial
      };            // primary template
       
      template<class T, int I> class A<T, T*, I> { // #1: partial specialization in which the 2nd parameter is a pointer to 'type of the first parameter.' 
-     public:
+        public:
         void describe()
         {
           cout << "uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'." << endl;
@@ -45,7 +45,7 @@ This modified example is from the http://en.cppreference.com article on `partial
       
      template<class T, class T2, int I>
      class A<T*, T2, I> { // #2: partial specialization in which the first parameter is a pointer.
-     public:
+        public:
         void describe()
         {
           cout << "uses partial template specialization #2 'class A<T*, T2, I>', in which the first parameter is a pointer." << endl;
@@ -55,7 +55,7 @@ This modified example is from the http://en.cppreference.com article on `partial
       
      template<class T>
      class A<int, T*, 5> { // #3: partial specialization in which first parameter is an int, 2nd is a pointer and the third is the scalar 5
-     public:
+        public:
         void describe()
         {
           cout << "uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5." << endl;
@@ -65,7 +65,7 @@ This modified example is from the http://en.cppreference.com article on `partial
       
      template<class X, class T, int I>
      class A<X, T*, I> {  // #4: partial specialization in which the second parameter is a pointer.
-     public:
+        public:
         void describe()
         {
           cout << "uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer." << endl;
@@ -145,7 +145,7 @@ This material is from IBM Knowledge Base article on template `Explicit specializ
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The declaration of full template specialization must be preceeded by ``template<>``, as the example of ``template<> class Sample<int>;`` below illustrates:
+``template<>``must be preceed a full template specialization, as the example of ``template<> class Sample<int>;`` below illustrates:
 
 .. code-block:: cpp
 
