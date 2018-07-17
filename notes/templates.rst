@@ -10,13 +10,6 @@ Links to Template specialization and partial specialization
 * https://en.cppreference.com/w/cpp/language/template_specialization
 * https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm
 
-Other links:
-++++++++++++
-
-* http://www.bogotobogo.com/cplusplus/templates.php
-* https://www.cprogramming.com/tutorial/template_specialization.html 
-* http://www.learncpp.com/cpp-tutorial/137-partial-template-specialization/
-
 Partial Template Specialization Examples
 ----------------------------------------
 
