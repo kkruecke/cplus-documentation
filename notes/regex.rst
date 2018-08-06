@@ -10,8 +10,10 @@ regex_match
 
 .. code-block:: cpp
 
-    void test_regex_match(const std::string& subject, const std::regex& re)
+    void test_regex_match(const std::string& subject, const std::string& re_str)
     {
+      regex re{re_str};
+
       cout << "Does subject of: '" << subject << "'. Match the regex of '" << re_str << "'" << endl;
     
       string msg { regex_match(subject, re) ? "matches " : "doesn't match " };
@@ -21,13 +23,18 @@ regex_match
 
     regex re{string{R"(\d\d/\d\d/\d\d\d\d)"}}; // four digit month/day/year date
 
-    test_regex_match(string{"5/31/2000"}, re);
+    test_regex_match(string{"5/31/2000"}, R"(\d\d/\d\d/\d\d\d\d)"); // four digit month/day/year date
 
-    test_regex_match(string{"05/31/2000"}, re);
+    test_regex_match(string{"05/31/2000"}, R"(\d\d/\d\d/\d\d\d\d)"); // four digit month/day/year date
     
-whose output is 
+whose output is:
 
-[ADD OUTPUT HERE]
+::
+
+    Does subject of: '5/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
+    Answer: doesn't match 
+    Does subject of: '05/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
+    Answer: matches 
 
 regex_search and smatch
 -----------------------
@@ -42,20 +49,21 @@ regex_search and smatch
     
       smatch m;
     
-      string s{R"(<prefix>kurt.krueckeberg@gmail.com<suffix>)"};
+      string s{R"(<prefix>kurt.krueckeberg@gmail.com<suffix>joe.smith@aol.com|jane.doe@comcast.net)"};
     
-      auto found = regex_search(s, m, re);
-    
-      for (auto i = 0; i < m.size(); ++i) {
-    
-          cout << "The " << i << "th submatch using m[i].str()     is: " <<  m[i].str() << endl;
-          cout << "The " << i << "th submatch using m.str(i)       is: " <<  m.str(i) << endl;
-          cout << "The " << i << "th submatch using *(begin() + n) is: " <<  *(m.begin() + i) << endl;
-      }
-      
-      cout << "m.prefix().str() = " << m.prefix().str() << endl;
-      
-      cout << "m.suffix().str() = " << m.suffix().str() << endl;
+      if (regex_search(s, m, re)) { 
+
+          for (auto i = 0; i < m.size(); ++i) {
+        
+              cout << "The " << i << "th submatch using m[i].str()     is: " <<  m[i].str() << endl;
+              cout << "The " << i << "th submatch using m.str(i)       is: " <<  m.str(i) << endl;
+              cout << "The " << i << "th submatch using *(begin() + n) is: " <<  *(m.begin() + i) << endl;
+          }
+          
+          cout << "m.prefix().str() = " << m.prefix().str() << endl;
+          
+          cout << "m.suffix().str() = " << m.suffix().str() << endl;
+      } 
     }
 
 The 0\ :sup:`th` submatch refers to the entire match (not a submatch). While each of these expressions
@@ -67,7 +75,39 @@ The 0\ :sup:`th` submatch refers to the entire match (not a submatch). While eac
     *(m.begin() + i)
 
 returns the i\ :sup:`th` submatch.  ``m.prefix().str()`` returns everything before the matched expression, while ``m.suffix().str()`` returns exerything after the matched
-expression. Thus ``m.prefix().str()`` is <prefix> and ``m.suffix().cstr()`` returns <suffix>
+expression. Thus ``m.prefix().str()`` is <prefix> and ``m.suffix().cstr()`` returns <suffix>.
+
+In the code above ``regex_search()`` only found the first email address. You can use ``regex_search()`` iteratively, but to do so you must use a loop like below, in which 
+``m.suffix().str()`` becomes the new input:
+ 
+.. code-block:: cpp
+
+    void test_regex_search2()  // See https://www.youtube.com/watch?v=nkjUpUu3dFk
+    {
+      regex re{R"(([[:w:]\.]+)@([[:w:]]+)\.com)"};
+    
+      smatch m;
+    
+      string s{R"(<prefix>kurt.krueckeberg@gmail.com<suffix>joe.smith@aol.com|jane.doe@comcast.net)"};
+    
+      while(regex_search(s, m, re) ) {
+    
+          for (auto i = 0; i < m.size(); ++i) {
+        
+              cout << "The " << i << "th submatch using m[i].str()     is: " <<  m[i].str() << endl;
+              cout << "The " << i << "th submatch using m.str(i)       is: " <<  m.str(i) << endl;
+              cout << "The " << i << "th submatch using *(begin() + n) is: " <<  *(m.begin() + i) << endl;
+          }
+          
+          cout << "m.prefix().str() = " << m.prefix().str() << endl;
+          
+          cout << "m.suffix().str() = " << m.suffix().str() << endl;
+
+          s = m.suffix().str();
+        }
+    }
+    
+.. note:: Again, note how the end of the loop resets the next input to ``regex_search`` to be the matches's suffix: ``m.prefix().str()``.
 
 regex iterators
 ---------------
@@ -75,17 +115,30 @@ regex iterators
 regex_iterator
 ^^^^^^^^^^^^^^
 
-If we change s in the previous code above to be 
+If we change ``s`` in the previous code above to be 
 
 .. code-block:: cpp
 
-    string s{R"(<prefix1>kurt.krueckeberg@gmail.com<suffix1>  <prefix2>kathafalk@yahoo.com<suffix2>)"}; 
+    string s{R"(<prefix1>kurt.krueckeberg@gmail.com<suffix1>  <prefix2>jane.doe@yahoo.com<suffix2>)"}; 
 
     smatch m;
 
     auto found = regex_search(s, m, re);
 
-``regex_search()`` will only find the first occurance in the string. To do repeated, iterative searching, use ``regex_iterator``
+``regex_search()`` will only find the first occurance in the string. To do repeated, iterative searching involving ``regex_search()``, we must use the while loop idiom shown in ``test_regex_search2()``:
+
+ .. code-block:: cpp
+ 
+    while(regex_search(s, m, re) ) {
+    
+      for (auto& x : m) {
+
+         // handle submatches here...
+      }  
+      s = m.suffix().str();
+    }
+
+``regex_iterator`` is a more natural alternative:
 
 .. code-block:: cpp
 
@@ -112,8 +165,19 @@ If we change s in the previous code above to be
     
 whose output is:
 
-[ADD OUTPUT HERE]
+::
 
+    The 0th match using re_iter->str(0)      is: kurt.krueckeberg@gmail.com or the entire matched expression.
+    The 1th submatch using re_iter->str(1)  is: kurt.krueckeberg
+    The 2th submatch using re_iter->str(2)  is: gmail
+    The 2th submatch using re_iter->prefix()  is: <prefix1>
+    The 2th submatch using re_iter->suffix()  is: <suffix1>  <prefix2>kathafalk@yahoo.com<suffix2>
+    The 0th match using re_iter->str(0)      is: kathafalk@yahoo.com or the entire matched expression.
+    The 1th submatch using re_iter->str(1)  is: kathafalk
+    The 2th submatch using re_iter->str(2)  is: yahoo
+    The 2th submatch using re_iter->prefix()  is: <suffix1>  <prefix2>
+    The 2th submatch using re_iter->suffix()  is: <suffix2>
+    
 regex_token_iterator
 ^^^^^^^^^^^^^^^^^^^^
 
