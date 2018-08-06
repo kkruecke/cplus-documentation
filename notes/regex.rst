@@ -16,7 +16,7 @@ regex_match
 
       cout << "Does subject of: '" << subject << "'. Match the regex of '" << re_str << "'" << endl;
     
-      string msg { regex_match(subject, re) ? "matches " : "doesn't match " };
+      string msg { regex_match(subject, re) ? "matches " : "does not match " };
     
       cout << "Answer: " << msg << endl;
     }
@@ -32,7 +32,7 @@ whose output is:
 ::
 
     Does subject of: '5/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
-    Answer: doesn't match 
+    Answer: does not match 
     Does subject of: '05/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
     Answer: matches 
 
@@ -165,8 +165,9 @@ If we change ``s`` in the previous code above to be
     
 whose output is:
 
-::
+.. raw:: html
 
+    <pre>
     The 0th match using re_iter->str(0)      is: kurt.krueckeberg@gmail.com or the entire matched expression.
     The 1th submatch using re_iter->str(1)  is: kurt.krueckeberg
     The 2th submatch using re_iter->str(2)  is: gmail
@@ -177,6 +178,7 @@ whose output is:
     The 2th submatch using re_iter->str(2)  is: yahoo
     The 2th submatch using re_iter->prefix()  is: <suffix1>  <prefix2>
     The 2th submatch using re_iter->suffix()  is: <suffix2>
+    </pre>
     
 regex_token_iterator
 ^^^^^^^^^^^^^^^^^^^^
