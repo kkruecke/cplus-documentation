@@ -4,11 +4,21 @@
 Rvalue References and Forwarding References in C++
 ==================================================
 
+Helpful Articles on Rvalue References, Move Semantics and Forwarding References
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* `C++ std::move and std::forward <http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html>`_.
+* `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
+* `Rvalue Reference Declarator: && <https://msdn.microsoft.com/en-us/library/dd293668.aspx>`_
+* `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_.
+* `Move semantics and rvalue references in C++11 <https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html>`_.
+* `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
+
 Move Semantics
 --------------
 
-To explain lvalues, rvlaues and move semantics, we use the Vector class below as a motivating example. In C++11 move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
-(see :ref:`rvalue-reference`). As we will see, this allows the compiler to always chose the more effecient constructor or assignment operator when an rvalue is passed. Below is template ``Vector`` class with the usual copy constructor and assignment operator as well
+The Vector class below is used to explain lvalues and rvlaues and move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
+(see :ref:`rvalue-reference`). Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
 as ``void push_back(const T&)`` that take an ``const T&``:
 
 .. code-block:: cpp
@@ -156,21 +166,21 @@ An lvalue is object that has name, an object whose address can be taken. Example
 
     int& f2(); // f2() returns an lvalue
 
-If an object is not an lvalue, an object whose address can be taken, it is termed an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
-rvalue. The address of an lvalue on the other hand can always be taken. For an in-depth explanation see `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some example of rvalue and lvalues:
+If an object is not an lvalue, it is an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
+rvalue. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some examples of rvalue and lvalues:
 
 .. code-block:: cpp
 
     int i; // lvalue
     int j = 8; // lvalue assigned rvalue
 
-    int f1(); // f1() returns an rvalue
+    int f1(); // f1() returns an rvalue. We can't do &f1().
     int& f2(); // f2() returns an lvalue
-    int&& f3(); // f3() returns an rvalue
+    int&& f3(); // f3() returns an rvalue.
 
     class X { //...};
 
-    X x1; // lvalue
+    X x1; // lvalue declared
     X f4(); // returns rvalue
     X& f5(); // returns lvalue
 
@@ -184,7 +194,7 @@ An rvalue reference is declared using ``&&``:
     int v = 9;
     int&& l = v; // error: cannot bind rvlue reference l to lvalue v.
 
-The rvalue reference j above is not really of any value. While we can change the value of a literal, using this trick
+The rvalue reference j above is not really of any value. While we can change the value of a literal using this trick
  
 .. code-block:: cpp
 
@@ -192,11 +202,69 @@ The rvalue reference j above is not really of any value. While we can change the
     j = 9;
     cout << j;  // prints: 9
 
-The temporay is deleted once j goes out of scope, and thus this technique has no real applicability. The value of rvalues simply lies in the ability of the compiler to detect then. If the compiler see an rvalue, it thinks, "oh, this is an
-rvalue, is there method that takes an rvalue reference", and if there is, it invokes it. 
+the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
+invoke it." 
 
-Implications for constructors and assignment operators
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note:: rvalue reference variables are lvalues when used in expressions. 
+ 
+.. code-block:: cpp
+
+    #include <iostream>
+    #include <utility>
+     
+    void f(int& x) {
+        std::cout << "lvalue reference overload f(" << x << ")\n";
+    }
+     
+    void f(const int& x) {
+        std::cout << "lvalue reference to const overload f(" << x << ")\n";
+    }
+     
+    void f(int&& x) {
+        std::cout << "rvalue reference overload f(" << x << ")\n";
+    }
+     
+    int main() {
+        int i = 1;
+        const int ci = 2;
+        f(i);  // calls f(int&)
+        f(ci); // calls f(const int&)
+        f(3);  // calls f(int&&)
+               // would call f(const int&) if f(int&&) overload wasn't provided
+        f(std::move(i)); // calls f(int&&)
+     
+        // rvalue reference variables are lvalues when used in expressions
+        int&& x = 1;
+        f(x);            // calls f(int& x)
+        f(std::move(x)); // calls f(int&& x)
+    }
+
+note:: rvalue reference parameters are lvalues
+ 
+.. code-block:: cpp
+
+   class Base {
+     // snip...
+    public:
+     Base(const Base& b);
+     Base(Base&& b);
+     //snip...  
+   };
+
+   class Derived {
+     // snip...
+    public:
+     Derived(const Derived& d);
+     Derived(Derived&& d);
+     //snip...  
+   };
+   
+   Derived::Derived(Derived&& d) : Base(std::move(d)), ... {} 
+
+Although d is a reference to an rvalue, d itself is an lvalue because it has a name and its address can be taken; and so it must be cast to an rvalue using ``std::move(d)``.
+
+Overloading Constructors and Assignment Operators with rvalue references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, and this allows the compiler to now branch at compiler time depending on whether the constructor or assignment operator is
 being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
@@ -205,7 +273,7 @@ Implementation of move constructor and move assignment operator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The move constructor and move assignment, both of which take rvalue references, both read from and write to the rvalue reference parameter. They perform a shallow copy of its resourses, and then, as in the example below, set the rvalue object\ |apos|\ s
-``length`` to 0 and it\ |apos|\ s pointer p is set to ``nullptr``. This prevents memory deallocation when the rvalue's destructor is called. 
+``length`` to 0 and it\ |apos|\ s pointer p is set to ``nullptr`` to prevent the memory being deallocated when the rvalue's destructor is called. 
  
 .. code-block:: cpp
 
@@ -299,7 +367,7 @@ The move constructor and move assignment, both of which take rvalue references, 
     {
        if (this != &lhs)  {
     
-           p = std::move(lhs.p); 
+           p = std::move(lhs.p); // std::move() casts an lvalue to an rvalue. 
     
            size = lhs.size;
            
@@ -391,7 +459,7 @@ Obviously the constructor and assignment operator overloaded to take an rvalue r
 
     Vector<int> v1{1, 5, 12};
     Vector<int> v2{v2}; // invokes copy constructor    
-    Vector<int> v2{v{2, 6, 16}; // invokes move constructor Vector::Vector(Vector&&)    
+    Vector<int> v2{v{2, 6, 16}}; // invokes move constructor Vector::Vector(Vector&&)    
     template<class T> void f(Vector<T>&& v);
     f(Vector<intT>{11, 19, 29}); // invokes move constructor Vector::Vector(Vector&&)    
 
@@ -552,14 +620,6 @@ Move Conclusion:
 .. note:: The C++ standard library's **Remove_reference** is simply ``remove_reference`` (with a lowercase r). The version above used ``Remove_reference`` (with an uppercase R), so that it would not conflict with the actual ``std::remove_reference`` in the standard library,
    which automatically gets included when <iostream> is included in main.cpp and its methods are used, as they were in the example code above.
 
-Helpful Articles on Rvalue References and Move Semantics
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* Thomas Becker's article `C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
-* `Move semantics and rvalue references in C++11 <https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html>`_.
-* `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
-* `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_
-
 Perfect Forwarding
 ------------------
 
@@ -568,13 +628,14 @@ This section discusses the use of forwarding references to implement perfect for
 Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~
 
-A template function parameter of type ``T&&`` such as
+A **forwarding reference** is a template function parameter of type ``T&&`` such as
 
 .. code-block:: cpp
 
    template<typename T> void sample(T&& t);
 
-is called a **forwarding reference**. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can have a reference to a reference. These reference collapsing rules apply to
+It looks just like an rvalue reference, but when ``&&`` is used in function template as above, it is called a **forwarding refernence**. Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. Forwarding reference take
+advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can syntactically have a reference to a reference. In this case, the following reference collapsing rules apply:
 references to references:
 
 * T& & becomes T&
@@ -582,14 +643,16 @@ references to references:
 * T&& & becomes T&
 * T&& && becomes T&&
 
+Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``.
+
 The Purpose of Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const objects. It can bind to mutable and volitale. When a lvalue, say, of type X is passed to a
-template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules is simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
-becomes ``X``, and ``T&&`` becomes ``X&&``.
+Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const objects. It can bind to mutable and volitale. In essence, it can bind to any type. When a lvalue, say, of type X is passed to a
+template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
+becomes ``X``, and ``T&&`` is thus simply ``X&&``.
 
-So in general, an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can see this in the code below:
+Thus an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can see this in the code below:
 
 .. code-block:: cpp
    
@@ -627,10 +690,12 @@ So in general, an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&`
     vector<int> v{1, 2, 3, 4};
     sample(v);
     sample(vector<int>{5, 6, 7, 8});
+    sample(move(v));
 
 This will result in output of::
 
     In partial template specialization of struct state_type<T&>
+    In non-specialization of struct state_type<T>
     In non-specialization of struct state_type<T>
 
 For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of sample() is
@@ -661,8 +726,7 @@ this:
        state_type<vector<int>>::describe();
     }
 
-In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function that perfect forwards
-its parameters. 
+In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function that perfectly forwards its parameters leaving the paramters type intact. 
 
 Now take this factory method:
 
@@ -689,7 +753,7 @@ Now take this factory method:
        return std::shared_ptr<T>{new T(arg)};  // fails to invoke A(string&&) when string is rvalue.
     }
 
-Note the output of the code below, where first an lvalue then an rvlaue is passed to ``factory<T>(ARG&& arg)`` and then an rvalue: 
+Note the output of the code below, where first an lvalue is passed to ``factory<T>(ARG&& arg)`` and then an rvalue: 
 
 .. code-block:: cpp
 
@@ -709,8 +773,7 @@ The output is::
 ``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead it got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
 fail in invoking ``A::A(A&&)``?
 
-The reason is, ``arg`` is not an lvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue 
-reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
+The reason is, ``arg`` is not an lvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
 
 .. code-block:: cpp
  
@@ -721,10 +784,10 @@ reference, if it has a name, is an lvalue. So we need to remove the name with a 
        return std::shared_ptr<T>{ new T( static_cast<ARG&&>(arg) ) };  // Cast returns a nameless parameter.
     }
 
-Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string&&&``, and after applying the reference collapsing rules is simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an rvalue is passed, however,
+Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string&&&``, and after applying the reference collapsing rules is simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an rvalue is passed; however,
 the lvalue ``arg`` is cast to a nameless rvalue. 
 
-The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do the static_cast, which looks like:
+The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do this static_cast, and ith looks like this:
 
 .. code-block:: cpp
 

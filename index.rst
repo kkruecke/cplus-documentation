@@ -11,3 +11,4 @@ Notes on Features of C++-17
    notes/rvalue-forwarding-refs.rst
    notes/templates.rst
    notes/regex.rst
+   notes/variant.rst
