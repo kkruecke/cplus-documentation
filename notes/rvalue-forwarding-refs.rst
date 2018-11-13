@@ -11,7 +11,6 @@ Helpful Articles on Rvalue References, Move Semantics and Forwarding References
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 * `Rvalue Reference Declarator: && <https://msdn.microsoft.com/en-us/library/dd293668.aspx>`_
 * `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_.
-* `Move semantics and rvalue references in C++11 <https://www.cprogramming.com/c++11/rvalue-references-and-move-semantics-in-c++11.html>`_.
 * `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
 
 Move Semantics
@@ -612,6 +611,128 @@ which simplies to
 
 And again as before, this casts arg to rvalue reference that does not have a name.
 
+std::move() Implementation
+--------------------------
+
+.. code-block:: cpp
+ 
+     template<typename T>
+        constexpr typename std::remove_reference<T>::type&&
+        move(T&& __t) noexcept
+        {
+          return static_cast<typename std::remove_reference<T>::type&&>(__t); 
+        }
+
+Why is the return type of ``std::move()`` is ``constexpr typename std::remove_reference<_Tp>::type&&`` instead of ``T&&``? Recall that when an lvalue is passed to ``std::move()`` like below
+
+.. code-block:: cpp
+   
+   using namespace std;
+
+   class X { 
+        //snip...
+      public:
+        X(const X&);
+        X(X&&);
+        //snip...
+   };
+
+   X x1;
+
+   X x2 = move(x1);
+  
+then T binds as ``X&``, and the ``move(x1)`` instantiated (before reference collapsing is done) is
+
+.. code-block:: cpp
+
+    constexpr typename std::remove_reference<X&>::type&&
+    move(X& && __t) noexcept
+    {
+      return static_cast<typename std::remove_reference<X&>::type&&>(__t); 
+    }
+
+and after applying reference collapsing, it is
+
+.. code-block:: cpp
+
+    constexpr typename std::remove_reference<X&>::type&&
+    move(X& __t) noexcept
+    {
+      return static_cast<typename std::remove_reference<X&>::type&&>(__t); 
+    }
+
+and the instantiation of ``remove_reference<X&>::type`` is simply ``X``. Thus ``move(x1)`` is:
+
+.. code-block:: cpp
+
+    constexpr X&&
+    move(X& __t) noexcept
+    {
+      return static_cast<X&&>(__t); 
+    }
+
+Had ``move()`` been implemented as
+
+.. code-block:: cpp
+
+    template<typename T>
+       constexpr T&&
+       move(T&& __t) noexcept
+       {
+         return static_cast<T&&>(__t); 
+       }
+
+then it would have been instantiated as 
+
+.. code-block:: cpp
+
+    constexpr X& &&
+    move(X& && __t) noexcept
+    {
+      return static_cast<X& &&>(__t); 
+    }
+
+and after applying reference collapsing, we would have
+
+.. code-block:: cpp
+
+    constexpr X& 
+    move(X& __t) noexcept
+    {
+      return static_cast<X&>(__t); 
+    }
+
+as the instantiation of ``move(x1)``, and ``move(x1)`` would still be an lvalue.  
+
+If ``move()`` is passed an rvalue, then the instantion of  
+
+.. code-block:: cpp
+
+    template<typename T>
+       constexpr T&&
+       move(T&& __t) noexcept
+       {
+         return static_cast<T&&>(__t); 
+       }
+
+would work fine. For example:
+
+    X createX();
+
+    X x = move(createX());
+
+would instantiate
+ 
+.. code-block:: cpp
+
+    constexpr X&&
+    move(X&& __t) noexcept
+    {
+      return static_cast<X&&>(__t); 
+    }
+
+and a nameless rvalue (known as a xvalue) would be returned. ``remove_reference<T>::value&&`` is needed to ensure an lvalue is converted to an rvalue (or more specifically a xvalue).
+   
 Move Conclusion:
 ~~~~~~~~~~~~~~~~
 
@@ -619,6 +740,16 @@ Move Conclusion:
 
 .. note:: The C++ standard library's **Remove_reference** is simply ``remove_reference`` (with a lowercase r). The version above used ``Remove_reference`` (with an uppercase R), so that it would not conflict with the actual ``std::remove_reference`` in the standard library,
    which automatically gets included when <iostream> is included in main.cpp and its methods are used, as they were in the example code above.
+
+Value Categories
+----------------
+
+.. todo:: Add examples with brief explanations.
+
+See: 
+
+* https://en.cppreference.com/w/cpp/language/value_category. 
+* `C++ std::move and std::forward <See http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html>`_.
 
 Perfect Forwarding
 ------------------
@@ -649,8 +780,8 @@ The Purpose of Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const objects. It can bind to mutable and volitale. In essence, it can bind to any type. When a lvalue, say, of type X is passed to a
-template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
-becomes ``X``, and ``T&&`` is thus simply ``X&&``.
+template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``. After applying the reference collapsing rules ``X& &&`` becomes simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
+becomes ``X``, and ``T&&`` is ``X&&``.
 
 Thus an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can see this in the code below:
 
@@ -692,13 +823,13 @@ Thus an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can 
     sample(vector<int>{5, 6, 7, 8});
     sample(move(v));
 
-This will result in output of::
+whose output is::
 
     In partial template specialization of struct state_type<T&>
     In non-specialization of struct state_type<T>
     In non-specialization of struct state_type<T>
 
-For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of sample() is
+For the lvalue v in ``sample(v);``, the instantiation of sample() is
 
 .. code-block:: cpp 
 
@@ -707,7 +838,7 @@ For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and th
        state_type<vector<int&>::describe();
     }
     
-Applying reference collapsing rules for references this becomes
+after which the compiler applies reference collapsing rules:
 
 .. code-block:: cpp 
 
@@ -716,8 +847,7 @@ Applying reference collapsing rules for references this becomes
        state_type<vector<int&>::describe();
     }
  
-So we see arg binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample looks like
-this: 
+Thus ``arg`` binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample is:
 
 .. code-block:: cpp 
 
@@ -726,9 +856,8 @@ this:
        state_type<vector<int>>::describe();
     }
 
-In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function that perfectly forwards its parameters leaving the paramters type intact. 
-
-Now take this factory method:
+In this case ``arg`` binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function that perfectly forwards its parameters leaving the paramters type intact. 
+For example, take this factory method:
 
 .. code-block:: cpp
 
@@ -770,10 +899,9 @@ The output is::
     In non-specialization of struct state_type<T>
      A::A(std::string& lhs) invoked.
  
-``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead it got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
-fail in invoking ``A::A(A&&)``?
-
-The reason is, ``arg`` is not an lvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
+``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead it got passed as an lvalue references. Why did ``factory<A>(string{"rvaluestr"});``
+fail to invoke ``A::A(A&&)``?  The reason is, ``arg`` is not an lvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with
+a cast:
 
 .. code-block:: cpp
  
@@ -797,17 +925,58 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
       return static_cast<T&&>(a);
     } 
 
-If you use just ``T&`` instead of ``remove_reference<T>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
-"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." 
+std::forward Implementation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The purpose of std::forward is to conditionally cast its argument. If the type of its argument is an rvalue reference, then ``std::forward<T>(arg)`` returns an rvalue reference. If the type of its argument is an
+lvalue or lvalue reference, the cast does nothing. To achieve the conditional casting, the template argument T must be supplied, which is why ``std::remove_reference<T>::type&`` is employed below in declaring the
+argument type that std::forward takes. 
 
 .. code-block:: cpp
 
-    template<typename _Tp>
-      constexpr _Tp&&
-    forward(typename std::remove_reference<_Tp>::type& __t) noexcept
+    template<typename T>
+      constexpr T&&
+    forward(typename std::remove_reference<T>::type& arg) noexcept
     {
-      return static_cast<_Tp&&>(__t); 
+      return static_cast<T&&>(arg); 
     }
+
+Using ``remove_reference<T>::type&`` as the argument type forces client code to explictly specify the template parameter for std::forward. Thus, unlike ``std::move`` we cannot call ``std::forward(arg)``. We must invoke ``std::forward<T>(arg)``, where ``T`` is the
+type of ``arg``. This use of ``std::forward`` results in a compile error:
+
+.. code-block:: cpp
+
+    class X {
+      public: 
+       X(string&&);
+       // snip...
+    };
+
+    template<class T, class ARG> std::shared_ptr<T> factory(ARG&& arg)
+    {
+       state_type<ARG>::describe();
+    
+       return std::shared_ptr<T>{new T(std::forward(arg))};  // compile error: TODO: list the error. 
+    }
+
+   factory(string("some string"));
+
+Instead the one must do:
+
+.. code-block:: cpp
+
+    template<class T, class ARG> std::shared_ptr<T> factory(ARG&& arg)
+    {
+       state_type<ARG>::describe();
+    
+       return std::shared_ptr<T>{new T(std::forward<ARG>(arg))};  // 
+    }
+
+   factory(string("some string"));
+
+   forward<T>(arg);
+ 
+.. todo:: This paragraph and code was written much earlier than what is above. Keep it? Discard it? Merge its thoughts with that above?
 
 We now use forward in our factory() function: 
 
@@ -834,6 +1003,8 @@ When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&``
     {
        return std::shared_ptr<A>{ new A( std::forward<T>(arg) ) }; 
     }
+
+.. todo:: This explains how std::forward works. Merge it with the newer code above the prior todo.
 
 For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type& `` resolves to ``string&``
 and so forward() is instantiated as:
