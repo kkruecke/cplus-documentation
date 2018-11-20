@@ -7,7 +7,7 @@ Rvalue References and Forwarding References in C++
 Helpful Articles on Rvalue References, Move Semantics and Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* `Howard Hinnant's Talk on Move Semantics <https://www.youtube.com/watch?v=vLinb2fgkHk&feature=youtu.be>`_.
+* `Howard Hinnant's, the creator of move semantics, Talk on Move Semantics <https://www.youtube.com/watch?v=vLinb2fgkHk&feature=youtu.be>`_.
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 * `Rvalue Reference Declarator: && <https://msdn.microsoft.com/en-us/library/dd293668.aspx>`_
 * `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_.
