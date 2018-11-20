@@ -7,7 +7,7 @@ Rvalue References and Forwarding References in C++
 Helpful Articles on Rvalue References, Move Semantics and Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* `Value categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_.
+* `Howard Hinnant's Talk on Move Semantics <https://www.youtube.com/watch?v=vLinb2fgkHk&feature=youtu.be>`_.
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 * `Rvalue Reference Declarator: && <https://msdn.microsoft.com/en-us/library/dd293668.aspx>`_
 * `rvalue Reference and Move Semantics <http://www.bogotobogo.com/cplusplus/C11/5_C11_Move_Semantics_Rvalue_Reference.php>`_.
@@ -748,8 +748,10 @@ Value Categories
 
 See: 
 
-* https://en.cppreference.com/w/cpp/language/value_category. 
-* `C++ std::move and std::forward <See http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html>`_.
+* `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
+* `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_.
+* `Scott Meyers Article with Examples <https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers>`_.
+* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 Perfect Forwarding
 ------------------
