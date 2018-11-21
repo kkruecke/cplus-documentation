@@ -502,8 +502,7 @@ that contains a static method called ``describe()``, which ``move()`` invokes:
     template<typename T> constexpr typename std::Remove_reference<T>::type&& move(T&& __t) noexcept 
     { 
       return static_cast<typename std::Remove_reference<T>::type&&>(__t); 
-    
-}
+    }
 
     // Remove_reference defined
     template<typename _Tp>
