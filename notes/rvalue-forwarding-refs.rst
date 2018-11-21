@@ -493,16 +493,17 @@ So when it "has a name" the rvalue reference parameter itself is an lvalue withi
 Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy constructor.
 
 Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown below. Its argument is of generic type ``T&&``. This looks
-like an rvalue reference, but it works differently than an ordinary rvalue reference, say, for example, ``std::string&&``, where the type is specified or hard-coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an
-lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations that contains a static method
-called ``describe()``, which ``move()`` invokes: 
+like an rvalue reference, but it works differently than an ordinary rvalue reference, say, for example, ``std::string&&``, where the type is specified or hard-coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference.
+When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations
+that contains a static method called ``describe()``, which ``move()`` invokes: 
 
 .. code-block:: cpp
 
     template<typename T> constexpr typename std::Remove_reference<T>::type&& move(T&& __t) noexcept 
     { 
       return static_cast<typename std::Remove_reference<T>::type&&>(__t); 
-    }
+    
+}
 
     // Remove_reference defined
     template<typename _Tp>
@@ -931,7 +932,27 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
     } 
 
 If you use just ``T&`` instead of ``remove_reference<T>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
-"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." 
+"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." If we don't explicitly supply the template argument when invoking
+``forward()``, a compile error results; for example
+
+.. code-block:: cpp
+
+    template<class _Tp> void f(_Tp&& t)
+    {
+        cout << "t = " << forward(t);
+    }
+    f(10);
+
+results in::
+
+    /usr/include/c++/7/bits/move.h:73:5: note: candidate: template<class _Tp> constexpr _Tp&& std::forward(typename std::remove_reference<_From>::type&)
+         forward(typename std::remove_reference<_Tp>::type& __t) noexcept
+         ^~~~~~~
+    /usr/include/c++/7/bits/move.h:73:5: note:   template argument deduction/substitution failed:
+    main.cpp:74:30: note:   couldn't deduce template parameter ‘_Tp’
+         cout << "t = " << forward(t);
+
+Returning to our original example:
 
 .. code-block:: cpp
 
