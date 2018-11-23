@@ -733,8 +733,8 @@ would instantiate
 
 and a nameless rvalue (known as a xvalue) would be returned. ``remove_reference<T>::value&&`` is needed to ensure an lvalue is converted to an rvalue (or more specifically a xvalue).
    
-Move Conclusion:
-~~~~~~~~~~~~~~~~
+Move Conclusion
+~~~~~~~~~~~~~~~
 
 ``move(T&&)`` is non-overloaded function template that casts its argument to an rvalue. It works both with lvalue and rvalue arguments. It uses the partial template specializations provided by ``Remove_reference<T>`` to do this.
 
