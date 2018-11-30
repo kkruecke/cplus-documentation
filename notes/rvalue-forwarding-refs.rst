@@ -5,7 +5,7 @@ Rvalue References and Forwarding References in C++
 ==================================================
 
 Helpful Articles on Rvalue References, Move Semantics and Forwarding References
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------------------------------------------
 
 * `Howard Hinnant's, the creator of move semantics, Talk on Move Semantics <https://www.youtube.com/watch?v=vLinb2fgkHk&feature=youtu.be>`_.
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
@@ -612,7 +612,7 @@ which simplies to
 And again as before, this casts arg to rvalue reference that does not have a name.
 
 std::move() Implementation
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: cpp
  
@@ -744,14 +744,15 @@ Move Conclusion
 Value Categories
 ----------------
 
-.. todo:: Add examples with brief explanations.
+links to explanatory articles: 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-See: 
-
+* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
+* `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
 * `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
 * `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_.
-* `Scott Meyers Article with Examples <https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers>`_.
-* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
+
+.. todo:: Use references above to add the explantion with examples.
 
 Perfect Forwarding
 ------------------
