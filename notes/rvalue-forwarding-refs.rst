@@ -744,8 +744,8 @@ Move Conclusion
 Value Categories
 ----------------
 
-links to explanatory articles: 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+articles: 
+~~~~~~~~~
 
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
