@@ -192,7 +192,7 @@ Output::
     weak_ptr<> not yet initialized
             observe() unable to lock weak_ptr<>
     weak_ptr<> initialized with shared_ptr.
-            observe() able to lock weak_ptr<>, value=42
+            observe() able to lock weak_ptr<>, value=42 
     shared_ptr<> has been destructed due to scope exit.
             observe() unable to lock weak_ptr<>
         
