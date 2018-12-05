@@ -194,7 +194,17 @@ Output::
             observe() able to lock weak_ptr<>, value=42 
     shared_ptr<> has been destructed due to scope exit.
             observe() unable to lock weak_ptr<>
-        
+
+Key Points
+----------
+
+* ``weak_ptr<>`` can only be initialized with a ``shared_ptr<>`` or a ``weak_ptr<>``.
+* ``weak_ptr<>`` has no dereference of overloaded pointer access methods, no ``T& weak_ptr<T>::operator*()`` or ``T *weak_ptr<T>::operator->()``.   
+* ``weak_ptr<>`` does not participate in in the reference count. 
+* ``shared_ptr<Ty> lock() const`` must be used to access the referenced object.
+* ``weak_ptr<>`` is useful in 1. preventing circular references and in 2. checking whether a ``shared_ptr<>`` dangles. 
+* To test if the corresponding ``shared_ptr<>`` dangle use ``weak_ptr<>`` methods ``bool expired() const`` or ``shared_ptr<Ty> lock() const``. 
+
 Articles About weak_ptr<>
 -------------------------
 
