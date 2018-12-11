@@ -13,7 +13,7 @@ Solution Techiques for Each Scenario
 ------------------------------------
 
 1. tag dispatch technique
-2. enable_if<T> template technique
+2. ``enable_if<T>`` template technique
 
 Resources
 ---------
