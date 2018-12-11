@@ -11,5 +11,6 @@ Notes on Features of C++-17
    notes/rvalue-forwarding-refs.rst
    notes/managed-ptrs.rst
    notes/templates.rst
+   notes/overloading-on-perfect-fwded-methods.rst
    notes/regex.rst
    notes/variant.rst
