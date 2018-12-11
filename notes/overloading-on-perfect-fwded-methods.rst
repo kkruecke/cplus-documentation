@@ -1,19 +1,19 @@
 Elimanating Compile Errors Resulting from Overloading Methods Taking Forwarding References
 ==========================================================================================
 
-.. todo:: Below is the outline for the discussion. Fill in the full explanation.
+.. todo:: Add the complete explanation, with examples, using the topic outline below.
 
-Two Use Cases Illustrating the Problem
---------------------------------------
+Two Use Cases Illustrating the Two Problem Scenarios
+----------------------------------------------------
 
-1. Methods example
-2. Constructors example
+1. Overloading a template free function or class member template method that takes forwarding references.
+2. Overloading constructors that are template methods taking forwarding references 
 
-Two Techniques for Solving the Two Overload-Resolution Problems
----------------------------------------------------------------
+The Two Techniques for Solving Two Problem Scenarios 
+----------------------------------------------------
 
-1. tag dispatch
-2. enable_if
+1. tag dispatch technique
+2. enable_if<T> template technique
 
 Resources
 ---------
