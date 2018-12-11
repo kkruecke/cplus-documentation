@@ -1,7 +1,7 @@
 Elimanating Compile Errors Resulting from Overloading Methods Taking Forwarding References
 ==========================================================================================
 
-.. todo:: Below is the outline for the discussion. Add the full explanation.
+.. todo:: Below is the outline for the discussion. Fill in the full explanation.
 
 Two Use Cases Illustrating the Problem
 --------------------------------------
