@@ -7,7 +7,12 @@ The Two Use Problem Scenarios
 -----------------------------
 
 1. Overloading a template free function or class member template method that takes forwarding references.
+
+see https://mortoray.com/2013/06/03/overriding-the-broken-universal-reference-t/
+
 2. Overloading constructors that are template methods taking forwarding references 
+
+See https://mpark.github.io/programming/2014/06/07/beware-of-perfect-forwarding-constructors/
 
 Solution Techiques for Each Scenario 
 ------------------------------------
