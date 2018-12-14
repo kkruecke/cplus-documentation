@@ -12,8 +12,7 @@ Comments. See also:
 Problem 1: Overloading a Template Function That Takes Forwarding Reference(s).
 ------------------------------------------------------------------------------
 
-
-In this example of an overloaded method, the expected promotion of short to int occurs.
+To highlight the problem. We first consider a example of an overloaded method in which the desired behavior, the promotion of short to int, occurs function call resolution.
 
 .. code-block:: cpp
 
@@ -54,9 +53,8 @@ Ouput::
     void add2log( int i) called
     void add2log(string &) called
 
-.. code-block:: cpp
-
-But when there is a template version of addd2log that take a forwarding reference as in this code. 
+``add2log(sint);`` results in the expected promotion of the short to an int and the call to ``void add2log(int)``. However, when there is a template version of addd2log that take a forwarding reference, this
+expected behavior does not occur as in this example. 
 
 .. code-block:: cpp
 
@@ -92,10 +90,10 @@ But when there is a template version of addd2log that take a forwarding referenc
     
     add2log(str);
 
-The code no longer compilers. Why does the expected promotion of sint to an int no longer occur? The reason is, the compiler can exactly match 'template<typename T> void add2log(T&& value)'. 
-The compiler then instantiates the function 'void add2log(short& value)', which eventually results in a call to the non-existant constructor string::string(short).
+Now the code no longer compilers. Why does the expected promotion of ``sint`` to an ``int`` no longer occur? The reason is, the compiler can exactly match ``template<typename T> void add2log(T&& value)``. 
+The compiler then instantiates ``void add2log(short& value)``, which eventually results in a call to the non-existant constructor ``string::string(short)``.
 
-How can we then achieve the overloaded behave we really want?
+How can we achieve the overloaded behave we really want if template methods with forwarding references can't really be overloaded without producing compile errors like those above?
 
 Solution: tag dispatch
 ----------------------
@@ -105,7 +103,7 @@ The technique .....
 
 Example:
 
-Credit Scott Meyers.      
+.. todo:: Reference to Scott Meyers book and Item #?.      
 
 
 Problem 2: Overloading a Constructor That Takes Forwarding Reference(s).
@@ -114,7 +112,4 @@ Problem 2: Overloading a Constructor That Takes Forwarding Reference(s).
 
 Solution: ``enable_if<T>``
 --------------------------
-
-Resources
----------
 
