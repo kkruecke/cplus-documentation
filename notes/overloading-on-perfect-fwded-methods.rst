@@ -90,7 +90,7 @@ expected behavior does not occur as in this example.
     
     add2log(str);
 
-Now the code no longer compilers. Why does the expected promotion of ``sint`` to an ``int`` no longer occur? The reason is, the compiler can exactly match ``template<typename T> void add2log(T&& value)``. 
+Now the code no longer compilers. The expected promotion of ``sint`` to an ``int`` no longer occurs because ``sint`` is an exact match for ``template<typename T> void add2log(T&& value)``. 
 The compiler then instantiates ``void add2log(short& value)``, which eventually results in a call to the non-existant constructor ``string::string(short)``.
 
 How can we achieve the overloaded behave we really want if template methods with forwarding references can't really be overloaded without producing compile errors like those above?
