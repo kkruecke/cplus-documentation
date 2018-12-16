@@ -12,7 +12,7 @@ Comments. See also:
 Problem 1: Overloading a Template Function That Takes Forwarding Reference(s).
 ------------------------------------------------------------------------------
 
-To highlight the problem. We first consider a example of an overloaded method in which the desired behavior, the promotion of short to int, occurs function call resolution.
+We first start with the example of an overloaded method ``addtolog`` where the desired behavior, the promotion of short to int, does occurs.
 
 .. code-block:: cpp
 
@@ -53,8 +53,8 @@ Ouput::
     void add2log( int i) called
     void add2log(string &) called
 
-``add2log(sint);`` results in the expected promotion of the short to an int and the call to ``void add2log(int)``. However, when there is a template version of addd2log that take a forwarding reference, this
-expected behavior does not occur as in this example. 
+``add2log(sint);`` results in the expected promotion of the short to an int and the call to ``void add2log(int)``; however, when there is a template version of ``addd2log`` that take a forwarding reference, this
+same expected behavior does not occur as shown below. 
 
 .. code-block:: cpp
 
@@ -90,16 +90,26 @@ expected behavior does not occur as in this example.
     
     add2log(str);
 
-Now the code no longer compilers. The expected promotion of ``sint`` to an ``int`` no longer occurs because ``sint`` is an exact match for ``template<typename T> void add2log(T&& value)``. 
-The compiler then instantiates ``void add2log(short& value)``, which eventually results in a call to the non-existant constructor ``string::string(short)``.
+Now the code no longer compilers. The expected promotion of ``sint`` to an ``int`` no longer occurs because ``sint`` is an exact match for ``template<typename T> void add2log(T&& value)``, 
+and the compiler then instantiates the function ``void add2log(short& value)``, which results in a call to the non-existant constructor ``string::string(short)`` during ``log.emplace_back(value)``.
 
 How can we achieve the overloaded behave we really want if template methods with forwarding references can't really be overloaded without producing compile errors like those above?
 
 Solution: tag dispatch
 ----------------------
 
-The technique .....
+The technique involves providing an inline method that implements ``template<typename T> void add2log(T&& value)`` that takes the same forwarding reference as ``add2log`` along with an extra parameter or tag that is used
+to select or dispatch-to at compile-time the correct implementation method. This example shows what is meant.
 
+.. todo:: Finish code below:
+
+.. code-block:: cpp
+
+    template<typename T>
+    void add2log(T&& value) 
+    {
+          
+    }
 
 Example:
 
