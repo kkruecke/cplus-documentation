@@ -91,7 +91,7 @@ same expected behavior does not occur as shown below.
     add2log(str);
 
 Now the code no longer compilers. The expected promotion of ``sint`` to an ``int`` no longer occurs because ``sint`` is an exact match for ``template<typename T> void add2log(T&& value)``, 
-and the compiler then instantiates the function ``void add2log(short& value)``, which results in a call to the non-existant constructor ``string::string(short)`` during ``log.emplace_back(value)``.
+and the compiler therefore instantiates ``void add2log(short& value)``, which results in a call to a non-existant constructor ``string::string(short)`` during the execution of ``log.emplace_back(value)``.
 
 How can we achieve the overloaded behave we really want if template methods with forwarding references can't really be overloaded without producing compile errors like those above?
 
