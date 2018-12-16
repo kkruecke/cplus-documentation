@@ -1,8 +1,8 @@
 Elimanating Compile Errors Resulting from Overloading Methods Taking Forwarding References
 ==========================================================================================
 
-Comments. See also:
--------------------
+References
+----------
 
 * https://mortoray.com/2013/06/03/overriding-the-broken-universal-reference-t/
 * http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf
