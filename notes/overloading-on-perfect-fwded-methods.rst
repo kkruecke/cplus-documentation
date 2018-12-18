@@ -71,7 +71,7 @@ same expected behavior does not occur as shown below.
     void add2log(T&& value) 
     {
         cout << "template<typename T> void add2log(T&&) called" << endl;
-        log.emplace_back(value);
+        log.emplace_back(std::forward<T>(value));
     }
 
     void add2log(int i) 
