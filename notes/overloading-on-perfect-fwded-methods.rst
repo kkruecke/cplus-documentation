@@ -5,6 +5,7 @@ References
 ----------
 
 * `Very Helpful <https://mortoray.com/2013/06/03/overriding-the-broken-universal-reference-t/>`_.
+* http://ericniebler.com/2013/08/07/universal-references-and-the-copy-constructo/
 * http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf
 
 .. todo:: Finish write up. 
