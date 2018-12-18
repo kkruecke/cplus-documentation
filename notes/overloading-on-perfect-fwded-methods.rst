@@ -165,10 +165,11 @@ First note this technique changes ``template<class T> void add2log(T&& value)`` 
     {
        std::cout << "int*" << std::endl;
     }
+
+
+Original code from Edqua
     
-Example 2:
 .. code-block:: cpp
- 
 
     #include <iostream>
     #include <string>
