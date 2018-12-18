@@ -99,14 +99,35 @@ How can we achieve the overloaded behave we really want if template methods with
 Solution: tag dispatch
 ----------------------
 
-This technique involves providing an inline method that implements ``template<class T> void add2log(T&& value)`` that takes the same forwarding reference as ``add2log`` along with an extra or **tag**  parameter that is used
-to select at compile-time the correct implementation method. This example shows exactly how this is done.
+To ensure the template function (taking a forwarding reference) does not genearte such compile errors, Edaqa Mortoray's `Overloading the broken universal reference ‘T&&’ <https://mortoray.com/2013/06/03/overriding-the-broken-universal-reference-t/>`_ explains:
+"there is no way to avoid redefinition errors with just one parameter, thus we need at least one extra parameter to overload. It would of course be very inconvenient if the caller had to know anything about this.
+The solution involves introducing a tag parameter."
 
-.. todo:: Example below from <https://mortoray.com/2013/06/03/overriding-the-broken-universal-reference-t/>`_
+First, no overloads of the add2log() are not allowed. Instead various implementations corresponding to each overload are employed. These implementation methods also take the same, identical forwarding reference parameter, but they also have
+have a extra parameter that serves as a tag. The type of this secondary tag parameter is determined at run-time. Thus this second parameter must be a template. ``std::decay<class T>``, from header ``<type_traits>`` is used to achieve this.
+
+An example makes this clearer. First, we change add2log() to be an inline method that simply calls the template method ``add2log_impl()``:
 
 .. code-block:: cpp
 
-    template<class T> struct class_tag { };
+    template<typename T> struct type_tag {};
+
+    template<typename T>
+    void add2log(T&& t) 
+    {
+       //Get the unqualified type, using std::decay<T>, tor the purpose of tagging.
+       class_tag<typename std::decay<T>::type> type_tag;
+    
+       add2log_impl(std::forward<T>(t), tag);
+    }
+
+First note this technique changes ``template<class T> void add2log(T&& value)`` to be an inline function that simply invokes ``template<class T, class Tag>  add2log_impl(T&& t, Tag)``.
+
+.. todo::  Finish commenting and incorporating code below into explanation.
+
+.. code-block:: cpp
+
+    template<class T> struct type_tag { };
 
     // Two different struct types used for example purposes:
     struct match_a { }; 
@@ -116,7 +137,7 @@ to select at compile-time the correct implementation method. This example shows 
     void add2log(T&& value) 
     {
         //get the unqualified type for the purpose of tagging
-	class_tag<typename std::decay<T>::type> tag;
+	type_tag<typename std::decay<T>::type> tag;
 
 	add2log_impl( std::forward<T>(f), tag );         
     }
@@ -128,26 +149,26 @@ to select at compile-time the correct implementation method. This example shows 
     }
      
     template<class T> 
-    void add2log_impl(T && f, class_tag<match_a>) 
+    void add2log_impl(T && f, type_tag<match_a>) 
     {
         std::cout << "match_a" << std::endl;
     }
      
     template<class T>
-    void add2log_impl(T && f, class_tag<match_b>)
+    void add2log_impl(T && f, type_tag<match_b>)
     {
        std::cout << "match_b" << std::endl;
     }
      
     template<class T>
-    void add2log_impl(T && f, class_tag<int*>) 
+    void add2log_impl(T && f, type_tag<int*>) 
     {
        std::cout << "int*" << std::endl;
     }
     
 Example 2:
-
 .. code-block:: cpp
+ 
 
     #include <iostream>
     #include <string>
@@ -165,7 +186,7 @@ Example 2:
     void apply(T&& t) 
     {
        //Get the unqualified type, using std::decay<T>, tor the purpose of tagging.
-       class_tag<typename std::decay<T>::type> tag;
+       type_tag<typename std::decay<T>::type> tag;
     
        apply_impl( std::forward<T>(t), tag );
     }
@@ -178,14 +199,14 @@ Example 2:
      
     struct match_a { };
     template<typename T> 
-    void apply_impl(T&& t, class_tag<match_a>) 
+    void apply_impl(T&& t, type_tag<match_a>) 
     {
        std::cout << "match_a" << std::endl;
     }
      
     struct match_b { };
     template<typename T>
-    void apply_impl(T&& t, class_tag<match_b>) 
+    void apply_impl(T&& t, type_tag<match_b>) 
     {
         std::cout << "match_b" << std::endl;
     }
