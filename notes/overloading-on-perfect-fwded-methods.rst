@@ -90,9 +90,9 @@ expected behavior does not occur. Instead a compiler error occurs:
     add2log(str);
 
 This code does not compile. The expected promotion of ``sint`` to an ``int`` no longer occurs because the short ``sint`` is an exact match for ``template<class T> void add2log(T&& value)``, 
-and the compiler therefore instantiates ``void add2log(short& value)``.  This causes ``log.emplace_back(std::forward<T>(t))`` to attempt to invoke the non-extant constructor ``string::string(short)``.
+and the compiler therefore instantiates ``void add2log(short& value)``,  and ``log.emplace_back(std::forward<T>(t))`` will then attempt to invoke the non-extant constructor ``string::string(short)``.
 
-How can we achieve the overloaded behavior in the first example if template methods with forwarding references can't be overloaded without producing compile errors like the example above? 
+So how can we achieve the overloaded behavior in the first example if template methods with forwarding references can't be overloaded without producing compile errors like the example above? 
 
 Solution: tag dispatch
 ----------------------
