@@ -114,7 +114,6 @@ This example is from  `Overloading the broken universal reference ‘T&&’ <htt
     #include <type_traits>
     
     using namespace std;
-    
      
     template<typename T>
     struct class_tag {}; // Type used to help choose the specific apply_impl method.
@@ -173,9 +172,9 @@ This example is from  `Overloading the broken universal reference ‘T&&’ <htt
     
        apply(a);
     
-       apply( static_cast<match_a const&>(a) );
+       apply( static_cast<const match_a&>(a) ); // T&& will be 'const match_a'.
     
-       apply( static_cast<match_a const>(a) );
+       apply( static_cast<const match_a>(a) );
      
        int b[5];
     
@@ -190,20 +189,60 @@ This example is from  `Overloading the broken universal reference ‘T&&’ <htt
 
 Ouput::
 
-.. todo:: Add output of code above. Followed by some brief comments
+    int
+    hello
+    match_a
+    match_b
+    match_a
+    match_a
+    match_a
+    int*
+    int*
+    int
 
-class_tag and ``std::decay`` does note provide enough flexibility as a solution to our ``add2log`` example. Instead....we need different way that First, we change add2log() to be an inline method that simply calls the template method ``add2log_impl()``:
-First note this technique changes ``template<class T> void add2log(T&& value)`` to be an inline function that simply invokes ``template<class T, class Tag>  add2log_impl(T&& t, Tag)``.
+We see that the basic underlying type, stripped of any modifiers like ``const``, is used to select the specific overload, while the forwarding reference parameter still continues to fully matche the type of the
+parameter that was passed, like, say, ``const match_a`` in the commented line above.
 
+However, the ``class_tag`` and ``std::decay`` technique does note provide enough flexibility to solve our beginning ``add2log`` example. For this case, we can instead use ``template< class T > std::struct is_integral``.
+First, we change ``template<class T> void add2log(T&& value)`` to an inline function that simply invokes ``template<class T, class Tag>  add2log_impl(T&& t, Tag)``.  **is_integral** is ....
 
-.. todo::  Finish commenting and incorporating code below into explanation.
+.. todo::  Finish comments above, introduce and explain the code below, and double check that it is correct.
 
 .. code-block:: cpp
 
+    #include <string>
+    #include <vector>
+    #include <unordered_map>
+    #include <type_traits>
+    using namespace std;
+
+    vector<string> log;
+    
+    unordered_map<int, string> umap = { {1, "one"}, {2, "two"}, {3, "three"}, {4, "four"} };
+    
+    const string& look_up_string(int i)
+    {
+        return umap[i];
+    }
+ 
     template<class T> 
     void add2log(T&& value) 
     {
-	add2log_impl( std::forward<T>(f), tag );         
+	add2log_impl( std::forward<T>(f), std::is_integral<T>);         
+    }
+
+    template<class T> 
+    void add2log_impl(T&& value, std::is_true) 
+    {
+        cout << "template<class T> void add2log_impl(T&&, std::is_true) called" << endl;
+	add2log(look_up_string(i));         
+    }
+
+    template<class T> 
+    void add2log_impl(T&& value, std::is_false) 
+    {
+        cout << "template<class T> void add2log_impl(T&&, std::is_false) called" << endl;
+        log.emplace_back(std::forward<T>(value));
     }
 
 .. todo:: Reference to Scott Meyers book and Item #?.      
@@ -214,5 +253,10 @@ Problem 2: Overloading a Constructor That Takes Forwarding Reference(s).
 
 
 Solution: ``enable_if<T>``
+--------------------------
+
+
+Best Solution: Concepts
+-----------------------
 --------------------------
 
