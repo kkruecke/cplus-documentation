@@ -7,6 +7,7 @@ References
 ----------
 
 * `A brief introduction to Concepts – Part 1 <https://blog.feabhas.com/2018/12/a-brief-introduction-to-concepts-part-1/>`_
+* `Arthur O'Dwyer “Concepts As She Is Spoke (Gives the state of Concepts support)” <https://www.youtube.com/watch?v=CXn02MPkn8Y&feature=youtu.be&t=170>`_
 * `Bjarne Stroustrup: Concepts: The Future of Generic Programming (the future is here) <https://www.youtube.com/watch?v=HddFGPTAmtU>`_
 * `Andrew Sutton: Concepts in 60: Everything you need to know and nothing you don't <https://www.youtube.com/watch?v=ZeU6OPaGxwM>`_
 * `Concepts and Contracts: What, When and How <https://www.youtube.com/watch?v=Vj2vuoPJNfE>`_
