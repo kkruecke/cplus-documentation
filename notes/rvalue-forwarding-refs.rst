@@ -1137,7 +1137,19 @@ Then the output is::
 
 as one would expect.
 
+remove_reference_t
+~~~~~~~~~~~~~~~~~~
+
+C++14 introduced ``template<class T> remove_reference_t`` as a synonym for the longer ``template<class T> typename remove_reference<T>::type``:
+
+.. code-block:: cpp
+
+   template<class T>
+   using remove_reference_t = typename remove_reference<T>::type 
+
+
 Further articles on forwarding references:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. `Modern C++ Features -- in place construction <https://arne-mertz.de/2016/02/modern-c-features-in-place-construction/>`_
 #. https://www.youtube.com/watch?v=ECoLo17nG5c
