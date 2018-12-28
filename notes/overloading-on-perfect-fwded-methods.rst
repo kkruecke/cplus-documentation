@@ -1,3 +1,6 @@
+.. include:: <isopub.txt>
+.. include:: <isonum.txt>
+
 Elimanating Compile Errors Resulting from Overloading Methods Taking Forwarding References
 ==========================================================================================
 
