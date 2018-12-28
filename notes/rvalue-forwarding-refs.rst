@@ -452,21 +452,24 @@ The move constructor and move assignment, both of which take rvalue references, 
        current++; 
     }
            
-Obviously the constructor and assignment operator overloaded to take an rvalue reference are more efficient that their copy constructor and copy assignment operator counterparts. For example 
+Obviously the versions of the constructor and assignment operator overloaded to take an rvalue reference are faster that their copy constructor and copy assignment operator counterparts. Take for example 
 
 .. code-block:: cpp
 
     Vector<int> v1{1, 5, 12};
     Vector<int> v2{v2}; // invokes copy constructor    
     Vector<int> v2{v{2, 6, 16}}; // invokes move constructor Vector::Vector(Vector&&)    
-    template<class T> void f(Vector<T>&& v);
-    f(Vector<intT>{11, 19, 29}); // invokes move constructor Vector::Vector(Vector&&)    
+                                 // because an rvalue is passed 
+
+    template<class T> void f(Vector<T>&& v); // forward declaration
+
+    f(Vector<int>{11, 19, 29}); // invokes move constructor Vector::Vector(Vector&&)    
 
 Rvalue References and Derived classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is an rvalue reference parameter itself an rvalue or an lvalue? The answer is, an rvalue reference that has a name is considered an lvalue because an rvalue reference parameter that has a name can have its address taken. It is therefore not a temporary.
-So when it "has a name" the rvalue reference parameter itself is an lvalue within the scope of the method. This has implications for how move semantics must be implemented in derived classes:
+Is an rvalue reference parameter an rvalue or an lvalue? Since an rvalue reference parameter has a name, it is not a temporary, and therefore it is an lvalue (because an rvalue reference parameter that has a name can have its address taken). 
+Since it "has a name" the rvalue reference parameter is an lvalue within the scope of its function. This implies move semantics in derived classes must be implemented in a certain way:
 
 .. code-block:: cpp
 
@@ -490,12 +493,13 @@ So when it "has a name" the rvalue reference parameter itself is an lvalue withi
          Derived(Derived&& d) : Base(std::move(d)) {}  
     };
 
-Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting it to an rvalue so that the Base move constructor is called and not the copy constructor.
+Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting ``d`` to an rvalue in order the Base move constructor is invoked rather than the copy constructor.
 
-Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when passing it an rvalue: it still returns an rvalue. The g++ version of ``std::move()`` is shown below. Its argument is of generic type ``T&&``. This looks
-like an rvalue reference, but it works differently than an ordinary rvalue reference, say, for example, ``std::string&&``, where the type is specified or hard-coded. `T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference.
-When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing a version of ``Remove_reference`` and its partial template specializations
-that contains a static method called ``describe()``, which ``move()`` invokes: 
+Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when it is passedan rvalue: an rvalue is still returned. The g++ version of ``std::move()`` is shown below. It takes an argument of generic type ``T&&``. While this looks
+like an rvalue reference, it works differently than an ordinary rvalue reference\ |mdash|\ say, for example, ``std::string&&``\ |mdash|\ where the parameter's type is specified.
+
+``T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing
+a version of ``Remove_reference`` and its partial template specializations that contains a static method called ``describe()``, which ``move()`` calls: 
 
 .. code-block:: cpp
 
@@ -641,7 +645,7 @@ Why is the return type of ``std::move()`` is ``constexpr typename std::remove_re
 
    X x2 = move(x1);
   
-then T binds as ``X&``, and the ``move(x1)`` instantiated (before reference collapsing is done) is
+that T binds as ``X&``, and the instantiation of ``move(x1)`` before reference collapsing is done looks like this
 
 .. code-block:: cpp
 
@@ -651,7 +655,7 @@ then T binds as ``X&``, and the ``move(x1)`` instantiated (before reference coll
       return static_cast<typename std::remove_reference<X&>::type&&>(__t); 
     }
 
-and after applying reference collapsing, it is
+and after applying reference collapsing, it looks like this
 
 .. code-block:: cpp
 
@@ -661,7 +665,7 @@ and after applying reference collapsing, it is
       return static_cast<typename std::remove_reference<X&>::type&&>(__t); 
     }
 
-and the instantiation of ``remove_reference<X&>::type`` is simply ``X``. Thus ``move(x1)`` is:
+``remove_reference<X&>::type`` is simply ``X``. Thus ``move(x1)`` resolves to be:
 
 .. code-block:: cpp
 
@@ -702,7 +706,7 @@ and after applying reference collapsing, we would have
       return static_cast<X&>(__t); 
     }
 
-as the instantiation of ``move(x1)``, and ``move(x1)`` would still be an lvalue.  
+as the instantiation of ``move(x1)``, and the return value of ``move(x1)`` would still be an lvalue.  
 
 If ``move()`` is passed an rvalue, then the instantion of  
 
@@ -732,6 +736,38 @@ would instantiate
     }
 
 and a nameless rvalue (known as a xvalue) would be returned. ``remove_reference<T>::value&&`` is needed to ensure an lvalue is converted to an rvalue (or more specifically a xvalue).
+
+remove_reference_t
+~~~~~~~~~~~~~~~~~~
+
+C++14 introduced shorthand or "synonym" for ``template<class T> typename remove_reference<T>::type``, namely ``template<class T> remove_reference_t``, which is defined as:
+
+.. code-block:: cpp
+
+   template<class T>
+   using remove_reference_t = typename remove_reference<T>::type 
+
+We can use it to simplify the C++11 implementation of ``std::move()``, changing
+
+.. code-block:: cpp
+ 
+     template<typename T> 
+        constexpr typename std::remove_reference<T>::type&& // C++11 implementation
+        move(T&& __t) noexcept
+        {
+          return static_cast<typename std::remove_reference<T>::type&&>(__t); 
+        }
+
+to
+ 
+.. code-block:: cpp
+ 
+     template<typename T>
+        constexpr typename std::remove_reference_t<T>&& // C++14
+        move(T&& __t) noexcept
+        {
+          return static_cast<typename std::remove_reference_t<T>&&>(__t); 
+        }
    
 Move Conclusion
 ~~~~~~~~~~~~~~~
@@ -1136,17 +1172,6 @@ Then the output is::
     In g(T&& param)
 
 as one would expect.
-
-remove_reference_t
-~~~~~~~~~~~~~~~~~~
-
-C++14 introduced ``template<class T> remove_reference_t`` as a synonym for the longer ``template<class T> typename remove_reference<T>::type``:
-
-.. code-block:: cpp
-
-   template<class T>
-   using remove_reference_t = typename remove_reference<T>::type 
-
 
 Further articles on forwarding references:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
