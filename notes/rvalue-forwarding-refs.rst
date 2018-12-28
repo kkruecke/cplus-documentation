@@ -788,7 +788,7 @@ articles discussing this topic:
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 * `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
 
-In C++11 the concept of an expression's **value category** was introducted. The `**Value Categories** article at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_ explains::
+C++11 introduced the concept of (an expression's) **value category**. The articles `**Value Categories** at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_ explains::
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category. Each expression has some non-reference type, and each expression belongs to exactly one of the
     three primary value categories: prvalue, xvalue, and lvalue...
