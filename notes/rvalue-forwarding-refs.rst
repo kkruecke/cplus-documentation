@@ -790,8 +790,8 @@ articles discussing this topic:
 
 C++11 introduced the concept of (an expression's) **value category**. The articles **Value Categories** at en.cppreference.com `explains <https://en.cppreference.com/w/cpp/language/value_category>`_::
 
-    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category. Each expression has some non-reference type, and each expression belongs to exactly one of the
-    three primary value categories: prvalue, xvalue, and lvalue...
+    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
+    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue...
 
 .. todo:: Use the top two references above to illustrate with examples how 1.) type and value category differ and how, in C++11 and above, the value category 2.) also affects the choice of overloaded method chosen.
 
