@@ -788,18 +788,17 @@ articles discussing this topic:
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 * `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
 
-
-In C++11 the **value category** property of expressions was introducted. The `**Value Categories** article at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_ explains::
+In C++11 the concept of an expression's **value category** was introducted. The `**Value Categories** article at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_ explains::
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category. Each expression has some non-reference type, and each expression belongs to exactly one of the
     three primary value categories: prvalue, xvalue, and lvalue...
 
-.. todo:: Use the top two references above to illustrate how value categories affect the choice of the particular overload chosen, and explain how type and value category are two different concepts.
+.. todo:: Use the top two references above to illustrate with examples how 1.) type and value category differ and how, in C++11 and above, the value category 2.) also affects the choice of overloaded method chosen.
 
 Perfect Forwarding
 ------------------
 
-This section discusses the use of forwarding references to implement perfect forwarding of parameters used to do in_place_construction_.
+This section discusses the use of forwarding references to implement perfect forwarding of parameters. Perfect forwardings allows us to do in_place_construction_.
 
 Forwarding References
 ~~~~~~~~~~~~~~~~~~~~~
