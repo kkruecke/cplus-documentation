@@ -200,8 +200,8 @@ Ouput::
     int*
     int
 
-We see that the basic underlying type, stripped of any modifiers like ``const``, is used to select the specific overload, while the forwarding reference parameter still continues to fully matche the type of the
-parameter that was passed, like, say, ``const match_a`` in the commented line above.
+We see that the basic underlying type, stripped of any modifiers like ``const``, is used to select the correct overload\ |mdash|\ while the forwarding reference parameter still fully matches the type of the
+parameter that was passed, like ``const match_a`` in the commented line above.
 
 However, the ``class_tag`` and ``std::decay`` technique does note provide enough flexibility to solve our beginning ``add2log`` example. For this case, we can instead use ``template< class T > std::struct is_integral``.
 First, we change ``template<class T> void add2log(T&& value)`` to an inline function that simply invokes ``template<class T, class Tag>  add2log_impl(T&& t, Tag)``.  **is_integral** is ....
