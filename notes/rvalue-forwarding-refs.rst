@@ -591,7 +591,7 @@ step by step:
       return static_cast<typename Remove_reference<std::string&>::type&&>(arg);
     }
 
-If we applying the reference collapsing rules of C++11, this becomes:
+Applying the reference collapsing rules of C++11, gives us 
 
 .. code-block:: cpp
 
@@ -613,7 +613,7 @@ which simplies to
       return static_cast<typename std::string&&>(arg);
     }
 
-And again as before, this casts arg to rvalue reference that does not have a name.
+Again as before, this casts arg to an rvalue reference that does not have a name.
 
 std::move() Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -740,7 +740,7 @@ and a nameless rvalue (known as a xvalue) would be returned. ``remove_reference<
 remove_reference_t
 ~~~~~~~~~~~~~~~~~~
 
-C++14 introduced shorthand or "synonym" for ``template<class T> typename remove_reference<T>::type``, namely ``template<class T> remove_reference_t``, which is defined as:
+C++14 introduced a shorthand or "synonym" for ``template<class T> typename remove_reference<T>::type``, namely ``template<class T> remove_reference_t``, which is defined as:
 
 .. code-block:: cpp
 
@@ -783,12 +783,18 @@ Value Categories
 articles: 
 ~~~~~~~~~
 
-* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
-* `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
 * `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_.
+* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
+* `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
 
-.. todo:: Use references above to add the explantion with examples.
+.. todo:: Use the top tow references above to explain how value categories affect the choice of the particular overload chosen, and explain how type and value category are two different concepts.
+
+As the **Value Categories** article on en.cppreference.com ``explains <https://en.cppreference.com/w/cpp/language/value_category>`_::
+
+    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category. Each expression has some non-reference type, and each expression belongs to exactly one of the
+    three primary value categories: prvalue, xvalue, and lvalue...
+
 
 Perfect Forwarding
 ------------------
