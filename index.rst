@@ -15,4 +15,3 @@ Notes on Features of C++-17
    notes/concepts.rst
    notes/regex.rst
    notes/variant.rst
-   notes/learning.rst
