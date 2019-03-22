@@ -8,10 +8,9 @@ Stoustrup explains on what an *lvalue* is pages 165 of XXXX::
 *lvalue* orignally meant an expression that can be on the left-hand side  of an assignment. But this is obviously not true of a *const* object, and object in this context refers to the low-level notion of "something
 in memory" and not to the notion of class object.
 
+.. todo:: Finish this section
 
 Stoustrup further explains on 166 of XXXX the other value categories::
-
-.. todo:: Finish this section
 
     There are two properties of an object
 
