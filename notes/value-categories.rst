@@ -5,7 +5,7 @@ Stoustrup explains on what an *lvalue* is pages 165 of XXXX:
 
     An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object. 
 
-*lvalue* orignally meant an expression that can be on the left-hand side  of an assignment. But this is obviously not true of a *const* object, and object in this context refers to the low-level notion of "something
+*lvalue* orignally meant an expression that can be on the left-hand side  of an assignment. But this is obviously not true of a *const* object. Notes also that object in this context refers to the low-level notion of "something
 in memory" and not to the notion of class object.
 
 .. todo:: Finish this section
