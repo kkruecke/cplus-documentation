@@ -8,6 +8,7 @@ Notes on Features of C++-17
    notes/understanding-const.rst 
    notes/auto-decltype.rst
    notes/observing-deduced-types.rst
+   notes/value-categories.rst
    notes/rvalue-forwarding-refs.rst
    notes/managed-ptrs.rst
    notes/templates.rst
