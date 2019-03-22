@@ -1,7 +1,7 @@
 Value Categories
 ================
 
-Stoustrup explains on what an *lvalue* is pages 165 of XXXX::
+Stoustrup explains on what an *lvalue* is pages 165 of XXXX:
 
     An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object. 
 
@@ -10,7 +10,7 @@ in memory" and not to the notion of class object.
 
 .. todo:: Finish this section
 
-Stoustrup further explains on 166 of XXXX the other value categories::
+Stoustrup further explains on 166 of XXXX the other value categories:
 
     There are two properties of an object
 
