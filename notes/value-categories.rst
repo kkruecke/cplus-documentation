@@ -9,7 +9,7 @@ Stoustrup explains on what an *lvalue* is pages 165 of XXXX:
 On page 166 he elaborates:
  
     An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
-    a function....
+    a function).
 
     There are two properties that for an object when it comes to addressing, copying and moving:
 
