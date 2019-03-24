@@ -1,9 +1,6 @@
 .. include:: <isopub.txt>
 .. include:: <isonum.txt>
 
-.. |nbsp| unicode:: 0xA0 
-   :trim:
-
 Rvalue References and Forwarding References in C++
 ==================================================
 
