@@ -28,7 +28,7 @@ On page 166, he introduces the term *rvalue* and elaborate on the differences be
 
 |nbsp|
 
-    So, a classical lvalue is something that has identity and cannot be moved(because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from.
+    So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from.
 
 .. todo:: finish above discussion.
 
