@@ -1,7 +1,7 @@
 Value Categories
 ================
 
-Stoustrup explains on what an *lvalue* is pages 165 of XXXX:
+Stoustrup explains the meaning of the term *lvalue* on pages 165 of **The C++ Programming Language 4th Edition**:
 
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
