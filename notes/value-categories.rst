@@ -1,3 +1,6 @@
+.. include:: <isopub.txt>
+.. include:: <isonum.txt>
+
 Value Categories
 ================
 
@@ -36,8 +39,8 @@ Stoustrup further explains on 166 of XXXX the other categories of objects:
 
     There are two properties of an object
 
-Links to Value Category Articles
---------------------------------
+.. Links to Value Category Articles
+.. --------------------------------
 
 * `Quick Q: What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://isocpp.org/blog/2016/04/quick-q-what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_.
 * `Stackoverflow: What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_.
