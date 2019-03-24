@@ -156,7 +156,7 @@ as ``void push_back(const T&)`` that take an ``const T&``:
 rvalue references and their role
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An lvalue is object that has name, an object whose address can be taken. Examples of lvalues would be:
+As explained above, an lvalue is object that has a name (identity), whose address can be taken, but that cannot be moved from. Examples of lvalues:
 
 .. code-block:: cpp
 
