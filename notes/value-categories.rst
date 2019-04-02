@@ -9,17 +9,17 @@ On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.c
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
 
-On page 166, he introduces the term *rvalue* and elaborate on the differences between them:
+On page 166, he introduces the term *rvalue* and elaborates on the differences between them:
  
     An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
     a function).
 
     There are two properties that for an object when it comes to addressing, copying and moving:
 
-    * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same whether the value has changed, etc.
+    * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
     * *Movable*: the object may be moved from (i.e. we allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying).
 
-    It turns out that three of the four possibilities of these two properites are neede to precisely describe the C++ language rules (we have not need for object that do not have identity and cannot be moved). Using "**m**
+    It turns out that three of the four possibilities of these two properites are neede to precisely describe the C++ language rules (we have no need for object that do not have identity and cannot be moved). Using "**m**
     for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
 
 .. figure:: ../images/lvalue-rvalue.jpg
@@ -44,7 +44,7 @@ On page 166, he introduces the term *rvalue* and elaborate on the differences be
 
 ..
 
-    Here ``std::move(vs)`` is an xvalue: it clearly has idenity (we can refer to it as ``vs``), but we have explicitly given permissio for it to be mmoved from by calling ``std::move()``.
+    Here ``std::move(vs)`` is an xvalue: it clearly has idenity (we can refer to it as ``vs``), but we have explicitly given permissio for it to be moved from by calling ``std::move()``.
     
     For praictical programming, thinking in terms of rvalue and lvalue is usally sufficient. Note that every expression is either an lvalue or an rvalue, but not both.
 
