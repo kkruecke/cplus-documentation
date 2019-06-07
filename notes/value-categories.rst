@@ -45,9 +45,9 @@ On page 166, he introduces the term *rvalue* and elaborates on the differences b
 
 ..
 
-    Here ``std::move(vs)`` is an xvalue: it clearly has idenity (we can refer to it as ``vs``), but we have explicitly given permissio for it to be moved from by calling ``std::move()``.
+    Here ``std::move(vs)`` is an xvalue: it clearly has idenity (we can refer to it as ``vs``), but we have explicitly given permission for it to be moved from by calling ``std::move()``.
     
-    For praictical programming, thinking in terms of rvalue and lvalue is usally sufficient. Note that every expression is either an lvalue or an rvalue, but not both.
+    For praictical programming, thinking in terms of rvalue and lvalue is usually sufficient. Note that every expression is either an lvalue or an rvalue, but not both.
 
 Here are links that discuss value categories.
 
