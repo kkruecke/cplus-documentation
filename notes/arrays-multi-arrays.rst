@@ -15,7 +15,7 @@ General Comments on Array Addressess
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Given the array ``some_array``, then ``&some_array[0]`` and ``some_array`` are both pointers of identical type and value that point to the first element in the array. This holds true regardless of the number of dimensions of ``some_array``. The code below,
-compiled using **g++ -std=c++1z**, illustrates this.
+compiled using **g++ -std=c++2a**, illustrates this.
 
 .. code-block:: cpp
 
