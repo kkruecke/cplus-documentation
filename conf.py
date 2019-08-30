@@ -115,6 +115,7 @@ todo_include_todos = True
 # a list of builtin themes.
 # html_theme = 'sphinxdoc'
 html_theme = 'haiku'
+
 html_theme_options = {
     "textcolor": "black",
 }
@@ -150,9 +151,12 @@ html_theme_options = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_css_files = [
+    'css/kurt.css',
+]
 #Kurt:
-def setup(app):
-    app.add_stylesheet('css/kurt.css')
+#def setup(app):
+#    app.add_stylesheet('css/kurt.css')
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
