@@ -33,7 +33,7 @@ compiled using **g++ -std=c++1z**, illustrates this.
 
       /*
          GCC's extension __cxa_demanage() is from the header <cxxabi.h>
-         and is used to demangle the output of **typeid()**.
+         and is used to demangle the output of std::typeid().
        */
 
       char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
