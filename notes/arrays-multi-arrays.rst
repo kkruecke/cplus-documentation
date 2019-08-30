@@ -41,12 +41,14 @@ compiled using **g++ -std=c++2a**, illustrates this.
       return string{"The type of '"} + str + "' is '" + realname + "'";
     }
 
-    // Using T&& allows us to pass both rvalues an lvalues to function ptr_diff, where they are std::forward'ed to get_typeof()
+    // Using T&& allows us to pass both rvalues an lvalues to function ptr_diff, where they are
+    // std::forward'ed to get_typeof()
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr) 
     {
       ostringstream ostr;
        
-      ostr << get_typeof(str, forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
+      ostr << get_typeof(str, forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " \
+           << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
     }
@@ -226,8 +228,9 @@ and the output is:
 The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types: 
 
 .. code-block:: cpp
-    
-    int b[2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; // Same as: int a[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
+
+    // Below same as: int b[][5] ={{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}}; 
+    int b[2][5] = {{1, 2, 3, 4, 5}, {6, 7, 8, 9, 10}};
     
     int *p1 = &b[0][0]; 
     
