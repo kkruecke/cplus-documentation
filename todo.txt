@@ -1,1 +1,1 @@
-Change the body text color (of the font) to black.
+Change the the font-size of inline code, i.e., code within ``code within double tick marks``.
