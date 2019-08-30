@@ -11,11 +11,11 @@ Understanding Arrays, Pointers and Multi-Dimensional Arrays
 Pointers, Arrays and Multidimensional Arrays
 --------------------------------------------
 
-Array Addressess in General
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+General Comments on Array Addressess
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For a array named, say, ``some_array``, both ``&some_array[0]`` and ``some_array`` are pointers of identical type and value. This holds true regardless of the number of dimensions of ``some_array``. The code below, compiled using **g++ -std=c++1z**,
-illustrates this:
+Given the array ``some_array``, then ``&some_array[0]`` and ``some_array`` are both pointers of identical type and value that point to the first element in the array. This holds true regardless of the number of dimensions of ``some_array``. The code below,
+compiled using **g++ -std=c++1z**, illustrates this.
 
 .. code-block:: cpp
 
@@ -27,7 +27,7 @@ illustrates this:
  
     template<class T> string get_typeof(const string& str, const T& t)
     {
-      const std::type_info  &ti = typeid(t);
+      const std::type_info &ti = typeid(t);
       
       int status;
 
@@ -35,12 +35,13 @@ illustrates this:
          GCC's extension __cxa_demanage() is from the header <cxxabi.h>
          and is used to demangle the output of **typeid()**.
        */
+
       char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
       
       return string{"The type of '"} + str + "' is '" + realname + "'";
     }
 
-    // Using T&& allows both rvalues an lvalues to be passed and then forwared to get_typeof()
+    // Using T&& allows us to pass both rvalues an lvalues to function ptr_diff, where they are std::forward'ed to get_typeof()
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr) 
     {
       ostringstream ostr;
@@ -86,7 +87,7 @@ and the ouput is:
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Given a one dimensional array such as ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \*** as the code below illustrates. And the use of simply ``a`` is equivalent to ``&a[0]``:
+Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \***, as the code below illustrates. And ``a`` is exactly the equivalent to ``&a[0]``:
 
 .. code-block:: cpp
 
