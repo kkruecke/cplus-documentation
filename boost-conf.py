@@ -15,6 +15,8 @@
 
 import sys
 import os
+#kurt
+import sphinx_boost
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -31,7 +33,7 @@ import os
 # ones.
 # Kurt: added 'sphinx.ext.mathjax'
 extensions = [
-    'sphinx.ext.todo',  'sphinx.ext.mathjax'
+    'sphinx.ext.todo',  'sphinx.ext.mathjax',  'sphinx.ext.githubpages'
 ]
 # Kurt: Added mathjax_path
 mathjax_path="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
@@ -114,12 +116,10 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # html_theme = 'sphinxdoc'
-html_theme = 'haiku'
-html_theme_options = {
-    "textcolor": "black",
-}
-
+html_theme = 'boost'
 # html_theme_path = ['_themes']
+# kurt
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
