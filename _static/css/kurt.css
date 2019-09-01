@@ -1,17 +1,24 @@
+/* 
+ The CSS selector for code-block is more like
+   div > div > pre
+ and the CSS selector for inline code is 
+   p > code > span
+ However, the selectors below work fine.
+   
+*/
 pre {
  /* This changes "code-block: cpp" */
 font-size: 120%;
 }
 
-/* These changes affect inline with tick markse: ``a[] = {...};`` */
+/* These changes affect inline with tick marks: ``a[] = {...};`` */
 code {
     /* This first group of changes was inspired by boostrap-theme, with some serrendipetious changes */
     padding: 2px 4px;
-    font-size: 90%;
     color: #c7254e;
     background-color: #f9f2f4;
     border-radius: 4px;
     font-weight: 700;
 
-    font-size: 117%;
+    font-size: 120%;
 }
