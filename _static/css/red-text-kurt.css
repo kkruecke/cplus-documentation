@@ -18,7 +18,7 @@ code {
     color: #c7254e;
     background-color: #f9f2f4;
     border-radius: 4px;
-    font-weight: 700;
+    font-weight: 700; /* <-- This can be varied. Try 500. */
 
     font-size: 120%;
 }

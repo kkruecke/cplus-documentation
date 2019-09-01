@@ -1,5 +1,1 @@
-Change the the font-size of inline code, i.e., code within ``code within double tick marks``.
-Try color "color:#d14;" from bootstrap-theme for 
-code {
-color:#d14;
-}
+_static/css/ contains 
