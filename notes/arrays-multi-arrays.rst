@@ -110,7 +110,7 @@ In fact, ``a[n]`` is equivalent to ``*(a + b)``. ``a + n``, where ``n`` is an in
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-Again, the name of the array itself, here ``a``, is synomous with ``&a[0]``. Thus we can loop through the array with following for-loop:
+Again, the name of the array itself, here ``a``, is synonymous with ``&a[0]``. Thus we can loop through the array with following for-loop:
 
 .. code-block:: cpp
 
