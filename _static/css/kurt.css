@@ -9,6 +9,7 @@
 pre {
  /* This changes "code-block: cpp" */
 font-size: 120%;
+/*font-weight: 550; */ /* <-- This can be varied */
 }
 
 /* These changes affect inline with tick marks: ``a[] = {...};`` */

@@ -108,12 +108,10 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-# html_theme = 'sphinxdoc'
 html_theme = 'haiku'
 
 html_theme_options = {
@@ -154,9 +152,6 @@ html_static_path = ['_static']
 html_css_files = [
     'css/kurt.css',
 ]
-#Kurt:
-#def setup(app):
-#    app.add_stylesheet('css/kurt.css')
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
