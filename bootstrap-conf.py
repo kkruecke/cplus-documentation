@@ -150,10 +150,6 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-#Kurt:
-def setup(app):
-    app.add_stylesheet('css/kurt.css')
-
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.

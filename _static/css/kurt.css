@@ -1,16 +1,17 @@
-/*
-p code {
-  font-weight: bold;
-}
-*/
 pre {
+ /* This changes "code-block: cpp" */
 font-size: 120%;
 }
 
-code span.pre {
-font-size: 117%;
-/*
-color: #d14;
-background-color:#f7f7f9;
-*/
+/* These changes affect inline with tick markse: ``a[] = {...};`` */
+code {
+    /* This first group of changes was inspired by boostrap-theme, with some serrendipetious changes */
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+    font-weight: 700;
+
+    font-size: 117%;
 }

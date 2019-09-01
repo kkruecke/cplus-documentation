@@ -373,7 +373,7 @@ Given
 
     int myMatrix[2][4] = { {10,20,30,40},{50,60,70,80} };
 
-``myMatrix[0]`` is a pointer to the first row of the 2D array. ``(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``(&myMatirx[0] + 0)``. To actually access elements of
+then ``myMatrix[0]`` is a pointer to the first row of the 2D array. ``(MyMatrix + 0)`` is of type ``int (*)[4]``. It is a pointer to the entire first inner array of four integers. It is equivalent to ``(&myMatirx[0] + 0)``. To actually access elements of
  the first inner array it must be deferenced: ``*(myMatrix + 0)``, which yields an ``int *`` to the first element of the array. Adding two to it, ``(*(myMatrix +0)) + 2``, moves the pointer to the third value in the first inner array. 
 
 .. todo:: Read these links below and incorporate any relevant points:

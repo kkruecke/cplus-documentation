@@ -113,8 +113,14 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinxdoc'
-html_theme_path = ['_themes']
+# html_theme = 'sphinxdoc'
+html_theme = 'haiku'
+
+html_theme_options = {
+    "textcolor": "black",
+}
+
+# html_theme_path = ['_themes']
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -145,9 +151,12 @@ html_theme_path = ['_themes']
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
+html_css_files = [
+    'css/kurt.css',
+]
 #Kurt:
-def setup(app):
-    app.add_stylesheet('css/kurt.css')
+#def setup(app):
+#    app.add_stylesheet('css/kurt.css')
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
