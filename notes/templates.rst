@@ -138,7 +138,7 @@ This material is from IBM Knowledge Base article on template `Explicit specializ
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-``template<>``must be preceed a full template specialization, as the example of ``template<> class Sample<int>;`` below illustrates:
+``template<>`` must be preceed a full template specialization, as the example of ``template<> class Sample<int>;`` below illustrates:
 
 .. code-block:: cpp
 
