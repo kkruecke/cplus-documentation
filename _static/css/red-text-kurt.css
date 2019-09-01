@@ -11,6 +11,10 @@ pre {
 font-size: 120%;
 }
 
+.highlight { /* This changes "code-block: cpp" */
+
+ /* font-weight: 550; <-- This can be varied */
+}
 /* These changes affect inline with tick marks: ``a[] = {...};`` */
 code {
     /* This first group of changes was inspired by boostrap-theme, with some serrendipetious changes */

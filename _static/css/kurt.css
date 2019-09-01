@@ -6,17 +6,23 @@
  However, the selectors below work fine.
    
 */
-pre {
- /* This changes "code-block: cpp" */
+pre { /* This changes "code-block: cpp" */
+
 font-size: 120%;
-/*font-weight: 550; */ /* <-- This can be varied */
+
+}
+
+.highlight { /* This changes "code-block: cpp" */
+
+  font-weight: 600;  /* <-- This can be varied */
 }
 
 /* These changes affect inline with tick marks: ``a[] = {...};`` */
 code {
     /* This first group of changes was inspired by boostrap-theme, with some serrendipetious changes */
     padding: 2px 4px;
-/*
+
+/* Alternative red color
     color: #c7254e;
     background-color: #f9f2f4;
 */
