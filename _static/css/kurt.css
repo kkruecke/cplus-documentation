@@ -14,7 +14,7 @@ font-size: 120%;
 
 .highlight { /* This changes "code-block: cpp" */
 
-  font-weight: 600;  /* <-- This can be varied */
+  font-weight: 500;  /* <-- This can be varied */
 }
 
 /* These changes affect inline with tick marks: ``a[] = {...};`` */
@@ -27,7 +27,7 @@ code {
     background-color: #f9f2f4;
 */
     border-radius: 4px;
-    font-weight: 500; /* <-- This can be varied */
+    font-weight: 525; /* <-- This can be varied */
 
     font-size: 120%;
 }
