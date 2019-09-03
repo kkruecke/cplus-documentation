@@ -100,7 +100,7 @@ Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of it
 Adding one to a pointer does not increase the pointer's address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer. Thus, addition is scaled based on the underlying pointed-to type. In the case of ``*p1 + ```, the pointer 
 is advanced to the next element in the array ``a[1]``, to the address ``&a[1]``.
 
-In fact, ``a[n]`` is equivalent to ``*(a + b)``. ``a + n``, where ``n`` is an int, advances the pointer to the n + 1 :sup:`th` element (recall C/C++ arrays use zero-base indexing).
+In fact, ``a[n]`` is equivalent to ``*(a + n)``. ``a + n``, where ``n`` is an int, advances the pointer to the (n + 1) :sup:`th` element. Recall that C/C++ arrays use zero-base indexing.
 
 .. code-block:: cpp
 
@@ -109,7 +109,7 @@ In fact, ``a[n]`` is equivalent to ``*(a + b)``. ``a + n``, where ``n`` is an in
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-Again, the name of the array itself, here ``a``, is synonymous with ``&a[0]``. Thus we can loop through the array with following for-loop:
+Again, the name of the array itself, here ``a``, is synonymous with ``&a[0]``. Thus we can loop through the array with following for\ |ndash|\ loop:
 
 .. code-block:: cpp
 
