@@ -88,7 +88,7 @@ and the ouput is:
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \***, as the code below illustrates. And ``a`` is exactly the equivalent to ``&a[0]``:
+Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \***, as the code below illustrates, and ``a`` is exactly equivalent to ``&a[0]``:
 
 .. code-block:: cpp
 
