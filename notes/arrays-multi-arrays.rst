@@ -301,12 +301,12 @@ Preliminary Summary of 2-dimensional array pointers
   
 This shows that for a two dimensional array:
 
-1. ``b[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer **sizeof(int)** bytes (or four bytes) to the next int **b[0][1]**. 
+1. ``b[0][0]`` is an ``int *`` pointing to the first element of the array, and adding one to it advances the pointer by **sizeof(int)** bytes (or four bytes) to point to the next int in the array **b[0][1]**. 
 2. Both ``&b[0]`` and ``b`` are of type ``int (*)[5]``, pointer to a block of five consecutive integers, and adding one to them advances the pointer ``4 x sizeof(int)`` or 20 bytes to the next block of five consecutive integers
-3. ``&b`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers(which in this
-   case does not exist).
+3. ``&b`` is of type ``int (*)[2][5]``, a pointer to two blocks of 'a block of five integers', and adding one to it advances its address ``2 x (4 x sizeof(int))`` or 40 bytes to the next block of two blocks of 'a block of five integers\ |ndash|\ which in this
+   case does not exist.
 
-The same logic holds for higher dimensional arrays:
+The same reasoning applies to higher dimensional arrays:
 
 .. code-block:: cpp
 
