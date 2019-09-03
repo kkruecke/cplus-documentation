@@ -14,7 +14,7 @@ Pointers, Arrays and Multidimensional Arrays
 General Comments on Array Addressess
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Given the array ``some_array``, then ``&some_array[0]`` and ``some_array`` are both pointers of identical type and value that point to the first element in the array. This holds true regardless of the number of dimensions of ``some_array``. The code below,
+Given the array ``some_array``, then ``&some_array[0]`` and ``some_array`` are both pointers of identical type and value, that point to the first element in the array. This holds true regardless of the number of dimensions of ``some_array``. The code below,
 compiled using **g++ -std=c++2a**, illustrates this.
 
 .. code-block:: cpp
@@ -32,8 +32,7 @@ compiled using **g++ -std=c++2a**, illustrates this.
       int status;
 
       /*
-         GCC's extension __cxa_demanage() is from the header <cxxabi.h>
-         and is used to demangle the output of std::typeid().
+         GCC extension __cxa_demanage() (from <cxxabi.h> ) demangles the output of std::typeid().
        */
 
       char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
@@ -41,13 +40,13 @@ compiled using **g++ -std=c++2a**, illustrates this.
       return string{"The type of '"} + str + "' is '" + realname + "'";
     }
 
-    // Using T&& allows us to pass both rvalues an lvalues to function ptr_diff, where they are
-    // std::forward'ed to get_typeof()
+    // Using T&& allows us to pass both rvalues and lvalues to ptr_diff(), where they are
+    // forwarded to get_typeof()
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr) 
     {
       ostringstream ostr;
        
-      ostr << get_typeof(str, forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " \
+      ostr << get_typeof(str, std::forward<T>(ptr)) << ", and (" << str << " + 1) - " << str << " in bytes is: " \
            << reinterpret_cast<unsigned long>(ptr + 1) - reinterpret_cast<unsigned long>(ptr);
       
       return ostr.str(); 	
