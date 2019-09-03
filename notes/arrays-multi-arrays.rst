@@ -32,7 +32,7 @@ compiled using **g++ -std=c++2a**, illustrates this.
       int status;
 
       /*
-         GCC extension __cxa_demanage() (from <cxxabi.h> ) demangles the output of std::typeid().
+         GCC extension __cxa_demanage()--from <cxxabi.h>--demangles the output of std::typeid().
        */
 
       char *realname = abi::__cxa_demangle(ti.name(), 0, 0, &status);
