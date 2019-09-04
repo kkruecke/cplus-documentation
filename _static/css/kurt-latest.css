@@ -1,0 +1,25 @@
+/* Remove "DejaVu Mono" as the default, first font-family option */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+pre { /* This changes "code-block: cpp" */
+
+font-size: 105%;
+
+}
+
+.highlight { /* This changes "code-block: cpp" */
+
+  font-weight: 500;  /* <-- This can be varied */
+}
+
+/* These changes affect inline with tick marks: ``a[] = {...};`` */
+code {
+
+   /* This first group of changes was inspired by boostrap-theme */
+    padding: 1px 2px;
+    font-weight: 500; /* <-- This can be varied */
+
+    font-size: 110%;
+}

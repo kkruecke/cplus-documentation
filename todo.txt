@@ -1,2 +1,1 @@
-_static/css/ contains kurt.css and a red-text version for inline code called red-text-kurt.css, but these were REMOVED from being used by commenting out in
-conf.py.
+_static/css/ contains kurt-initial.css and a kurt-latest.css. kurt-latest.css is being used in conf.py.
