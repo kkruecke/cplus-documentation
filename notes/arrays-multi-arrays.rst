@@ -14,7 +14,7 @@ Pointers, Arrays and Multidimensional Arrays
 General Comments on Array Addressess
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Given the array ``some_array``, then ``&some_array[0]`` and ``some_array`` are both pointers of identical type and value, that point to the first element in the array. This holds true regardless of the number of dimensions of ``some_array``. The code below,
+Given the array ``some_array``, ``&some_array[0]`` and ``some_array`` are both pointers (of identical type and value) that point to the first element in the array. The code below,
 compiled using **g++ -std=c++2a**, illustrates this.
 
 .. code-block:: cpp
@@ -24,7 +24,8 @@ compiled using **g++ -std=c++2a**, illustrates this.
     #include <utility>
     #include <iostream>
     #include <sstream>
- 
+
+    // Demangles the output of std::typeid().
     template<class T> string get_typeof(const string& str, const T& t)
     {
       const std::type_info &ti = typeid(t);
@@ -40,8 +41,8 @@ compiled using **g++ -std=c++2a**, illustrates this.
       return string{"The type of '"} + str + "' is '" + realname + "'";
     }
 
-    // Using T&& allows us to pass both rvalues and lvalues to ptr_diff(), where they are
-    // forwarded to get_typeof()
+    // ptr_diff() is a wrapper function that accetps both rvalues and lvalues parameters for its 2nd parameter,
+    // which is forwarded to get_typeof()
     template<class T> std::string ptr_diff(const std::string& str, T&& ptr) 
     {
       ostringstream ostr;
@@ -82,8 +83,8 @@ and the ouput is:
     The type of '&c1[0]' is 'int (*) [2][3]', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
 
-.. note: While the types of, for example, ``c1`` and ``&c1[0]`` appear different above, actually they are not. When ``c1`` is used as a pointer in code without any index operators present, it is no different than using ``&c1[0]``. It is of the same type as
-   ``&c1[0]`` and has the same pointer value.  
+.. note: When ``c1`` is used as a pointer in code without any index operators present, it is  the same as using ``&c1[0]``. It has the same type as
+   ``&c1[0]``, it holds the same address.  
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -97,10 +98,10 @@ Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of it
     int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-Adding one to a pointer does not increase the pointer's address by one but rather advances the address by ``sizeof(int)`` bytes, advancing it to the next integer. Thus, addition is scaled based on the underlying pointed-to type. In the case of ``*p1 + ```, the pointer 
-is advanced to the next element in the array ``a[1]``, to the address ``&a[1]``.
+Adding one to a pointer does advances the address by ``sizeof(int)`` bytes, so it points to the next integer in the array. Thus, pointer addition is scaled based on the underlying pointed-to type. 
+In the case of ``*p1 + 1``, the pointer is advanced to the address of next element in the array, so it holds the value of ``&a[1]``.
 
-In fact, ``a[n]`` is equivalent to ``*(a + n)``. ``a + n``, where ``n`` is an int, advances the pointer to the (n + 1) :sup:`th` element. Recall that C/C++ arrays use zero-base indexing.
+In general, ``a[n]`` is equivalent to ``*(a + n)``. ``a + n``, where ``n`` is an int, advances the pointer to the (n + 1) :sup:`th` element. Recall: that C/C++ arrays use zero-base indexing.
 
 .. code-block:: cpp
 
@@ -155,9 +156,9 @@ One dimensional array can be passed using either syntax below.
 Higher Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^ 
  
-Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row or block of values. The code below shows the various address types possible for a
-2-dimensional arrays, and the difference in bytes when using pointer addition for each of these various pointer types. It also shows the corresponding dereference types. It uses the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle
-the output of ``typeid()``.
+Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row. The code below shows the various types of addresses possible for a
+2-dimensional arrays, and it shows the difference in bytes for each of these different pointer types. It further shows the corresponding dereference types (using the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle
+the output of ``typeid()``).
 
 .. code-block:: cpp
 
