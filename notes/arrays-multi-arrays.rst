@@ -297,7 +297,7 @@ The output is:
     The type of *&b is: int [2][5]
     </pre>
  
-Thus, in the 2-dimensional array ``b[2][5]``, ``b`` and ``&b[0]`` have the same type: pointer to a block of five ints, written as int (*)[5]. And ``&b`` is of type ``int (*)[2][5]``. When one is added to ``&b``, the address is advanced
+Thus, in the 2-dimensional array ``b[2][5]``, ``b`` and ``&b[0]`` have the same type: pointer to a block of five ints, type ``int (*)[5]``. And ``&b`` is of type ``int (*)[2][5]``. When one is added to ``&b``, the address is advanced
 **2 x (5 x sizeof(int))** or 40 bytes.
  
 Preliminary Summary of 2-dimensional array pointers
