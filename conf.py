@@ -150,9 +150,9 @@ html_theme_options = {
 html_static_path = ['_static']
 
 # Kurt
-html_css_files = [
-    'css/kurt.css',
-]
+# html_css_files = [
+#    'css/kurt.css',
+#]
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied

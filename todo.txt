@@ -1,4 +1,2 @@
-_static/css/ contains kurt.css and a red-text version for inline code called red-text-kurt.css.
-
-The alternative pygment styles, specifed in conf.py using "pygments_style = <some_style>", can be viewed here:
-http://pygments.org/demo/1467499/ 
+_static/css/ contains kurt.css and a red-text version for inline code called red-text-kurt.css, but these were REMOVED from being used by commenting out in
+conf.py.
