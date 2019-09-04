@@ -5,7 +5,7 @@ body {
 
 pre { /* This changes "code-block: cpp" */
 
-font-size: 105%;
+font-size: 107%;
 
 }
 
@@ -21,5 +21,5 @@ code {
     padding: 1px 2px;
     font-weight: 500; /* <-- This can be varied */
 
-    font-size: 110%;
+    font-size: 107%;
 }
