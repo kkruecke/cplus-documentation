@@ -156,7 +156,7 @@ One dimensional array can be passed using either syntax below.
 Higher Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^^^^ 
  
-Two dimensional and higher arrays are still stored, like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row. The code below shows the various types of addresses possible for a
+Two dimensional and higher arrays are still stored like one dimensional arrays, as one contiguous linear block, with the first row or block of values followed by the next row. The code below shows the various pointers possible for a
 2-dimensional arrays, and it shows the difference in bytes for each of these different pointer types. It further shows the corresponding dereference types (using the GCC extension ``abi::__cxa_demanage()`` from the header <cxxabi.h> to demangle
 the output of ``typeid()``).
 
@@ -224,7 +224,7 @@ and the output is:
     The type of '*&a' is 'int [5]'
     The type of '**&a' is 'int'
     </pre>
- 
+
 The code below shows the types of various pointer types of 2-dimensional arrays and what their difference in bytes are, when using pointer addtion. It aslo shows the corresponding dereferenced types: 
 
 .. code-block:: cpp
@@ -296,6 +296,9 @@ The output is:
     The type of *b is: int [5]
     The type of *&b is: int [2][5]
     </pre>
+ 
+Thus, in the 2-dimensional array ``b[2][5]``, ``b`` and ``&b[0]`` have the same type: pointer to a block of five ints, written as int (*)[5]. And ``&b`` is of type ``int (*)[2][5]``. When one is added to ``&b``, the address is advanced
+**2 x (5 x sizeof(int))** or 40 bytes.
  
 Preliminary Summary of 2-dimensional array pointers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
