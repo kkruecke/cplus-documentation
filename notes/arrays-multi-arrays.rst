@@ -167,9 +167,9 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
      
     int b[2][3] = { {1, 2, 3}, {10, 20, 30}}; // array of 2 arrays of 3 int
     
-    int** p2 = b;      // error: b does not decay to int**
+    int** p2 = b;        // error: b does not decay to int**
     
-    int (*p2)[3] = b;  // b decays to a pointer to the first 3-element row of b
+    int (*p2)[3] = b;    // b decays to a pointer to the first 3-element row of b
     
     // While b and &b[0][0] have the same address, they are not of the same pointer type.
     string str = (reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(b)) ? "true" : "false";
@@ -204,8 +204,8 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
         cout << "}, ";
     }
     
-    int c[2][3][4];   // array of 2 arrays of 3 arrays of 4 int
+    int c[2][3][4];       // array of 2 arrays of 3 arrays of 4 int
     
-    int*** p3 = c;    // error: c does not decay to int***
+    int*** p3 = c;        // error: c does not decay to int***
 
-    int (*p3)[3][4] = c;   // c decays to a pointer to the first 3 × 4-element plane of c
+    int (*p3)[3][4] = c;  // c decays to a pointer to the first 3 × 4-element plane of c
