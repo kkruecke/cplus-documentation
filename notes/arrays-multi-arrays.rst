@@ -14,8 +14,7 @@ Pointers, Arrays and Multidimensional Arrays
 General Comments on Array Addressess
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Given the array ``some_array``, ``&some_array[0]`` and ``some_array`` are identical pointers that both point to the first element in the array. The code below,
-compiled using **g++ -std=c++2a**, illustrates this.
+Given the array ``some_array``, ``&some_array[0]`` and ``some_array`` both point to the first element in the array. The code below, compiled using **g++ -std=c++2a**, illustrates this.
 
 .. code-block:: cpp
 
@@ -68,7 +67,7 @@ compiled using **g++ -std=c++2a**, illustrates this.
     cout << ptr_diff("c1", c1) << '\n';
     cout << ptr_diff("&c1[0]", &c1[0]) <<  "\n\n";
         
-and the ouput is:
+The ouput is:
 
 .. raw:: html
 
@@ -83,13 +82,12 @@ and the ouput is:
     The type of '&c1[0]' is 'int (*) [2][3]', and (&c1[0] + 1) - &c1[0] in bytes is: 24
     </pre>    
 
-.. note: When ``c1`` is used as a pointer in code without any index operators present, it is  the same as using ``&c1[0]``. It has the same type as
-   ``&c1[0]``, it holds the same address.  
+.. note: When ``c1`` is used as a pointer in code without any index operators present, it is the same as ``&c1[0]`` (assuming c1 is a one-dimensional array). 
 
 One Dimensional Arrays
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \***, as the code below illustrates, and ``a`` is exactly equivalent to ``&a[0]``:
+Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of its first element ``&a[0]`` is of type **int \***, shown in the code below, and ``a`` is exactly equivalent to ``&a[0]``:
 
 .. code-block:: cpp
 
@@ -98,8 +96,8 @@ Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of it
     int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-The index operator ``a[n]`` is equivalent to ``*(a + n)``. Adding one to a pointer does advances it by ``sizeof(int)`` bytes because pointer addition is scaled based on the underlying pointed-to type. In the case of ``*p1 + 1``, the pointer is
-advanced to the address of next element in the array, to ``&a[1]``.
+The index operator ``a[n]`` is equivalent to ``*(a + n)``. Adding one ``a`` advances it by ``sizeof(int)`` bytes because pointer addition is scaled based on the underlying pointed-to type. ``p1 = ++p1`` advances
+p1 to the address of next element in the array, to ``&a[1]``.
 
 .. code-block:: cpp
 
@@ -108,7 +106,7 @@ advanced to the address of next element in the array, to ``&a[1]``.
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-Again, the name of the array itself, here ``a``, is synonymous with ``&a[0]``. Thus we can loop through the array with following for\ |ndash|\ loop:
+Again, the name of the array, here ``a``, decays to the address of its first element when assigned to a pointer. We can iterator over the array elements using this pointer:
 
 .. code-block:: cpp
 
@@ -179,7 +177,7 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
         }
     }
 
-    int a[2] = { 1, 2};            // array of 2 int
+    int a[2] = { 1, 2};  // array of 2 int
     
     int* p1 = a;         // a decays to a pointer to the first element of a, which is an int.
     
@@ -187,16 +185,16 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
      
     int b[2][3] = { {1, 2, 3}, {10, 20, 30}};         // array of 2 arrays of 3 int
     
-    //--int** p2 = b;      // error: b does not decay to int**
+    //--int** p2 = b;    // error: b does not decay to int**
     
-    int (*p2)[3] = b;      // b decays to a pointer to the first 3-element row of b
+    int (*p2)[3] = b;    // b decays to a pointer to the first 3-element row of b
     
-    // While b and &b[0][0] have the same address, they are not of the same pointer type.
+    // While b and &b[0][0] have the same address value, they are not of the same pointer type.
     string str = (reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(b)) ? "true" : "false";
     
-    cout << "b is 'int b[2][3]', and the result of \n  reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(v) is " << str << endl;
+    cout << "b is 'int b[2][3]', and the result of \n reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(v) is " << str << endl;
     
-    // This loop shows how muli-dimentional arrays can be accessed via pointer notation
+    // muli-dimentional arrays can be accessed via pointer notation
     print_with_pointer(b, 3);
     
     cout << endl;
@@ -213,7 +211,8 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
     int c[2][3][4];        // array of 2 arrays of 3 arrays of 4 int
     
     // int*** p3 = c;      // error: c does not decay to int***
-    int (*p4)[3][4] = c;   // c decays to a pointer to the first 3 × 4-element plane of c
+    int (*p4)[3][4] = c;   // c decays to a pointer to the first array of '3 arrays of 4 int'.
     
     // p4 points to the first 3 x 4 array, so *p4 points to the first row, and **p4 points to the first element
+    // in the first row.
     int *p5 = **p4; 
