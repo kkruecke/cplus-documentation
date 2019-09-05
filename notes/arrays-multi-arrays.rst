@@ -106,7 +106,7 @@ p1 to the address of next element in the array, to ``&a[1]``.
     p = p + 4;
     cout << "p is equal to 5 is " << (*p == 5 ? "true" : "false"); // "p is equal to 5 is true"
 
-Again, the name of the array, here ``a``, decays to the address of its first element when assigned to a pointer. We can iterator over the array elements using this pointer:
+Again, when assigned to a pointer, the name of the array, here ``a``, decays to the address of its first element. We can iterator over the array elements using this pointer:
 
 .. code-block:: cpp
 
