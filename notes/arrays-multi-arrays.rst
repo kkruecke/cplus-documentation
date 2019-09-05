@@ -174,29 +174,21 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
     // While b and &b[0][0] have the same address, they are not of the same pointer type.
     string str = (reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(b)) ? "true" : "false";
     
-    cout << "b is 'int b[2][3]', and the result of \n  reinterpret_cast<void*>(&b[0][0]) ==\
-              reinterpret_cast<void*>(v) is " << str << endl;
+    cout << "b is 'int b[2][3]', and the result of \n";
+    cout << "reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(v) is " << str << endl;
     
-    // This loop shows how muli-dimentional arrays can be accessed via pointer notation
-    for (auto row = 0; row < 2; ++row) {
-        cout << "{ ";
-        for (auto column = 0; column < 3; ++column)
-            cout << *(*(b + row) + column) << ", ";
-        cout << "}, ";
-    }
-    
-    cout << endl;
-    
-    // Access the array using p2
-    cout << endl;
-    
+    // This loop shows how muli-dimentional arrays can be accessed via pointer notation, and it
+    // p2 is equivalent to b.
     for (auto row = 0; row < 2; ++row) {
         cout << "{ ";
         for (auto column = 0; column < 3; ++column)
             cout << *(*(p2 + row) + column) << ", ";
         cout << "}, ";
     }
+    
+    cout << endl;
 
+    // Access the array using index operator    
     for (auto row = 0; row < 2; ++row) {
         cout << "{ ";
         for (auto column = 0; column < 3; ++column)
@@ -210,6 +202,5 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
 
     int (*p3)[3][4] = c;  // c decays to a pointer to the first 3 × 4-element plane of c
 
-     // p4 points to the first 3 x 4 array, so *p4 points to the first row, and **p4 points to the first element
+    // p4 points to the first 3 x 4 array, so *p4 points to the first row, and **p4 points to the first element
     int *p5 = **p4;        
-    
