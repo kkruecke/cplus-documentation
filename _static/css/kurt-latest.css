@@ -5,8 +5,7 @@ body {
 
 pre { /* This changes "code-block: cpp" */
 
-font-size: 107%;
-
+   font-size: 107%;
 }
 
 .highlight { /* This changes "code-block: cpp" */
