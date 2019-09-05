@@ -159,48 +159,61 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
 
 .. code-block:: cpp
 
-    int a[2] = { 1, 2};  // array of 2 int
+    template<class T, int columns> void print_with_pointer(T (*p)[columns], int rows)
+    {
+        for (auto row = 0; row < rows; ++row) {
+            cout << "{ ";
+            for (auto column = 0; column < columns; ++column)
+                cout << *(*(p + row) + column) << ", ";
+            cout << "}, ";
+        }
+    }
+    
+    template<class T, int columns> void print_with_index(T (*p)[columns], int rows) 
+    {
+        for (auto row = 0; row < rows; ++row) {
+            cout << "{ ";
+            for (auto column = 0; column < columns; ++column)
+                cout << p[row][column] << ", ";
+            cout << "}, ";
+        }
+    }
+
+    int a[2] = { 1, 2};            // array of 2 int
     
     int* p1 = a;         // a decays to a pointer to the first element of a, which is an int.
     
     cout << "*p1 = " << *p1 << endl;
      
-    int b[2][3] = { {1, 2, 3}, {10, 20, 30}}; // array of 2 arrays of 3 int
+    int b[2][3] = { {1, 2, 3}, {10, 20, 30}};         // array of 2 arrays of 3 int
     
-    int** p2 = b;        // error: b does not decay to int**
+    //--int** p2 = b;      // error: b does not decay to int**
     
-    int (*p2)[3] = b;    // b decays to a pointer to the first 3-element row of b
+    int (*p2)[3] = b;      // b decays to a pointer to the first 3-element row of b
     
     // While b and &b[0][0] have the same address, they are not of the same pointer type.
     string str = (reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(b)) ? "true" : "false";
     
-    cout << "b is 'int b[2][3]', and the result of \n";
-    cout << "reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(v) is " << str << endl;
+    cout << "b is 'int b[2][3]', and the result of \n  reinterpret_cast<void*>(&b[0][0]) == reinterpret_cast<void*>(v) is " << str << endl;
     
-    // This loop shows how muli-dimentional arrays can be accessed via pointer notation, and it
-    // p2 is equivalent to b.
-    for (auto row = 0; row < 2; ++row) {
-        cout << "{ ";
-        for (auto column = 0; column < 3; ++column)
-            cout << *(*(p2 + row) + column) << ", ";
-        cout << "}, ";
-    }
+    // This loop shows how muli-dimentional arrays can be accessed via pointer notation
+    print_with_pointer(b, 3);
     
     cout << endl;
-
-    // Access the array using index operator    
-    for (auto row = 0; row < 2; ++row) {
-        cout << "{ ";
-        for (auto column = 0; column < 3; ++column)
-            cout << p2[row][column] << ", ";
-        cout << "}, ";
-    }
     
-    int c[2][3][4];       // array of 2 arrays of 3 arrays of 4 int
+    print_with_pointer(p2, 3);
+
+    // Access the array using p2
+    print_with_index(p2, 3);
+        
+    cout << endl;
     
-    int*** p3 = c;        // error: c does not decay to int***
-
-    int (*p3)[3][4] = c;  // c decays to a pointer to the first 3 × 4-element plane of c
-
+    int *p3 = *p2;         // *p2 is of type 'int *'
+        
+    int c[2][3][4];        // array of 2 arrays of 3 arrays of 4 int
+    
+    // int*** p3 = c;      // error: c does not decay to int***
+    int (*p4)[3][4] = c;   // c decays to a pointer to the first 3 × 4-element plane of c
+    
     // p4 points to the first 3 x 4 array, so *p4 points to the first row, and **p4 points to the first element
-    int *p5 = **p4;        
+    int *p5 = **p4; 
