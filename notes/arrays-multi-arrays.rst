@@ -209,3 +209,7 @@ array is converted to a pointer to its first element, i.e., a pointer to its fir
     int*** p3 = c;        // error: c does not decay to int***
 
     int (*p3)[3][4] = c;  // c decays to a pointer to the first 3 × 4-element plane of c
+
+     // p4 points to the first 3 x 4 array, so *p4 points to the first row, and **p4 points to the first element
+    int *p5 = **p4;        
+    
