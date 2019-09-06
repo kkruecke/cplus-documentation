@@ -122,7 +122,7 @@ gives such an example:
         }
     }
 
-The article `Use auto&& for range-based for loops <https://edmundv.home.xs4all.nl/blog/2014/01/28/use-auto-and-and-for-range-based-for-loops/>`_ explains ``auto&&`` "works with both const and non-const containers, but also works with proxy objects. It is always correct and efficient!"
+The article `Use auto&& for range-based for loops <https://edmundv.home.xs4all.nl/blog/2014/01/28/use-auto-and-and-for-range-based-for-loops/>`_ also gives an example and succinctly explains ``auto&&`` "works with both const and non-const containers, but also works with proxy objects. It is always correct and efficient!"
     
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
