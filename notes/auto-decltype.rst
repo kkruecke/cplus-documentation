@@ -107,8 +107,8 @@ Use of auto&&
    T t1{  f(example1) }; // t becomes lvalue reference: Example&
    T t2{ f(Example{} );  // t becomes rvalue refernece: Example&&e
 
-When do use ``auto&`` and when do use ``auto&&``? Accoring to the cppreference.com article `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_: It is safe, and in fact, preferable in generic code, to use deduction to
-forwarding reference, ``for (auto&& var : sequence)``. For an explanation of this use of ``auto&&``, see the discussion of ``auto&&`` in `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_.
+When do use ``auto&`` and when do use ``auto&&``? Accoring to the cppreference.com article `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_: "It is safe, and in fact, preferable in generic code, to use deduction to
+forwarding reference, ``for (auto&& var : sequence)``". For more details on this use of ``auto&&``, see the discussion of ``auto&&`` in `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_.
 
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
