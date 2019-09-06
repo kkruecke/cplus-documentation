@@ -76,9 +76,7 @@ Obviously, ``c`` cannot be changed because it is ``const``. Therefore ``rc`` mus
 Use of auto&&
 -------------
 
-``auto&&`` behaves like template functions parameters that are declared using ``&&``:
-
-.. todo:: Provide a cross link to forwarding references here.
+``auto&&`` behaves like template functions parameters that are declared using ``&&``, known as a forwarding reference. Here is a template parameter that takes a forwarding reference.
 
 .. code-block:: cpp
 
@@ -106,8 +104,10 @@ Use of auto&&
 
    Example example1{}; // lvalue
 
-   T t1{  f(example1) };
-   T t2{ f(Example{} );  // rvalue
+   T t1{  f(example1) }; // t becomes lvalue reference: Example&
+   T t2{ f(Example{} );  // t becomes rvalue refernece: Example&&e
+
+When do use ``auto&`` and when do use ``auto&&``? Accoring to the cppreference.com article `Range-based for loop<https://en.cppreference.com/w/cpp/language/range-for>`_: "It is safe, and in fact, preferable in generic code, to use deduction to forwarding reference, for (auto&& var : sequence)."
 
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
