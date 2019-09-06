@@ -76,7 +76,7 @@ Obviously, ``c`` cannot be changed because it is ``const``. Therefore ``rc`` mus
 Use of auto&&
 -------------
 
-``auto&&`` behaves like template functions parameters that are declared using ``&&``, known as a forwarding reference. To review forwarding references, here is a template function that uses a forwarding reference parameter.
+``auto&&`` behaves like template functions parameters that are declared using ``&&`` (known as a forwarding reference). To quickly review forwarding references, this template function uses a forwarding reference parameter.
 
 .. code-block:: cpp
 
@@ -104,12 +104,26 @@ Use of auto&&
 
    Example example1{}; // lvalue
 
-   T t1{  f(example1) }; // t becomes lvalue reference: Example&
-   T t2{ f(Example{} );  // t becomes rvalue refernece: Example&&e
+   T t1{  f(example1) }; // t becomes lvalue reference, Example&
+   T t2{ f(Example{} );  // t becomes rvalue refernece, Example&&
 
-When do use ``auto&`` and when do use ``auto&&``? Accoring to the cppreference.com article `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_: "It is safe, and in fact, preferable in generic code, to use deduction to
-forwarding reference, ``for (auto&& var : sequence)``". For more details on this use of ``auto&&``, see the discussion of ``auto&&`` in `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_.
+When should ``auto&&``? `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` secition of `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
+gives such an example:
 
+.. code-block:: cpp
+
+    // Sets all elements in the given range to the given value.
+    // Now working even with std::vector<bool>.
+    template<typename Range, typename Value>
+    void set_all_to(Range& range, const Value& value) {
+
+        for (auto&& x : range) { // Notice && instead of &.
+            x = value;
+        }
+    }
+
+`Use auto&& for range-based for loops <https://edmundv.home.xs4all.nl/blog/2014/01/28/use-auto-and-and-for-range-based-for-loops/>`_ explains ``auto&&`` "works with both const and non-const containers, but also works with proxy objects. It is always correct and efficient!"
+    
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
 
