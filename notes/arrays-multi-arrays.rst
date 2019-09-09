@@ -6,8 +6,6 @@
 Understanding Arrays, Pointers and Multi-Dimensional Arrays
 ===========================================================
 
-.. todo:: proof read and correct.
-
 Pointers, Arrays and Multidimensional Arrays
 --------------------------------------------
 
@@ -96,7 +94,7 @@ Given the one dimensional array ``int a[] = {1, 2, 3, 4, 5}``, the address of it
     int *p2 = a;     // equivalent to line above.
     int *q = new int{9}; // q points to int on the heap with a value of 9
 
-The index operator ``a[n]`` is equivalent to ``*(a + n)``. Adding one ``a`` advances it by ``sizeof(int)`` bytes because pointer addition is scaled based on the underlying pointed-to type. ``p1 = ++p1`` advances
+The index operator ``a[n]`` is equivalent to ``*(a + n)``. Adding one to ``a`` advances it ``sizeof(int)`` bytes because pointer addition is scaled based on the underlying pointed-to type. Therefore ``p1 = ++p1`` advances
 p1 to the address of next element in the array, to ``&a[1]``.
 
 .. code-block:: cpp
