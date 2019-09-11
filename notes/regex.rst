@@ -6,8 +6,7 @@ C++ Regular Expressions Functions
 regex_match
 -----------
 
-''regex_match`` determines whether there is a match between the regular expression e, and all of the input character sequence [first,last).
-It returns true if such a match exists, false otherwise.
+``regex_match`` returns true if and only if the entire input sequence has been matched. 
 
 .. code-block:: cpp
 
@@ -40,8 +39,8 @@ whose output is:
 regex_search and smatch
 -----------------------
 
-While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed even if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex as well as all
-submatches, that is, captures within the regex. For example, in this code
+While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed even if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex
+as well as all submatches, captures, within the regex. In the code
 
 .. code-block:: cpp
 
@@ -70,7 +69,7 @@ submatches, that is, captures within the regex. For example, in this code
       } 
     }
 
-The first "submatch", the 0\ :sup:`th` submatch, is not really a submatch. It is the entire match. While each of these expressions, which can be written variously as
+the first "submatch", ``m[0].str()`` and ``m.str(0)``, is the entire regex match. Note that submatches can be returned various ways that are equivalent
 
 .. code-block:: cpp
 
@@ -78,10 +77,12 @@ The first "submatch", the 0\ :sup:`th` submatch, is not really a submatch. It is
     m.str(i) 
     *(m.begin() + i)
 
-returns the i\ :sup:`th` submatch.  Furthermore,``m.prefix().str()`` returns everything before the matched expression, while ``m.suffix().str()`` returns exerything after the matched expression. Thus ``m.prefix().str()`` is **<prefix>** and
-``m.suffix().cstr()`` returns **<suffix>**.
+In addition to submatches, ``regex_search`` returns everything before the matched expression in ``m.prefix().str()``, and it returns everything aftere the matched expression in ``m.suffix().str()``.  Thus, ``m.prefix().str()`` is **<prefix>**
+and ``m.suffix().cstr()`` is **<suffix>**.
 
-In the code above ``regex_search()`` only found the first email address. You can use ``regex_search()`` in a loop, but you must supply ``m.suffix().str()`` as the new input each time through the loop:
+In the code above ``regex_search()`` only found the first email address.
+
+You can use ``regex_search()`` in a loop, but you must supply ``m.suffix().str()`` as the new input each time through the loop:
  
 .. code-block:: cpp
 
