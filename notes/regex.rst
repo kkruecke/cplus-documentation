@@ -6,7 +6,7 @@ C++ Regular Expressions Functions
 regex_match
 -----------
 
-``regex_match`` returns true if and only if the entire input sequence has been matched. 
+``regex_match`` returns true and only if the entire input sequence **[start, end)** is matched. The output of
 
 .. code-block:: cpp
 
@@ -16,7 +16,7 @@ regex_match
 
       cout << "Does subject of: '" << subject << "'. Match the regex of '" << re_str << "'" << endl;
     
-      string msg { regex_match(subject, re) ? "matches " : "does not match " };
+      string msg { regex_match(subject, re) ? "yes" : "no" };
     
       cout << "Answer: " << msg << endl;
     }
@@ -27,20 +27,20 @@ regex_match
 
     test_regex_match(string{"05/31/2000"}, R"(\d\d/\d\d/\d\d\d\d)"); // four digit month/day/year date
     
-whose output is:
+is:
 
 ::
 
     Does subject of: '5/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
-    Answer: does not match 
+    Answer: no
     Does subject of: '05/31/2000'. Match the regex of '\d\d/\d\d/\d\d\d\d'
-    Answer: matches 
+    Answer: yes 
 
 regex_search and smatch
 -----------------------
 
-While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed even if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex
-as well as all submatches, captures, within the regex. In the code
+While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex
+and any submatches, any captures, within the regex. Given the code
 
 .. code-block:: cpp
 
@@ -69,7 +69,7 @@ as well as all submatches, captures, within the regex. In the code
       } 
     }
 
-the first "submatch", ``m[0].str()`` and ``m.str(0)``, is the entire regex match. Note that submatches can be returned various ways that are equivalent
+the first "submatch", ``m[0].str()`` and ``m.str(0)``, is always the match of the entire regex. Submatches can be returned various ways that are all equivalent to one another
 
 .. code-block:: cpp
 
@@ -77,7 +77,7 @@ the first "submatch", ``m[0].str()`` and ``m.str(0)``, is the entire regex match
     m.str(i) 
     *(m.begin() + i)
 
-In addition to submatches, ``regex_search`` returns everything before the matched expression in ``m.prefix().str()``, and it returns everything aftere the matched expression in ``m.suffix().str()``.  Thus, ``m.prefix().str()`` is **<prefix>**
+In addition to returning submatches, ``regex_search`` returns everything before the matched expression in ``m.prefix().str()``, and everything after the matched expression in ``m.suffix().str()``.  Thus, ``m.prefix().str()`` is **<prefix>**
 and ``m.suffix().cstr()`` is **<suffix>**.
 
 In the code above ``regex_search()`` only found the first email address.
