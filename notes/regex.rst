@@ -6,7 +6,8 @@ C++ Regular Expressions Functions
 regex_match
 -----------
 
-``regex_match`` returns true if and only if the entire input sequence has been matched. To find matches within strings, use ``regex_search()``.
+''regex_match`` determines whether there is a match between the regular expression e, and all of the input character sequence [first,last).
+It returns true if such a match exists, false otherwise.
 
 .. code-block:: cpp
 
@@ -39,12 +40,15 @@ whose output is:
 regex_search and smatch
 -----------------------
 
-``regex_search`` returns the matched regex as well as all submatches. For example, in this code
+While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed even if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex as well as all
+submatches, that is, captures within the regex. For example, in this code
 
 .. code-block:: cpp
 
-    void test_regex_search()  // See https://www.youtube.com/watch?v=nkjUpUu3dFk
+    void test_regex_search()  
     {
+      // [:w:] stands for "word character". It matches the ASCII characters [A-Za-z0-9_].
+      // This regex matches a 
       regex re{R"(([[:w:]\.]+)@([[:w:]]+)\.com)"};
     
       smatch m;
@@ -66,7 +70,7 @@ regex_search and smatch
       } 
     }
 
-The 0\ :sup:`th` submatch refers to the entire match (not a submatch). While each of these expressions
+The first "submatch", the 0\ :sup:`th` submatch, is not really a submatch. It is the entire match. While each of these expressions, which can be written variously as
 
 .. code-block:: cpp
 
@@ -74,11 +78,10 @@ The 0\ :sup:`th` submatch refers to the entire match (not a submatch). While eac
     m.str(i) 
     *(m.begin() + i)
 
-returns the i\ :sup:`th` submatch.  ``m.prefix().str()`` returns everything before the matched expression, while ``m.suffix().str()`` returns exerything after the matched
-expression. Thus ``m.prefix().str()`` is <prefix> and ``m.suffix().cstr()`` returns <suffix>.
+returns the i\ :sup:`th` submatch.  Furthermore,``m.prefix().str()`` returns everything before the matched expression, while ``m.suffix().str()`` returns exerything after the matched expression. Thus ``m.prefix().str()`` is **<prefix>** and
+``m.suffix().cstr()`` returns **<suffix>**.
 
-In the code above ``regex_search()`` only found the first email address. You can use ``regex_search()`` iteratively, but to do so you must use a loop like below, in which 
-``m.suffix().str()`` becomes the new input:
+In the code above ``regex_search()`` only found the first email address. You can use ``regex_search()`` in a loop, but you must supply ``m.suffix().str()`` as the new input each time through the loop:
  
 .. code-block:: cpp
 
@@ -89,8 +92,8 @@ In the code above ``regex_search()`` only found the first email address. You can
       smatch m;
     
       string s{R"(<prefix>kurt.krueckeberg@gmail.com<suffix>joe.smith@aol.com|jane.doe@comcast.net)"};
-    
-      while(regex_search(s, m, re) ) {
+
+      for(;(regex_search(s, m, re) ); s = m.suffix().str())  { 
     
           for (auto i = 0; i < m.size(); ++i) {
         
@@ -102,13 +105,38 @@ In the code above ``regex_search()`` only found the first email address. You can
           cout << "m.prefix().str() = " << m.prefix().str() << endl;
           
           cout << "m.suffix().str() = " << m.suffix().str() << endl;
-
-          s = m.suffix().str();
         }
     }
-    
-.. note:: Again, note how the end of the loop resets the next input to ``regex_search`` to be the matches's suffix: ``m.prefix().str()``.
 
+The output is
+
+.. raw:: html
+
+    <pre>
+    The 0th submatch using m[i].str()     is: kurt.krueckeberg@gmail.com
+    The 0th submatch using m.str(i)       is: kurt.krueckeberg@gmail.com
+    The 0th submatch using *(begin() + n) is: kurt.krueckeberg@gmail.com
+    The 1th submatch using m[i].str()     is: kurt.krueckeberg
+    The 1th submatch using m.str(i)       is: kurt.krueckeberg
+    The 1th submatch using *(begin() + n) is: kurt.krueckeberg
+    The 2th submatch using m[i].str()     is: gmail
+    The 2th submatch using m.str(i)       is: gmail
+    The 2th submatch using *(begin() + n) is: gmail
+    m.prefix().str() = <prefix>
+    m.suffix().str() = <suffix>joe.smith@aol.com|jane.doe@comcast.net
+    The 0th submatch using m[i].str()     is: joe.smith@aol.com
+    The 0th submatch using m.str(i)       is: joe.smith@aol.com
+    The 0th submatch using *(begin() + n) is: joe.smith@aol.com
+    The 1th submatch using m[i].str()     is: joe.smith
+    The 1th submatch using m.str(i)       is: joe.smith
+    The 1th submatch using *(begin() + n) is: joe.smith
+    The 2th submatch using m[i].str()     is: aol
+    The 2th submatch using m.str(i)       is: aol
+    The 2th submatch using *(begin() + n) is: aol
+    m.prefix().str() = <suffix>
+    m.suffix().str() = |jane.doe@comcast.net
+    </pre>
+    
 regex iterators
 ---------------
 
