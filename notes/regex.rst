@@ -6,7 +6,7 @@ C++ Regular Expressions Functions
 regex_match
 -----------
 
-``regex_match`` returns true and only if the entire input sequence **[start, end)** is matched. The output of
+``regex_match`` returns true and only if the entire input sequence **[start, end)** is matched. For example, the output of
 
 .. code-block:: cpp
 
@@ -27,7 +27,7 @@ regex_match
 
     test_regex_match(string{"05/31/2000"}, R"(\d\d/\d\d/\d\d\d\d)"); // four digit month/day/year date
     
-is:
+is
 
 ::
 
@@ -39,8 +39,8 @@ is:
 regex_search and smatch
 -----------------------
 
-While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed if only a sub-sequence matches the regular expression. ``regex_search`` returns both the matched regex
-and any submatches, any captures, within the regex. Given the code
+While ``regex_match`` returns true only if the regular expression matches the entire input sequence, ``regex_search`` will succeed even if only a sub-sequence matches the regular expression. And ``regex_search`` will return both the matched regex
+and any submatches, any captures, within the regex. Given code such as
 
 .. code-block:: cpp
 
@@ -69,7 +69,7 @@ and any submatches, any captures, within the regex. Given the code
       } 
     }
 
-the first "submatch", ``m[0].str()`` and ``m.str(0)``, is always the match of the entire regex. Submatches can be returned various ways that are all equivalent to one another
+the first "submatch", ``m[0].str()`` and ``m.str(0)``, is always the match of the entire regex , while is the first submatch is returned in ``m[1].str()``. Submatches can be returned various ways that are all equivalent to one another
 
 .. code-block:: cpp
 
@@ -77,8 +77,8 @@ the first "submatch", ``m[0].str()`` and ``m.str(0)``, is always the match of th
     m.str(i) 
     *(m.begin() + i)
 
-In addition to returning submatches, ``regex_search`` returns everything before the matched expression in ``m.prefix().str()``, and everything after the matched expression in ``m.suffix().str()``.  Thus, ``m.prefix().str()`` is **<prefix>**
-and ``m.suffix().cstr()`` is **<suffix>**.
+In addition to returning submatches, ``regex_search`` returns everything before the matched expression in ``m.prefix().str()``, and everything after the matched expression in ``m.suffix().str()``.  Therefore ``m.prefix().str()`` contains **<prefix>**
+and ``m.suffix().cstr()`` contains **<suffix>**.
 
 In the code above ``regex_search()`` only found the first email address.
 
