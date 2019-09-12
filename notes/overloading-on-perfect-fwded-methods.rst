@@ -258,6 +258,8 @@ Problem 2: Overloading a Constructor That Takes Forwarding Reference(s).
 Solution: ``enable_if<T>``
 --------------------------
 
+See article `Notes on C++ SFINAE <https://www.bfilipek.com/2016/02/notes-on-c-sfinae.html>`_ byBartłomiej Filipek. 
+
 
 Best Solution: Concepts
 -----------------------
