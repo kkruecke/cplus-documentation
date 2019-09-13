@@ -203,8 +203,6 @@ The rvalue reference j above is not really of any value. While we can change the
 the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
 invoke it." 
 
-.. note:: rvalue reference variables are lvalues when used in expressions. 
- 
 .. code-block:: cpp
 
     #include <iostream>
@@ -237,7 +235,7 @@ invoke it."
         f(std::move(x)); // calls f(int&& x)
     }
 
-note:: rvalue reference parameters are lvalues
+Note: *rvalue* reference variables are *lvalues* when used in expressions. For example, parameter d in ``Derived::Derived(Derived&& d)`` below
  
 .. code-block:: cpp
 
@@ -259,7 +257,7 @@ note:: rvalue reference parameters are lvalues
    
    Derived::Derived(Derived&& d) : Base(std::move(d)), ... {} 
 
-Although d is a reference to an rvalue, d itself is an lvalue because it has a name and its address can be taken; and so it must be cast to an rvalue using ``std::move(d)``.
+is a reference to an rvalue; however, *d* itself is an lvalue because it has a name and its address can be taken. Therefore to ensure that ``Base::Base(Base&&)`` is called, it must first be cast to an rvalue using ``std::move(d)``.
 
 Overloading Constructors and Assignment Operators with rvalue references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
