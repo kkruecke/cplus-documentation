@@ -257,7 +257,8 @@ Note: *rvalue* reference variables are *lvalues* when used in expressions. For e
    
    Derived::Derived(Derived&& d) : Base(std::move(d)), ... {} 
 
-is a reference to an rvalue; however, *d* itself is an lvalue because it has a name and its address can be taken. Therefore to ensure that ``Base::Base(Base&&)`` is called, it must first be cast to an rvalue using ``std::move(d)``.
+is a reference to an rvalue; however, *d* itself is an lvalue because it has a name and its address can be taken. Therefore to ensure the *Derived* move constructor invokes ``Base::Base(Base&&)``, *d* must first be cast to an rvalue using ``std::move(d)``.
+All this is explained in more detail below.
 
 Overloading Constructors and Assignment Operators with rvalue references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
