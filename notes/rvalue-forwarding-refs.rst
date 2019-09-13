@@ -38,7 +38,7 @@ as ``void push_back(const T&)`` that take an ``const T&``:
     
        public:
     
-         Vector() : p(std::make_unique<T[]>(Vector::default_sz )), size{Vector::default_sz}, current{0}  
+         Vector() : p(std::make_unique<T[]>(Vector::default_sz)), size{Vector::default_sz}, current{0}  
          {
          }
          
@@ -454,19 +454,22 @@ Obviously the versions of the constructor and assignment operator overloaded to 
 .. code-block:: cpp
 
     Vector<int> v1{1, 5, 12};
-    Vector<int> v2{v2}; // invokes copy constructor    
-    Vector<int> v2{v{2, 6, 16}}; // invokes move constructor Vector::Vector(Vector&&)    
+    Vector<int> v2{v1}; // invokes copy constructor    
+    Vector<int> v3{v{2, 6, 16}}; // move constructor Vector::Vector(Vector&&) invoked    
                                  // because an rvalue is passed 
 
     template<class T> void f(Vector<T>&& v); // forward declaration
 
-    f(Vector<int>{11, 19, 29}); // invokes move constructor Vector::Vector(Vector&&)    
+    f(Vector<int>{11, 19, 29}); // move constructor Vector::Vector(Vector&&) invoked    
+
+*v2* above does not allocation any memory. Instead it "steals" the memory allocated by v1 by copying *v1*'s ``int *`` pointer and then setting *v1*'s pointer to *nullptr*. The same comments apply to *v3* which steals the memory allocated
+by the rvalue vector passed to it.
 
 Rvalue References and Derived classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Is an rvalue reference parameter an rvalue or an lvalue? Since an rvalue reference parameter has a name, it is not a temporary, and therefore it is an lvalue (because an rvalue reference parameter that has a name can have its address taken). 
-Since it "has a name" the rvalue reference parameter is an lvalue within the scope of its function. This implies move semantics in derived classes must be implemented in a certain way:
+Is an rvalue reference parameter an rvalue or an lvalue? Since an rvalue reference parameter has a name, it is not a temporary. It is therefore an lvalue. Since it "has a name" the rvalue reference parameter is an lvalue within the scope of its
+function. This implies move semantics in derived classes must be implemented in a certain way:
 
 .. code-block:: cpp
 
@@ -490,10 +493,12 @@ Since it "has a name" the rvalue reference parameter is an lvalue within the sco
          Derived(Derived&& d) : Base(std::move(d)) {}  
     };
 
-Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting ``d`` to an rvalue in order the Base move constructor is invoked rather than the copy constructor.
+Since ``d`` is an lvalue, the implementation of ``Derived(Derived&& d)`` requires casting ``d`` to an rvalue in order that the Base move constructor is invoked rather than the default copy constructor.
 
-Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when it is passedan rvalue: an rvalue is still returned. The g++ version of ``std::move()`` is shown below. It takes an argument of generic type ``T&&``. While this looks
-like an rvalue reference, it works differently than an ordinary rvalue reference\ |mdash|\ say, for example, ``std::string&&``\ |mdash|\ where the parameter's type is specified.
+Note, Since ``std::move()`` works correctly on both rvalues and lvalues, no harm is done when it is passed an rvalue: an rvalue is still returned. The g++ version of ``std::move()`` is shown below. It takes an argument of generic type ``T&&``.
+While this looks like an rvalue reference, it works differently than an ordinary rvalue reference\ |mdash|\ say, for example, ``std::string&&``\ |mdash|\ where the parameter's type is specified.
+
+.. todo:: This is really a new topic, forwarding references. It should appear under the rublik of "forwarding references" and, perhaps, on a separate page.
 
 ``T&&`` binds to both lvalues and rvalues, and is known as a forwarding reference. When it binds to an lvalue, ``T`` resolves to an lvalue reference, and when an rvalue is passed **T** resolves to the underlying nonreference type. We can see this by implementing
 a version of ``Remove_reference`` and its partial template specializations that contains a static method called ``describe()``, which ``move()`` calls: 
