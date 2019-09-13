@@ -164,8 +164,8 @@ As explained above, an lvalue is object that has a name (identity), whose addres
 
     int& f2(); // f2() returns an lvalue
 
-If an object is not an lvalue, it is an rvalue. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
-rvalue. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. Below are some examples of rvalue and lvalues:
+If an object is not an lvalue, it is an rvalue. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
+rvalue. Below are some examples of rvalue and lvalues:
 
 .. code-block:: cpp
 
@@ -203,7 +203,7 @@ The rvalue reference j above is not really of any value. While we can change the
 the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
 invoke it." 
 
-note:: rvalue reference variables are lvalues when used in expressions. 
+.. note:: rvalue reference variables are lvalues when used in expressions. 
  
 .. code-block:: cpp
 
