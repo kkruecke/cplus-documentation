@@ -10,7 +10,8 @@ Notes on Features of C++-17
    notes/auto-decltype.rst
    notes/observing-deduced-types.rst
    notes/value-categories.rst
-   notes/rvalue-forwarding-refs.rst
+   notes/rvalue-lvalue.rst
+   notes/forwarding-refs.rst
    notes/managed-ptrs.rst
    notes/templates.rst
    notes/overloading-on-perfect-fwded-methods.rst
