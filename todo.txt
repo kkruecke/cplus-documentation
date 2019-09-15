@@ -1,1 +1,1 @@
-_static/css/ contains kurt-initial.css and a kurt-latest.css. kurt-latest.css is being used in conf.py.
+Best to just reorganize logically what I have already written.
