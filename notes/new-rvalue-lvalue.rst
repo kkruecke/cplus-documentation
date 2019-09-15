@@ -11,8 +11,8 @@ Helpful Articles on Understanding Rvalue References, Move Semantics and Forwardi
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 * `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
 
-The new rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a new way of efficiently creating new object from the resouces of objects about to die.
-We first look at rvlaue reference, followed by forwarding references, and finally we look at move semantics.
+The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We will first look at rvlaue reference, followed by forwarding references,
+and finally move semantics.
 
 .. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
 
@@ -101,22 +101,23 @@ invoke it."
         f(std::move(x)); // calls f(int&& x)
     }
 
-Note: *rvalue* reference variables are *lvalues* when used in expressions. For example, parameter x in ``void f(SomeClass&& x`` below
+Note: *rvalue* reference variables are *lvalues* when used in expressions. To see this, consider parameter x in ``void f(SomeClass&& x)`` below 
 
-.. todo:: change this to remove move constructors. USe an example like that used on fluent Ct++
- 
 .. code-block:: cpp
-
+   
    void f(SomeClass&& x)
    {
        ...
        SomeClass *p = &x; // note: we can take the address of x.
        ...
    }
-     
-is a reference to an rvalue; however, *x* itself is an lvalue because it has a name and its address can be taken. 
 
-.. todo:: Insert deiscussion of forwarding references here.
+   f(SomeClass()); 
+   
+The parameter x is a reference to an rvalue that refers to a temporary SomeClass instantiated at the point f is invoked. But within the body of the  function f, *x* is an lvalue because it has a name. x refers to a object about to die, 
+but x itself is not about to die. It exists within the execution lifetime of body of f. This fact will have important implications later when move constructors and move assignment operators are introduced.
+
+.. todo:: Insert  the discussion of forwarding references right here before proceeding.
 
 Overloading Constructors and Assignment Operators with rvalue references
 ------------------------------------------------------------------------
