@@ -690,27 +690,3 @@ Move Conclusion
 
 .. note:: The C++ standard library's **Remove_reference** is simply ``remove_reference`` (with a lowercase r). The version above used ``Remove_reference`` (with an uppercase R), so that it would not conflict with the actual ``std::remove_reference`` in the standard library,
    which automatically gets included when <iostream> is included in main.cpp and its methods are used, as they were in the example code above.
-
-.. todo:: Decide what to do with the material below...
-
-
-Value Categories
-----------------
-
-articles discussing this topic: 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-* `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
-* `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_.
-* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
-* `Value Categories at en.cppreference.com <https://en.cppreference.com/w/cpp/language/value_category>`_. 
-
-C++11 introduced the concept of (an expression's) **value category**. The articles `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains::
-
-    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
-    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue...
-
-.. todo:: Use the top two references above to illustrate with examples how 1.) type and value category differ and how, in C++11 and above, the value category 2.) also affects the choice of overloaded method chosen.
-
-
-

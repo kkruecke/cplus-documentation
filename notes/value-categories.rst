@@ -7,9 +7,16 @@ Value Categories
 Helpful Articles
 ----------------
 
-* http://www.stroustrup.com/terminology.pdf
-* https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe
-* http://marcodiiga.github.io/building-intuition-on-value-categories
+* `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
+* `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
+* `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_
+* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
+* `Building Intuition on Value Categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_
+
+C++11 introduced the concept of (an expression's) **value category**. The articles `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains::
+
+    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
+    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue...
 
 On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
 Stroustrup explains what *lvalue* means:
