@@ -1,8 +1,8 @@
 .. include:: <isopub.txt>
 .. include:: <isonum.txt>
 
-Rvalue References and Forwarding References in C++
-==================================================
+Rvalue References and Lvalue References in C++
+==============================================
 
 Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
 ---------------------------------------------------------------------------------------------
