@@ -29,7 +29,7 @@ reference collapsing rules apply:
 * T&& & becomes T&
 * T&& && becomes T&&
 
-Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``, a generic lvalue reference.
+Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``, a lvalue reference.
 
 The Purpose of Forwarding References
 ------------------------------------
