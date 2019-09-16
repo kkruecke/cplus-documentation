@@ -50,7 +50,7 @@ simply transfered to the new object being constructed or, in the case of the ass
 
     String s3{s1 + s2}; 
 
-The temporary string representing *s1 + s2* will die after the line is executed and its memory will be delete. Therefore it would be more efficient if its resources were simply taken over or moved to *s3* like this
+The temporary string representing *s1 + s2* will die after the line is executed and its memory will be deleted. Therefore it would be more efficient if its resources were simply taken over or moved to *s3* like this
 
 .. code-block:: cpp
 
@@ -63,7 +63,7 @@ The temporary string representing *s1 + s2* will die after the line is executed 
 When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references like the constructor above (called a move constructor), and this allows the compiler to now branch at compiler time
 depending on whether the constructor or assignment operator is being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
 
-The Vector class below is were introduced when rvalues were explained :ref:rvalue-reference. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
+The Vector class below is were introduced when rvalues were explained :ref:`rvalue-reference`. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
 See :ref:`rvalue-reference` for an explanation of rvalue references. Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
 as ``void push_back(const T&)`` that take an ``const T&``:
 
