@@ -10,7 +10,7 @@ Overloading Constructors and Assignment Operators with rvalue references
 .. todo:: See also https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
 
 When a copy constructor or an assignment operator is invoked, the source object remains unchanged. But if the source object is about to die and its resources about to be deleted, it would be more efficient if the source objects resources were
-simply transfered to the new object being constructed or, in the case of the assignment operator, the object being assigned. For example, given a String object
+simply transfered to the new object being constructed or, in the case of the assignment operator, the object being assigned. For example, take the String class below.
 
 .. code-block:: cpp
 
