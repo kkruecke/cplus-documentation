@@ -9,11 +9,62 @@ Overloading Constructors and Assignment Operators with rvalue references
 
 .. todo:: See also https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, and this allows the compiler to now branch at compiler time depending on whether the constructor or assignment operator is
-being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
+When a copy constructor or an assignment operator is invoked, the source object remains unchanged. But if the source object is about to die and its resources about to be deleted, it would be more efficient if the source objects resources were
+simply transfered to the new object being constructed or, in the case of the assignment operator, the object being assigned. For example, given a String object
 
-The Vector class below is used to explain lvalues and rvlaues and move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
-(see :ref:`rvalue-reference`). Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
+.. code-block:: cpp
+
+    class String {
+      private:
+          char *p;
+          int length;
+      public:
+          String() : p{nullptr}, length{0} {}
+          String(char *ptr)
+          {
+             length = strlen(ptr);
+             p = new char[length + 1];  
+             strcpy(p, ptr);
+          }
+          String(const String& str) : length{p.length}
+          {
+             p = new char[length + 1];  
+             strcpy(p, ptr);
+          }   
+          String& operator=(const String& str)
+          {
+             if (this != &str) {
+
+                delete [] p;
+                length = strlen(str.length);
+                p = new char[length + 1];  
+                strcpy(p, str.p);
+             } 
+             return *this;
+          }
+          // ....  
+    };  
+
+    String s1{"abc"};
+    String s2{"def"};
+
+    String s3{s1 + s2}; 
+
+The temporary string representing *s1 + s2* will die after the line is executed and its memory will be delete. Therefore it would be more efficient if its resources were simply taken over or moved to *s3* like this
+
+.. code-block:: cpp
+
+    String::String(String&& str) : length{str.length}, p{str.p}
+    {
+       str.length = 0;
+       str.p = nullptr;
+    }   
+
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references like the constructor above (called a move constructor), and this allows the compiler to now branch at compiler time
+depending on whether the constructor or assignment operator is being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
+
+The Vector class below is were introduced when rvalues were explained :ref:rvalue-reference. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
+See :ref:`rvalue-reference` for an explanation of rvalue references. Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
 as ``void push_back(const T&)`` that take an ``const T&``:
 
 .. code-block:: cpp
