@@ -11,11 +11,11 @@ Helpful Articles on Understanding Rvalue References, Move Semantics and Forwardi
 * `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 
+.. _rvalue-reference:
+
 The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We look here at rvlaue references.
 
 .. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
-
-.. _rvalue-reference:
         
 Rvalue References and Their Role
 --------------------------------
@@ -65,8 +65,8 @@ The rvalue reference j above is not really of any value. While we can change the
     j = 9;
     cout << j;  // prints: 9
 
-the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
-invoke it." 
+the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. However, when the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
+invoke it.", and this ability to detect an rvalue is crucial to the implementation of move semantics bring, which is discussed in the section :ref:`move-semantics`.
 
 .. code-block:: cpp
 
