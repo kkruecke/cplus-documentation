@@ -20,7 +20,7 @@ The same notation used for rvalue references, the double ampersand *&&*, is also
 
    template<typename T> void sample(T&& t);
 
-While this looks just like an rvalue reference :ref:`rvalue-reference`, when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both
+While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both
 rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can in certain cases syntactically have a reference to a reference. In this case, the following
 reference collapsing rules apply:
 
