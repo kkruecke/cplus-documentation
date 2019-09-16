@@ -6,34 +6,39 @@
 Forwarding References and Perfect Forwarding
 ============================================
 
+Important Article that Explains Forwarding References and Perfect Forwarding
+----------------------------------------------------------------------------
+
+* `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
+
 Forwarding References
 ---------------------
 
-A **forwarding reference** is a template function parameter of type ``T&&`` such as
+The same notation used for rvalue references, the double ampersand *&&*, is also used to denote a forwarding reference. This was an unfortunetly decision by the C++ Committe. A **forwarding reference** is a template function parameter of type ``T&&`` such as
 
 .. code-block:: cpp
 
    template<typename T> void sample(T&& t);
 
-It looks just like an rvalue reference, but when ``&&`` is used in function template as above, it is called a **forwarding refernence**. Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. Forwarding reference take
-advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can syntactically have a reference to a reference. In this case, the following reference collapsing rules apply:
-references to references:
+While this looks just like an rvalue reference :ref:rvalue-reference, when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both
+rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can in certain cases syntactically have a reference to a reference. In this case, the following
+reference collapsing rules apply:
 
 * T& & becomes T&
 * T& && becomes T&
 * T&& & becomes T&
 * T&& && becomes T&&
 
-Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``.
+Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``, a generic lvalue reference.
 
 The Purpose of Forwarding References
 ------------------------------------
 
-Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both const and non-const objects. It can bind to mutable and volitale. In essence, it can bind to any type. When a lvalue, say, of type X is passed to a
-template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue of type X is passed, ``T``
-becomes ``X``, and ``T&&`` is thus simply ``X&&``.
+Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to any type. When a lvalue, say, of
+type X is passed to a template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
+of type X is passed, ``T`` becomes ``X``, and ``T&&`` is thus simply ``X&&``.
 
-Thus an lvalue of type X binds as ``X&`` and an rvalue binds as ``X&&``. We can see this in the code below:
+Thus an lvalue of type X binds as ``X&`` and an rvalue of type X binds as ``X&&``. We can see this in the code below:
 
 .. code-block:: cpp
    
@@ -88,7 +93,7 @@ For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and th
        state_type<vector<int&>::describe();
     }
     
-Applying reference collapsing rules for references this becomes
+which, after applying reference collapsing rules for references, becomes
 
 .. code-block:: cpp 
 
@@ -97,8 +102,7 @@ Applying reference collapsing rules for references this becomes
        state_type<vector<int&>::describe();
     }
  
-So we see arg binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample looks like
-this: 
+So we see *arg* binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample looks like this: 
 
 .. code-block:: cpp 
 

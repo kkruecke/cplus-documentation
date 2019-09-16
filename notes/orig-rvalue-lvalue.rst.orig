@@ -11,121 +11,8 @@ Helpful Articles on Understanding Rvalue References, Move Semantics and Forwardi
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 * `Perfect Forwarding by Stroutrup, Sutter and Dos Reis <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2014/n4164.pdf>`_.
 
-The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We will first look at rvlaue reference, followed by forwarding references,
-and finally move semantics.
-
-.. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
-
-.. _rvalue-reference:
-        
-rvalue references and their role
---------------------------------
-    
-An lvalue is object that has a name (identity), whose address can be taken, but that cannot be moved from. Examples of lvalues:
-
-.. code-block:: cpp
-
-    int i; // lvalue
-    int j = 8; // lvalue assigned rvalue
-
-    int& f2(); // f2() returns an lvalue
-
-If an object is not an lvalue, it is an rvalue. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
-rvalue. Below are some examples of rvalue and lvalues:
-
-.. code-block:: cpp
-
-    int i; // lvalue
-    int j = 8; // lvalue assigned rvalue
-
-    int f1(); // f1() returns an rvalue. We can't do &f1().
-    int& f2(); // f2() returns an lvalue
-    int&& f3(); // f3() returns an rvalue.
-
-    class X { //...};
-
-    X x1; // lvalue declared
-    X f4(); // returns rvalue
-    X& f5(); // returns lvalue
-
-An rvalue reference is declared using ``&&``: 
-
-.. code-block:: cpp
-
-    int&& j = 8;
-    int&& f3(); // f3() returns an rvalue
-    int&& k = f3();
-    int v = 9;
-    int&& l = v; // error: cannot bind rvlue reference l to lvalue v.
-
-The rvalue reference j above is not really of any value. While we can change the value of a literal using this trick
- 
-.. code-block:: cpp
-
-    int&& j = 8;
-    j = 9;
-    cout << j;  // prints: 9
-
-the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
-invoke it." 
-
-.. code-block:: cpp
-
-    #include <iostream>
-    #include <utility>
-     
-    void f(int& x) {
-        std::cout << "lvalue reference overload f(" << x << ")\n";
-    }
-     
-    void f(const int& x) {
-        std::cout << "lvalue reference to const overload f(" << x << ")\n";
-    }
-     
-    void f(int&& x) {
-        std::cout << "rvalue reference overload f(" << x << ")\n";
-    }
-     
-    int main() {
-        int i = 1;
-        const int ci = 2;
-        f(i);  // calls f(int&)
-        f(ci); // calls f(const int&)
-        f(3);  // calls f(int&&)
-               // would call f(const int&) if f(int&&) overload wasn't provided
-        f(std::move(i)); // calls f(int&&)
-     
-        // rvalue reference variables are lvalues when used in expressions
-        int&& x = 1;
-        f(x);            // calls f(int& x)
-        f(std::move(x)); // calls f(int&& x)
-    }
-
-Note: *rvalue* reference variables are *lvalues* when used in expressions. To see this, consider parameter x in ``void f(SomeClass&& x)`` below 
-
-.. code-block:: cpp
-   
-   void f(SomeClass&& x)
-   {
-       ...
-       SomeClass *p = &x; // note: we can take the address of x.
-       ...
-   }
-
-   f(SomeClass()); 
-   
-The parameter x is a reference to an rvalue that refers to a temporary SomeClass instantiated at the point f is invoked. But within the body of the  function f, *x* is an lvalue because it has a name. x refers to a object about to die, 
-but x itself is not about to die. It exists within the execution lifetime of body of f. This fact will have important implications later when move constructors and move assignment operators are introduced.
-
-.. todo:: Insert  the discussion of forwarding references right here before proceeding.
-
-Overloading Constructors and Assignment Operators with rvalue references
-------------------------------------------------------------------------
-
-.. todo:: See also https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
-
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, and this allows the compiler to now branch at compiler time depending on whether the constructor or assignment operator is
-being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
+Move Semantics
+--------------
 
 The Vector class below is used to explain lvalues and rvlaues and move semantics. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
 (see :ref:`rvalue-reference`). Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
@@ -257,13 +144,97 @@ as ``void push_back(const T&)`` that take an ``const T&``:
     {
        return static_cast<T *>(this)->operator[](pos);
     }
-
-.. todo:: probably need to re-comment about ravlue reference paramaters are lvalues
+        
+.. _rvalue-reference:
+        
+rvalue references and their role
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    
+An lvalue is object that has a name (identity), whose address can be taken, but that cannot be moved from. Examples of lvalues:
 
 .. code-block:: cpp
 
+    int i; // lvalue
+    int j = 8; // lvalue assigned rvalue
 
-  class Base {
+    int& f2(); // f2() returns an lvalue
+
+If an object is not an lvalue, it is an rvalue. See `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_. An rvalue is a temporary object whose lifetime does not extend past the current line\ |apos|\ s semicolon\. You cannot take the address of an
+rvalue. Below are some examples of rvalue and lvalues:
+
+.. code-block:: cpp
+
+    int i; // lvalue
+    int j = 8; // lvalue assigned rvalue
+
+    int f1(); // f1() returns an rvalue. We can't do &f1().
+    int& f2(); // f2() returns an lvalue
+    int&& f3(); // f3() returns an rvalue.
+
+    class X { //...};
+
+    X x1; // lvalue declared
+    X f4(); // returns rvalue
+    X& f5(); // returns lvalue
+
+An rvalue reference is declared using ``&&``: 
+
+.. code-block:: cpp
+
+    int&& j = 8;
+    int&& f3(); // f3() returns an rvalue
+    int&& k = f3();
+    int v = 9;
+    int&& l = v; // error: cannot bind rvlue reference l to lvalue v.
+
+The rvalue reference j above is not really of any value. While we can change the value of a literal using this trick
+ 
+.. code-block:: cpp
+
+    int&& j = 8;
+    j = 9;
+    cout << j;  // prints: 9
+
+the temporay gets deleted once j goes out of scope, and this technique has no wide applicability. When the compiler see an rvalue, it thinks, "oh, this is an rvalue, let me see if the class method being invoked takes an rvalue reference, so I can
+invoke it." 
+
+.. code-block:: cpp
+
+    #include <iostream>
+    #include <utility>
+     
+    void f(int& x) {
+        std::cout << "lvalue reference overload f(" << x << ")\n";
+    }
+     
+    void f(const int& x) {
+        std::cout << "lvalue reference to const overload f(" << x << ")\n";
+    }
+     
+    void f(int&& x) {
+        std::cout << "rvalue reference overload f(" << x << ")\n";
+    }
+     
+    int main() {
+        int i = 1;
+        const int ci = 2;
+        f(i);  // calls f(int&)
+        f(ci); // calls f(const int&)
+        f(3);  // calls f(int&&)
+               // would call f(const int&) if f(int&&) overload wasn't provided
+        f(std::move(i)); // calls f(int&&)
+     
+        // rvalue reference variables are lvalues when used in expressions
+        int&& x = 1;
+        f(x);            // calls f(int& x)
+        f(std::move(x)); // calls f(int&& x)
+    }
+
+Note: *rvalue* reference variables are *lvalues* when used in expressions. For example, parameter d in ``Derived::Derived(Derived&& d)`` below
+ 
+.. code-block:: cpp
+
+   class Base {
      // snip...
     public:
      Base(const Base& b);
@@ -281,9 +252,15 @@ as ``void push_back(const T&)`` that take an ``const T&``:
    
    Derived::Derived(Derived&& d) : Base(std::move(d)), ... {} 
 
-Therefore to ensure the *Derived* move constructor invokes ``Base::Base(Base&&)``, *d* must first be cast to an rvalue using ``std::move(d)``.
+is a reference to an rvalue; however, *d* itself is an lvalue because it has a name and its address can be taken. Therefore to ensure the *Derived* move constructor invokes ``Base::Base(Base&&)``, *d* must first be cast to an rvalue using ``std::move(d)``.
 All this is explained in more detail below.
-   
+
+Overloading Constructors and Assignment Operators with rvalue references
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, and this allows the compiler to now branch at compiler time depending on whether the constructor or assignment operator is
+being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
+
 Implementation of move constructor and move assignment operator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -639,8 +616,6 @@ which simplies to
     }
 
 Again as before, this casts arg to an rvalue reference that does not have a name.
-
-.. todo:: First discuss forwarding references before discussing std::move
 
 std::move() Implementation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

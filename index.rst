@@ -12,6 +12,7 @@ Notes on Features of C++-17
    notes/value-categories.rst
    notes/rvalue-lvalue.rst
    notes/forwarding-refs.rst
+   notes/move-semantics.rst
    notes/managed-ptrs.rst
    notes/templates.rst
    notes/overloading-on-perfect-fwded-methods.rst
