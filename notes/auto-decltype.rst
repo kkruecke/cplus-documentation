@@ -40,8 +40,11 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
     const auto& d = cx; // The type of d is 'const int&'
 
 The type of *a* is determined just like the way the type of ``arg`` (and ``T``) are deduced if there where a function template ``template<class T> void f(T& arg)`` to which *crx* was passed. In that case, the type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+
 The type of *b* is determined just like the way the type of ``arg`` (and ``T``)  are deduced if there where a function template ``template<class T> void f(const T& arg)`` to which *crx* was passed. In that case, the type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+
 The type of *c* is determined just like the way the type of ``arg`` (and ``T``) are deduced if there where a function template ``template<class T> void f(T& arg)`` to which *cx* was passed. In that case, the type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
+
 The type of *d* is determined just like the way the type of ``arg`` (and ``T``) are deduced if there where a function template ``template<class T> void f(const T& arg)`` to which *cx* was passed. In that case, the type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
 
 Use of auto with const pointers
