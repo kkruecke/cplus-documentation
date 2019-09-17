@@ -29,8 +29,12 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
 
     int x = 10;
     const int& rx = x;
-    auto& y = rx;       // The type of y is 'int&' 
-    const auto& a = rx; // The type of a is 'const int&' 
+    auto& a = rx;       // The type of a is 'const int&' 
+    const auto& b = rx; // The type of b is 'const int&' 
+
+    const int cx = 11;
+    auto& c = cx;       // The type of c is 'const int&'
+    const auto& d = cx; // The type of d is 'const int&'
 
 Use of auto with const pointers
 -------------------------------
