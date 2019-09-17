@@ -1,6 +1,8 @@
 .. include:: <isopub.txt>
 .. include:: <isonum.txt>
 
+.. _rvalue-reference:
+
 Rvalue References and Lvalue References in C++
 ==============================================
 
@@ -10,8 +12,6 @@ Helpful Articles on Understanding Rvalue References, Move Semantics and Forwardi
 * `Understanding lvalues and rvalues in C and C++ <https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c>`_
 * `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
-
-.. _rvalue-reference:
 
 The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We look here at rvlaue references.
 
