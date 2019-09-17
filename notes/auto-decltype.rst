@@ -39,7 +39,8 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
     auto& c = cx;       // The type of c is 'const int&'
     const auto& d = cx; // The type of d is 'const int&'
 
-The type of ``a`` is determined just like the type of ``arg`` (and ``T``) is determined when ``crx`` is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+In the code above, template type deduction is used. For example, the type of ``a`` is determined just like the type of ``arg`` (and ``T``) is determined when ``crx`` is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+The other instances above are similar:
 
 The type of ``b`` is determined just like the type of ``arg`` (and ``T``)  is determined when ``crx`` is passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
 
