@@ -19,8 +19,11 @@ When auto sets the type of a declared variable from its initializing expression,
 .. code-block:: cpp
 
     int x = 10;
+
     const int& crx = x;
+
     *crx = 11;   // error: *crx is read only
+
     auto y = rx; // The type of y is int not 'const int'.
 
 The type of ``y`` above is ``int``. Both the reference and const are ignored. To make ``y`` a reference you simply use ``auto&`` or ``const auto&&``.
@@ -28,13 +31,24 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
 .. code-block:: cpp
 
     int x = 10;
-    const int& rx = x;
-    auto& a = rx;       // The type of a is 'const int&' 
-    const auto& b = rx; // The type of b is 'const int&' 
+    const int& crx = x;
+    auto& a = crx;       // The type of a is 'const int&' 
+    const auto& b = crx; // The type of b is 'const int&' 
 
-    const int cx = 11;
+    const int cx = 20;
     auto& c = cx;       // The type of c is 'const int&'
     const auto& d = cx; // The type of d is 'const int&'
+
+    ++x;
+    cout << "x = " << x << ". crx = " << crx << ". a = " << a << ". b = " << b << '.' << endl;
+
+The output is:
+        
+.. raw:: html
+
+   <pre>
+   x = 11. crx = 11. a = 11. b = 11.
+   </pre>
 
 Use of auto with const pointers
 -------------------------------
