@@ -39,13 +39,13 @@ The type of ``y`` above is ``int``. Both the reference and const are ignored. To
     auto& c = cx;       // The type of c is 'const int&'
     const auto& d = cx; // The type of d is 'const int&'
 
-The type of *a* is determined just like the type of ``arg`` (and ``T``) is determined when *crx* is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+The type of ``a`` is determined just like the type of ``arg`` (and ``T``) is determined when ``crx`` is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
 
-The type of *b* is determined just like the type of ``arg`` (and ``T``)  is determined when *crx* is passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
+The type of ``b`` is determined just like the type of ``arg`` (and ``T``)  is determined when ``crx`` is passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would be ``const int&`` and the type of ``T`` would be int.
 
-The type of *c* is determined just like the type of ``arg`` (and ``T``) is determined when *cx* is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
+The type of ``c`` is determined just like the type of ``arg`` (and ``T``) is determined when ``cx`` is passed to the function template ``template<class T> void f(T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
 
-The type of *d* is determined just like the type of ``arg`` (and ``T``) is determined when *cx* is passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
+The type of ``d`` is determined just like the type of ``arg`` (and ``T``) is determined when ``cx`` is passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
 
 Use of auto with const pointers
 -------------------------------
