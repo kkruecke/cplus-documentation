@@ -76,44 +76,36 @@ If a pointer of type ``const some_type *``, is assigned to a variable declared `
 
 The auto deduced types for pointer involving const follow common sense rules: they preserve const when it is necessary; otherwise, they ignore it.
 
-Use of auto&&
--------------
+auto&&
+------
 
-``auto&&`` behaves like template forwarding parameters that are declared using ``&&``. To quickly review forwarding references, this template function uses a forwarding reference parameter to handle both rvalues
-and lvalues.
+``auto&&`` behaves like template forwarding parameters that are declared using ``&&``. 
 
 .. code-block:: cpp
 
-   template<typename T> T f(T&& t)
-   {
-     T ret{t};
-     return ret;
-   } 
-
    class Example {
-           std::vector<int> v;
-      public:
-          Example() : v{0, 1, 2, 3} {}
-          Example(const Example& lhs) : v{lhs} 
-          {
-             cout << "Example copy ctor called." << std::endl;
-          }
+      std::vector<int> v;
+     public:
+      Example() : v{0, 1, 2, 3} {}
+      Example(const Example& lhs) : v{lhs} 
+      {
+         cout << "Example copy ctor called." << std::endl;
+      }
 
-          Example(Example&& lhs) : v{std::move(lhs}
-          {             
-             cout << "Example move ctor called." << std::endl;
-          }   
-          const std::vector<int>&  get_vector() const { return v;}
+      Example(Example&& lhs) : v{std::move(lhs}
+      {             
+         cout << "Example move ctor called." << std::endl;
+      }   
+      const std::vector<int>&  get_vector() const { return v;}
    };
 
    Example example1{}; // lvalue
 
-   T t1{ f(example1) };  // t within function f is an lvalue reference of type Example&
-
-   T t2{ f(Example{} );  // t within function f is a rvalue refernece of type Example&&
-
-   auto&& v1{example};    // v1 is of type Example& 
+   auto&& v1{example1};    // v1 is of type Example& 
    auto&& v2{Example{}};  // v2 is of type Example&& 
+
+The type of ``v1`` is determined from the theoretical template function ``template<class T> void f(T&& arg)``. The type of ``arg``, if ``example1`` were pass to it ``f(example1)``, would be ``Example&``. While, if
+type of ``v2`` is determined from the theorectical invocation of ``f(Example{})``, in which case ``arg`` is of type ``Example&&``. 
 
 When should you use ``auto&&``? cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
 gives such an example:
