@@ -115,7 +115,7 @@ and lvalues.
    auto&& v1{example};    // v1 is of type Example& 
    auto&& v2{Example{}};  // v2 is of type Example&& 
 
-When should you use ``auto&&``? cppreference.com's `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
+When should you use ``auto&&``? cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
 gives such an example:
 
 .. code-block:: cpp
