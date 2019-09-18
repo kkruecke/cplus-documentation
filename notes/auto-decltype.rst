@@ -76,23 +76,10 @@ If a pointer of type ``const some_type *``, is assigned to a variable declared `
 
 The auto deduced types for pointer involving const follow common sense rules: they preserve const when it is necessary; otherwise, they ignore it.
 
-Further Examples
-----------------
-
-To further clarify the use of ``auto&``. What happens when a ``auto& rc`` is assigned from a ``const int``?
-
-.. code-block:: cpp
-
-    const int c = 0;
-    auto& rc = c;
-    rc = 44; // Is rc an 'int &' or an 'const int&'?
-
-Obviously, ``c`` cannot be changed because it is ``const``. Therefore ``rc`` must be  a ``const int&``. Note: This example still adheres to the two rules above (since c was not a reference).
-
 Use of auto&&
 -------------
 
-``auto&&`` behaves like template functions parameters that are declared using ``&&`` (known as a forwarding reference). To quickly review forwarding references, this template function uses a forwarding reference parameter to handle both rvalues
+``auto&&`` behaves like template forwarding parameters that are declared using ``&&``. To quickly review forwarding references, this template function uses a forwarding reference parameter to handle both rvalues
 and lvalues.
 
 .. code-block:: cpp
@@ -121,10 +108,14 @@ and lvalues.
 
    Example example1{}; // lvalue
 
-   T t1{ f(example1) };  // t becomes lvalue reference, Example&
-   T t2{ f(Example{} );  // t becomes rvalue refernece, Example&&
+   T t1{ f(example1) };  // t within function f is an lvalue reference of type Example&
 
-When should ``auto&&``? cppreference.com's `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
+   T t2{ f(Example{} );  // t within function f is a rvalue refernece of type Example&&
+
+   auto&& v1{example};    // v1 is of type Example& 
+   auto&& v2{Example{}};  // v2 is of type Example&& 
+
+When should you use ``auto&&``? cppreference.com's `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
 gives such an example:
 
 .. code-block:: cpp
