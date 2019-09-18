@@ -104,10 +104,10 @@ auto&&
    auto&& v1{example1};    // v1 is of type Example& 
    auto&& v2{Example{}};  // v2 is of type Example&& 
 
-The type of ``v1`` is determined from the theoretical template function ``template<class T> void f(T&& arg)``. The type of ``arg``, if ``example1`` were pass to it ``f(example1)``, would be ``Example&``. While, if
-type of ``v2`` is determined from the theorectical invocation of ``f(Example{})``, in which case ``arg`` is of type ``Example&&``. 
+The type of ``v1`` is determined from the theoretical template function ``template<class T> void f(T&& arg)``. The type of ``v``` is that of ``arg``, if ``example1`` were passed to it ``f(example1)``, would be ``Example&``. While, if
+type of ``v2`` is determined from the theorectical invocation of ``f(Example{})``, in which case ``arg``, whose type is the type of ``v2``, is of type ``Example&&``. 
 
-When should you use ``auto&&``? cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
+When should you use ``auto&&``? The cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
 gives such an example:
 
 .. code-block:: cpp
