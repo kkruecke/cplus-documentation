@@ -71,7 +71,7 @@ If a pointer of type ``const some_type *``, is assigned to a variable declared `
   auto x = 10;       // x is 'int'
   const int *p = &x; // *p is read/write, but p is read-only
 
-  auto pauto = p;        // pauto1 is 'const int *'
+  auto pauto = p;       // pauto1 is 'const int *'
   const auto pauto = p; // pauto1 is 'const int * const'
 
 The auto deduced types for pointer involving const follow common sense rules: they preserve const when it is necessary; otherwise, they ignore it.
@@ -130,7 +130,7 @@ The article `Use auto&& for range-based for loops <https://edmundv.home.xs4all.n
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
 
-**decltype** means the 'declared type'. If you use decltype with a name, it will give you the declared type of that name:
+**decltype** means the 'declared type'. If you use decltype with a name, it will give you the declared type of that name
 
 .. code-block:: cpp
 
@@ -140,8 +140,8 @@ decltype(*name*) and decltype(*expression*) deduction rules
     const auto& rx = x;
     decltype(rx); //  decltype(x) = const int&
 
-If you have an expression instead of a name, then ``decltype(expr)`` is either an lvalue or an rvalue. If it an lvalue, then decltype will add a reference to it. Below when we add parenthesis to ``x`` before passing it to **decltype**, we turn it into an expression;
-it is not longer solely a name:
+If you have an expression instead of a name, then ``decltype(expr)`` is either an lvalue or an rvalue. If it an lvalue, then decltype will add a reference to it. Below, when we add parenthesis to ``x`` before passing it to **decltype**, we turn it
+into an expression; it is not longer solely a name:
 
 .. code-block:: cpp
 
@@ -170,15 +170,14 @@ This produces the expected output of::
     get_value(v, 3) is: 4
 
 However, assigning to ``get_values(v, 3) = 10`` fails to compile. Why? Most containers with an index operator like ``std::vector<int>`` return an reference to an lvalue: in the case of ``vecotr<int>``, an ``int&`` is retunred. However, if the return type of the 
-template ``get_value()`` is ``auto``, instead of returning ``in&``, ``int`` is returned. That is, the value of the return type is the same as the value of x below:
+template ``get_value()`` is ``auto``, instead of returning ``in&``, ``int`` is returned. That is, the value of the return type is the same as the value of x as below:
 
 .. code-block:: cpp
     
     vector<int> v{1 ,2 ,3 ,4 5};
     auto y = v[3]; // y is of type 'int' not 'int&'
 
-
-This is because the ``auto`` return type uses **template (not auto) type deduction rules** and not the normal auto type deduction rules for objects. But, again, when auto is used as a return type, it uses template type deduction rules. Therefore,
+This is because the ``auto`` return type uses **template type deduction rules** and not the normal auto type deduction rules for objects. So when auto is used as a return type, it uses template type deduction rules. Therefore,
 to return the desired ``int&`` return type above, the type identical to ``c[i]``, we must use ``decltype(auto)``, which will retun the same type as ``y`` and ``z`` below
 
 .. code-block:: cpp
@@ -218,11 +217,10 @@ which produces:
 
     v[3] = 10, get_value(v, 3) = 10
 
-In summary, we need to know the use case for your function: do you want template type deduction rules, then use ``auto`` for the return type; if you want the decltype type deduction, then use ``decltype(auto)``. It often boils down to whether you want
+In summary, we need to know the use case for your function: if you want template type deduction rules, then use ``auto`` for the return type; if you want the decltype type deduction, then use ``decltype(auto)``. It often boils down to whether you want
 an lvalue reference return or an rvalue. In general, ``decltype(auto)`` will return the type of the actual expression or object being returned. So in general it is the first choice to always consider.
-rules described above.
 
-Finally, the same comments about template returns types apply to lambdas.
+These same comments about template returns types apply to lambdas.
 
 Using decltype(declval<some_type>()) 
 ------------------------------------
@@ -252,8 +250,10 @@ And it gives this example:
     class B : public A {    // class with specific constructor
       int val_;
     public:
-      B(int i,int j):val_(i*j){}
-      int value() {return val_;}
+
+      B(int i,int j) : val_(i*j) {}
+
+      int value() { return val_; }
     };
     
     int main() {
@@ -264,4 +264,3 @@ And it gives this example:
       std::cout << a << '\n';
       return 0;
     }
-
