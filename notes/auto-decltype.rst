@@ -218,15 +218,6 @@ which produces:
 
     v[3] = 10, get_value(v, 3) = 10
 
-.. note:: The required C++11 syntax for get_value() would have been:
-
-.. code-block:: cpp
-
-    template<class Container, class Index> auto get_value(Container& c, Index i) ->  decltype(c[i])
-    {
-        return c[i];
-    }
-
 In summary, we need to know the use case for your function: do you want template type deduction rules, then use ``auto`` for the return type; if you want the decltype type deduction, then use ``decltype(auto)``. It often boils down to whether you want
 an lvalue reference return or an rvalue. In general, ``decltype(auto)`` will return the type of the actual expression or object being returned. So in general it is the first choice to always consider.
 rules described above.
