@@ -110,21 +110,23 @@ So we see *arg* binds as an lvalue reference. In the case of ``f(vector<int>{5, 
        state_type<vector<int>>::describe();
     }
 
-In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function, like a factory method, that perfectly forwards its parameters leaving the paramters type intact. 
+In this case ``arg`` binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function, like a factory method, that perfectly forwards its parameters leaving the paramters type intact. 
 
 Now take this factory method:
 
 .. code-block:: cpp
 
     class A { // trivial example
+
        std::string str;
+
       public:
-        A(std::string& lhs) : str(lhs)
+        A(const std::string& lhs) : str(lhs) // copy constructor
         {
           cout << " A::A(std::string& lhs) invoked." << endl;
         }
     
-        A(std::string&& lhs) 
+        A(std::string&& lhs) // move constructor
         {
           cout << " A::A(std::string&& lhs) invoked." << endl;
         }
@@ -134,7 +136,7 @@ Now take this factory method:
     {
        state_type<ARG>::describe();
     
-       return std::shared_ptr<T>{new T(arg)};  // fails to invoke A(string&&) when string is rvalue.
+       return std::shared_ptr<T>{std::make_new<T>(arg)};  // fails to invoke A(string&&) when arg is an rvalue.
     }
 
 Note the output of the code below, where first an lvalue is passed to ``factory<T>(ARG&& arg)`` and then an rvalue: 
@@ -154,10 +156,11 @@ The output is::
     In non-specialization of struct state_type<T>
      A::A(std::string& lhs) invoked.
  
-``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead it got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
+``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead the rvalue reference got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
 fail in invoking ``A::A(A&&)``?
 
-The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
+The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference to *std::string*! Remember an rvalue reference parameter, since it has a name, is an lvalue. So we need to remove the
+name with a cast:
 
 .. code-block:: cpp
  
@@ -165,13 +168,13 @@ The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ eve
     {
        state_type<ARG>::describe();
     
-       return std::shared_ptr<T>{ new T( static_cast<ARG&&>(arg) ) };  // Cast returns a nameless parameter.
+       return std::shared_ptr<T>{ new T( static_cast<ARG&&>(arg) ) };  // static_cast<ARG&&>(arg) returns a nameless parameter.
     }
 
-Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string&&&``, and after applying the reference collapsing rules is simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an rvalue is passed; however,
-the lvalue ``arg`` is cast to a nameless rvalue. 
+Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string& &&``, which, after applying the reference collapsing rules, becomes simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an
+rvalue is passed, however, the lvalue ``arg`` parameter is cast to a nameless rvalue. 
 
-The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do this static_cast, and ith looks like this:
+The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do this *static_cast*, and it looks like this:
 
 .. code-block:: cpp
 
@@ -182,8 +185,8 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
     } 
 
 If you use just ``T&`` instead of ``remove_reference<T>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
-"it works fine only as long as we explicitly specify Arg as the template argument of std::forward. The purpose of the remove_reference in the definition of std::forward is to force us to do so." If we don't explicitly supply the template argument when invoking
-``forward()``, a compile error results; for example
+"it works fine only as long as we explicitly specify ARG as the template argument of ``std::forward``, ``std::forward<ARG>``. The purpose of the ``remove_reference`` in the definition of std::forward is to force us to do so." If we don't explicitly
+supply the template argument when invoking ``forward()``, a compile error results; for example
 
 .. code-block:: cpp
 
@@ -229,6 +232,13 @@ We now use forward in our factory() function:
 
        return std::shared_ptr<T>{ new T( std::forward<T>(arg) ) };  // forward returns a nameless parameter.
     }
+
+The output now is::
+
+    In partial template specialization: template<class T> struct state_type<T&>::decribe()
+     A::A(std::string& lhs) invoked.
+    In template<class T> state_type::decribe()
+     A::A(std::string&& lhs) invoked.
 
 When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&`` and applying reference collapsing, we have this instantiation of factory: 
 
