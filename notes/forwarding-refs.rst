@@ -14,15 +14,14 @@ Important Article that Explains Forwarding References and Perfect Forwarding
 Forwarding References
 ---------------------
 
-The same notation used for rvalue references, the double ampersand *&&*, is also used to denote a forwarding reference. This was an unfortunetly decision by the C++ Committe. A **forwarding reference** is a template function parameter of type ``T&&`` such as
+The same notation used for rvalue references, the double ampersand *&&*, is also used to denote a forwarding reference. A **forwarding reference** is a template function parameter of type ``T&&`` such as
 
 .. code-block:: cpp
 
    template<typename T> void sample(T&& t);
 
-While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both
-rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11** unlike previous versions, you can syntactically have a reference to a reference. In this case, the following
-reference collapsing rules apply:
+While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference bind to both
+rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
 
 * T& & becomes T&
 * T& && becomes T&
@@ -36,7 +35,7 @@ The Purpose of Forwarding References
 
 Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to any type. When a lvalue, say, of
 type X is passed to a template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
-of type X is passed, ``T`` becomes ``X``, and ``T&&`` is thus simply ``X&&``.
+of type X is passed, ``T`` becomes ``X``, and ``T&&`` is simply ``X&&``.
 
 Thus an lvalue of type X binds as ``X&`` and an rvalue of type X binds as ``X&&``. We can see this in the code below:
 
@@ -67,16 +66,16 @@ Thus an lvalue of type X binds as ``X&`` and an rvalue of type X binds as ``X&&`
      }
     };
     
-    template<class ARG> void sample(ARG&& arg)
+    template<class ARG> void f(ARG&& arg)
     {
        state_type<ARG>::describe();
     }
      
     using namespace std;
     vector<int> v{1, 2, 3, 4};
-    sample(v);
-    sample(vector<int>{5, 6, 7, 8});
-    sample(move(v));
+    f(v);
+    f(vector<int>{5, 6, 7, 8});
+    f(move(v));
 
 This will result in output of::
 
@@ -84,11 +83,11 @@ This will result in output of::
     In non-specialization of struct state_type<T>
     In non-specialization of struct state_type<T>
 
-For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of sample() is
+For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of ``f()`` is
 
 .. code-block:: cpp 
 
-    void sample(vector<int>& && arg)
+    void f(vector<int>& && arg)
     {
        state_type<vector<int&>::describe();
     }
@@ -97,21 +96,21 @@ which, after applying reference collapsing rules for references, becomes
 
 .. code-block:: cpp 
 
-    void sample(vector<int>& arg)
+    void f(vector<int>& arg)
     {
        state_type<vector<int&>::describe();
     }
  
-So we see *arg* binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of sample looks like this: 
+So we see *arg* binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of ``f`` looks like this: 
 
 .. code-block:: cpp 
 
-    void sample(vector<int>&& arg)
+    void f(vector<int>&& arg)
     {
        state_type<vector<int>>::describe();
     }
 
-In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function that perfectly forwards its parameters leaving the paramters type intact. 
+In this case arg binds as a rvalue reference. We can use these binding rules for function templates as the first step in writing a template function, like a factory method, that perfectly forwards its parameters leaving the paramters type intact. 
 
 Now take this factory method:
 
@@ -158,7 +157,7 @@ The output is::
 ``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead it got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
 fail in invoking ``A::A(A&&)``?
 
-The reason is, ``arg`` is not an lvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
+The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference! Remember than an rvalue reference, if it has a name, is an lvalue. So we need to remove the name with a cast:
 
 .. code-block:: cpp
  
