@@ -239,8 +239,8 @@ When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&``
        return std::shared_ptr<A>{ new A( std::forward<T>(arg) ) }; 
     }
 
-For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type& `` resolves to ``string&``
-and so forward() is instantiated as:
+For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type&`` resolves to ``string&``
+and so ``forward()`` gets instantiated as:
 
 .. code-block:: cpp
 
@@ -250,7 +250,7 @@ and so forward() is instantiated as:
       return static_cast<string&>(__t); 
    }
 
-So the complete instantiation of ``factory<A>(lvaluestr)`` is:
+So the complete instantiation of ``factory<A>(lvaluestr)`` is
 
 .. code-block:: cpp
 
