@@ -235,9 +235,9 @@ We now use forward in our factory() function:
 
 The output now is::
 
-    In partial template specialization: template<class T> struct state_type<T&>::decribe()
+    In partial template specialization of struct state_type<T&>
      A::A(std::string& lhs) invoked.
-    In template<class T> state_type::decribe()
+    In non-specialization of struct state_type<T>
      A::A(std::string&& lhs) invoked.
 
 When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&`` and applying reference collapsing, we have this instantiation of factory: 
