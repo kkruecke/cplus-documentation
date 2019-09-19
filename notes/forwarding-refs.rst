@@ -18,7 +18,7 @@ The same notation used for rvalue references, the double ampersand *&&*, is also
 
 .. code-block:: cpp
 
-   template<typename T> void sample(T&& t);
+   template<typename T> void f(T&& t);
 
 While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference bind to both
 rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
@@ -83,7 +83,7 @@ This will result in output of::
     In non-specialization of struct state_type<T>
     In non-specialization of struct state_type<T>
 
-For the lvalue v in ``sample(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of ``f()`` is
+For the lvalue v in ``f(v);``, ``ARG`` resolves to ``vector<int>&``, and the instantiation of ``f()`` is
 
 .. code-block:: cpp 
 
@@ -101,7 +101,7 @@ which, after applying reference collapsing rules for references, becomes
        state_type<vector<int&>::describe();
     }
  
-So we see *arg* binds as an lvalue reference. In the case of ``sample(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of ``f`` looks like this: 
+So we see *arg* binds as an lvalue reference. In the case of ``f(vector<int>{5, 6, 7, 8});``, ``ARG`` resolves to ``vector<int>``, and the instantiation of ``f`` looks like this: 
 
 .. code-block:: cpp 
 
