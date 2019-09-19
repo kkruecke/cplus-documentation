@@ -113,5 +113,5 @@ Note: *rvalue* reference variables are *lvalues* when used in expressions. To se
 
    f(SomeClass()); 
    
-The parameter x is a reference to an rvalue that refers to a temporary SomeClass instantiated at the point f is invoked. But within the body of the  function f, *x* is an lvalue because it has a name. x refers to a object about to die, 
-but x itself is not about to die. It exists within the execution lifetime of body of f. This fact will have important implications later when move constructors and move assignment operators are introduced.
+The parameter x is a reference to an rvalue that refers to a temporary SomeClass instantiated at the point f is invoked. But within the body of f, *x* is an lvalue because it has a name. x refers to a object about to die, an rvalue, 
+but x itself is not about to die. It will exist for the lifetime of f. This fact, that can rvalue reference parameter is itself an lvalue, will have important implications later when move constructors and move assignment operators are introduced.
