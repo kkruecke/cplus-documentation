@@ -405,8 +405,7 @@ Further articles on forwarding references:
 Conclusion
 ----------
 
-We have seen when an lvalue is passed to ``std::forward``, a nameless lvalue is returned; however, when an rvalue is passed to forward, a nameless rvalue is returned. This perfectly forwards
-the parameters, resulting in the correct method always being invoked and its paramters perfectly forwared.
+When an lvalue is passed to ``std::forward<T>(x)``, it returns a nameless lvalue; however, when an rvalue is passed, a nameless rvalue is returned. ``std::forward<T>()`` thus perfectly fowards template function parameters that are specified as forwarding parameters, resulting in the correct method always being invoked and its paramters perfectly forwared.
 
 .. Say, we want to add a method that would  <See below for insert vs emplace differences>
    http://stackoverflow.com/questions/14788261/c-stdvector-emplace-vs-insert
