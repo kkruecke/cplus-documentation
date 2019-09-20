@@ -50,8 +50,10 @@ The reasoning for the other auto variable assignments is similar:
 
 3. The type of ``d`` is determined just like the type of ``arg`` is determined were ``cx`` to be passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
 
-Various C++17 Examples
-----------------------
+auto Examples
+-------------
+
+These C++17 examples illustrate the various ways to initial an auto variable.
 
 .. code-block:: cpp
 
@@ -59,8 +61,8 @@ Various C++17 Examples
     auto x2 = {1, 2.5 };   // error cannot deduce element type
     auto x3{1, 2};         // error: direct initialization must be a single element
     auto x4 = {3};         // decltype(x4) is std::initializer_list<int>
-    auto x5{3};            // declytpe(x5) is int 
-   
+    auto x5{3};            // declytpe(x5) is int
+
 Use of auto with const pointers
 -------------------------------
 
