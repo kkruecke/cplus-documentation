@@ -4,7 +4,9 @@ Use of auto, decltype(), and decltype(auto)
 How auto deduces types
 -----------------------
 
-When auto sets the type of a declared variable from its initializing expression, it proceeds as follows:
+``auto`` deduces types using the rules for template argument deduction, except in the case of ``decltype(auto)`` where the type is ``decltype(e)``, where e is the initializer.
+
+When auto sets the type of a declared variable from its initializing expression, it uses template argument deduction. It proceeds as follows:
 
 1. First, if an auto vairable is assigned from a reference, the reference is ignored in determing the type of the auto variable. For example,
 
