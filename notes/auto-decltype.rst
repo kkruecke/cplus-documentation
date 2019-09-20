@@ -50,6 +50,17 @@ The reasoning for the other auto variable assignments is similar:
 
 3. The type of ``d`` is determined just like the type of ``arg`` is determined were ``cx`` to be passed to the function template ``template<class T> void f(const T& arg)``. The type of ``arg`` would again be ``const int&`` and the type of ``T`` would again be int.
 
+Various C++17 Examples
+----------------------
+
+.. code-block:: cpp
+
+    auto x1 = {1, 2};      // decltype(x1) is std::initializer_list<int>
+    auto x2 = {1, 2.5 };   // error cannot deduce element type
+    auto x3{1, 2};         // error: direct initialization must be a single element
+    auto x4 = {3};         // decltype(x4) is std::initializer_list<int>
+    auto x5{3};            // declytpe(x5) is int 
+   
 Use of auto with const pointers
 -------------------------------
 
@@ -81,7 +92,7 @@ The auto deduced types for pointer involving const follow common sense rules: th
 auto&&
 ------
 
-``auto&&`` behaves like template forwarding parameters that are declared using ``&&``. 
+``auto&&`` behaves like template forwarding parameters declared using ``&&``. It binds to rvalues, lvalues, const, non-const, etc. 
 
 .. code-block:: cpp
 
@@ -103,7 +114,7 @@ auto&&
 
    Example example1{}; // lvalue
 
-   auto&& v1{example1};    // v1 is of type Example& 
+   auto&& v1{example1};   // v1 is of type Example& 
    auto&& v2{Example{}};  // v2 is of type Example&& 
 
 The type of ``v1`` is determined from the theoretical template function ``template<class T> void f(T&& arg)``. The type of ``v``` is that of ``arg``, if ``example1`` were passed to it ``f(example1)``, would be ``Example&``. While, if
