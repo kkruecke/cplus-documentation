@@ -20,8 +20,11 @@ The same notation used for rvalue references, the double ampersand *&&*, is also
 
    template<typename T> void f(T&& t);
 
-While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference bind to both
-rvalues and lvalues. Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
+While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference can bind to
+both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything.  The purpose of *forwarding references* is to support *argument forwarding*, to allow you to pass the argument on unchanged to other function(s). An example of this
+use *argument forwarding* is the ``emplace`` method of many of the STL containers. emplace allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
+
+Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
 
 * T& & becomes T&
 * T& && becomes T&
@@ -34,7 +37,7 @@ The Purpose of Forwarding References
 ------------------------------------
 
 Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to any type. When a lvalue, say, of
-type X is passed to a template function argument of generic type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
+type X is passed to a template function argument of *forwarding reference* type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
 of type X is passed, ``T`` becomes ``X``, and ``T&&`` is simply ``X&&``.
 
 Thus an lvalue of type X binds as ``X&`` and an rvalue of type X binds as ``X&&``. We can see this in the code below:
@@ -156,7 +159,7 @@ The output is::
     In non-specialization of struct state_type<T>
      A::A(std::string& lhs) invoked.
  
-``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead the rvalue reference got passed as lvalue references. Why? Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
+``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead the rvalue reference got passed as lvalue references. Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
 fail in invoking ``A::A(A&&)``?
 
 The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference to *std::string*! Remember an rvalue reference parameter, since it has a name, is an lvalue. So we need to remove the
@@ -249,8 +252,7 @@ When ``factory<A>(lvaluestr)`` is called, again, ``ARG`` resolves to ``string&``
        return std::shared_ptr<A>{ new A( std::forward<T>(arg) ) }; 
     }
 
-For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type&`` resolves to ``string&``
-and so ``forward()`` gets instantiated as:
+For the accompanying forward instantiation, the partial template specialization for lvalue references is applied and ``std::remove_reference<string&>::type&`` resolves to ``string&`` and so ``forward()`` gets instantiated as:
 
 .. code-block:: cpp
 
@@ -304,7 +306,7 @@ which will cause the ``A::A(string&&)`` constructor will be invoked!
 Application of Perfect Forwarding
 ---------------------------------
 
-Below Vector now has a new template member function ``emplace_back`` that takes variadic `forwarding references`_.
+Below ``teample<calss T> class Vector`` has a new template member function ``emplace_back`` that takes variadic `forwarding references`_.
 
 .. code-block:: cpp
 
@@ -346,7 +348,7 @@ Below Vector now has a new template member function ``emplace_back`` that takes 
     v.push_back(Employee{"John Doe", 15, 0});
     v.emplace_back("Bob Smith", 45, 80000);
 
-``emplace_back()`` creates the new vector element in-place, in the vector itself, using the object's forwarded parameters, and thus eliminating the creation and moving of a temporary object into the vector.
+``emplace_back()`` creates the new vector element in-place, in the vector's allocated memory, using the forwarded parameters and thus eliminating the creation and moving of a temporary object into the vector.
 
 Overloading involving both rvalues and forwarding references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -394,6 +396,20 @@ Then the output is::
     In g(T&& param)
 
 as one would expect.
+
+auto&&
+------
+
+``auto&&`` used in range-base for loops
+
+.. code-block:: cpp
+
+    
+    for(auto&& x : c) { // x is a forwarding reference
+      //...
+    }
+
+is also a forwarding reference. It's purpose is support the abstraction of perfect forwarding of x to other functions within the *for loop*.
 
 Further articles on forwarding references:
 ------------------------------------------
