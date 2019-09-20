@@ -94,7 +94,7 @@ The auto deduced types for pointer involving const follow common sense rules: th
 auto&&
 ------
 
-The type of ``auto&&`` is deduced in the same way the type of a template forwarding reference parameter is deduced, and like forwarding references,``auto&&`` binds to rvalues, lvalues, const, non-const, etc. 
+The type of ``auto&&`` is deduced in the same way the type of a template forwarding reference parameter is deduced, and like forwarding references, ``auto&&`` binds to rvalues, lvalues, const, non-const, etc. 
 
 .. code-block:: cpp
 
