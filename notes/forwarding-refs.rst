@@ -306,7 +306,7 @@ which will cause the ``A::A(string&&)`` constructor will be invoked!
 Application of Perfect Forwarding
 ---------------------------------
 
-Below ``teample<calss T> class Vector`` has a new template member function ``emplace_back`` that takes variadic `forwarding references`_.
+Below ``temple<calss T> class Vector`` has a new template member function ``emplace_back`` that takes variadic `forwarding references`_.
 
 .. code-block:: cpp
 
