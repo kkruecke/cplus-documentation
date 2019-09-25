@@ -20,9 +20,9 @@ The same notation used for rvalue references, the double ampersand *&&*, is also
 
    template<typename T> void f(T&& t);
 
-While this looks just like an rvalue reference (see :ref:`rvalue-reference`), when ``&&`` is used as a function template parameter as above, it is called a **forwarding refernence**. And unlike an rvalue reference, a forwarding reference can bind to
-both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything.  The purpose of *forwarding references* is to support *argument forwarding*, to allow you to pass the argument on unchanged to other function(s). An example of this
-use *argument forwarding* is the ``emplace`` method of many of the STL containers. emplace allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
+While this looks just like an rvalue reference (:ref:`rvalue-reference`), when ``&&`` is used for a function template parameter, it is called a **forwarding refernence**, and unlike an rvalue reference, a forwarding reference can bind to
+both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything. Its is to support *argument forwarding*, to allow you to pass the argument on unchanged to other function(s). An example of this
+use of *argument forwarding* is the ``emplace`` method of many STL containers. ``emplace (Args&&... args)`` allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
 
 Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
 
@@ -31,13 +31,13 @@ Forwarding reference take advantage of the new **C++11** reference collapsing ru
 * T&& & becomes T&
 * T&& && becomes T&&
 
-Except in the case of ``T&& &&``, the final result of reference collapsing is always ``T&``.
+Except in one case, of ``T&& &&``, the final result of reference collapsing is always ``T&``.
 
 The Purpose of Forwarding References
 ------------------------------------
 
-Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to any type. When a lvalue, say, of
-type X is passed to a template function argument of *forwarding reference* type ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
+Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to everything. When a lvalue, say, of
+type X is passed to a template function with a *forwarding reference* ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
 of type X is passed, ``T`` becomes ``X``, and ``T&&`` is simply ``X&&``.
 
 Thus an lvalue of type X binds as ``X&`` and an rvalue of type X binds as ``X&&``. We can see this in the code below:
@@ -189,7 +189,7 @@ The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to
 
 If you use just ``T&`` instead of ``remove_reference<T>::type&`` in the defintion of ``std::forward``, perfect forwarding still works just fine. However, as Thomas Becker `explains <http://thbecker.net/articles/rvalue_references/section_08.html>`_: 
 "it works fine only as long as we explicitly specify ARG as the template argument of ``std::forward``, ``std::forward<ARG>``. The purpose of the ``remove_reference`` in the definition of std::forward is to force us to do so." If we don't explicitly
-supply the template argument when invoking ``forward()``, a compile error results; for example
+supply the template argument when invoking ``forward()``, this gcc compile error results:
 
 .. code-block:: cpp
 
@@ -208,7 +208,7 @@ results in::
     main.cpp:74:30: note:   couldn't deduce template parameter ‘_Tp’
          cout << "t = " << forward(t);
 
-Returning to our original example:
+Returning to our original example
 
 .. code-block:: cpp
 
@@ -219,7 +219,7 @@ Returning to our original example:
       return static_cast<_Tp&&>(__t); 
     }
 
-We now use forward in our factory() function: 
+we now use ``std::forward`` in our factory() function: 
 
 .. code-block:: cpp
 
@@ -348,7 +348,7 @@ Below ``teample<calss T> class Vector`` has a new template member function ``emp
     v.push_back(Employee{"John Doe", 15, 0});
     v.emplace_back("Bob Smith", 45, 80000);
 
-``emplace_back()`` creates the new vector element in-place, in the vector's allocated memory, using the forwarded parameters and thus eliminating the creation and moving of a temporary object into the vector.
+``emplace_back()`` creates the new vector element in-place, in the vector's already-allocated memory, using the forwarded parameters. This eliminates the creation and moving of a temporary object into the vector.
 
 Overloading involving both rvalues and forwarding references
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
