@@ -36,7 +36,7 @@ Except in one case, of ``T&& &&``, the final result of reference collapsing is a
 The Purpose of Forwarding References
 ------------------------------------
 
-Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. In essence, it can bind to everything. When a lvalue, say, of
+Unlike an rvalue reference, a forwarding reference ``T&&`` can bind to both rvalues and lvalues. It can bind to both *const* and *non-const* objects. It can bind to *mutable* and *volitale*. It can bind to everything. When a lvalue, say, of
 type X is passed to a template function with a *forwarding reference* ``T&&``, then ``T`` becomes ``X&``, and therefore ``T&&`` becomes ``X& &&``, which after applying the reference collapsing rules becomes simply ``X&``. On the other hand, when an rvalue
 of type X is passed, ``T`` becomes ``X``, and ``T&&`` is simply ``X&&``.
 
@@ -162,7 +162,7 @@ The output is::
 ``factory<T>(ARG&& arg)`` correctly forwarded the lvalue reference, but not the rvalue reference. Instead the rvalue reference got passed as lvalue references. Why did ``shared_ptr<A> ptr2 { factory<A>(string{"rvaluestr"}) };``
 fail in invoking ``A::A(A&&)``?
 
-The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference to *std::string*! Remember an rvalue reference parameter, since it has a name, is an lvalue. So we need to remove the
+The reason is, ``arg`` is not an rvalue within the body of factory\ |ndash|\ even though the type of ``arg`` is rvalue reference to *std::string*! Remember an rvalue reference parameter, since it has a name, is an lvalue. We need to remove the
 name with a cast:
 
 .. code-block:: cpp
@@ -174,7 +174,7 @@ name with a cast:
        return std::shared_ptr<T>{ new T( static_cast<ARG&&>(arg) ) };  // static_cast<ARG&&>(arg) returns a nameless parameter.
     }
 
-Now when ``"lvaluestr"`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string& &&``, which, after applying the reference collapsing rules, becomes simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an
+Now when ``lvaluestr`` is passed, ``ARG`` becomes ``string&`` and so ``ARG&&`` becomes ``string& &&``, which, after applying the reference collapsing rules, becomes simply ``string&``, and ``static_cast<string&>(arg)`` is still an lvalue. When an
 rvalue is passed, however, the lvalue ``arg`` parameter is cast to a nameless rvalue. 
 
 The standard library provides ``forward<T>(std::remove_reference<T>::type&)`` to do this *static_cast*, and it looks like this:
