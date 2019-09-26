@@ -13,7 +13,7 @@ Links to Template specialization and partial specialization
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example is from the `en.cppreference.com <http://en.cppreference.com>`_ article on `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_. It shows how to partially specialize a template:
+This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how to partially specialize a template:
 
 .. code-block:: cpp
 
@@ -96,12 +96,14 @@ Comments
 
 The output from the above will be:
 
-::
+.. raw:: html
 
+     <pre>
      A<int, int, 1> a1 uses primary template.
      A<int, int *, 1> a2 uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'.
      A<int, char *, 5> a3 uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5
      A<int, char *, 1> a4 uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer.
+     </pre>
      
 For ``a1`` no specializations exist that match the template parameters, so the primary template is used. In the case of ``a2``, where the second parameter is ``int *`` and the first parameter is ``int``, partial specialization #1 is more specialized than the primary
 template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``, the third parameter of ``5`` and the second parameter of pointer type, make #3 the only template partial specialization that matches.
@@ -120,7 +122,7 @@ Another, real-world example of partial template specialization comes from the GN
       //...
       };
 
-and it declares a partial specialization of ``vector<T, Alloc>`` for type ``bool`` like this:
+and it declares a partial specialization of ``vector<T, Alloc>`` for ``bool`` like this:
 
 .. code-block:: cpp
 
@@ -138,7 +140,7 @@ This material is from IBM Knowledge Base article on template `Explicit specializ
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-``template<>`` must be preceed a full template specialization, as the example of ``template<> class Sample<int>;`` below illustrates:
+``template<>`` must be preceed a full template specialization, as the example of ``template<> class Sample<int>`` below illustrates:
 
 .. code-block:: cpp
 
@@ -148,8 +150,9 @@ Definition and declaration of explicit specializations
        Sample() {}
        std::ostream& print(std::ostream&) const;
     };
-     
-    template<> class Sample<int> {
+
+     // full template specialization for Sample<int>. There is an entirely separate implementation of Sample<int>. 
+    template<> class Sample<int> { 
        int i1;
        int i2;
      public: 
@@ -187,8 +190,8 @@ Definition and declaration of explicit specializations
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to define the primary
-template). In this example:
+The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to
+define the primary template). In this example:
 
 .. code-block:: cpp
 
