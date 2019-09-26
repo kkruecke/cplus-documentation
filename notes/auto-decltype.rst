@@ -240,8 +240,8 @@ an lvalue reference return or an rvalue. In general, ``decltype(auto)`` will ret
 
 These same comments about template returns types apply to lambdas.
 
-Using decltype(declval<some_type>()) 
-------------------------------------
+Using ``decltype(declval<some_type>())`` 
+----------------------------------------
 
 The cplusplus.com entry for `decval <http://www.cplusplus.com/reference/utility/declval/>`_ explains:
 
