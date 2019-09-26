@@ -3,13 +3,6 @@
 Templates and Specializations
 =============================
 
-Links to Template specialization and partial specialization
------------------------------------------------------------
-
-* https://en.cppreference.com/w/cpp/language/partial_specialization 
-* https://en.cppreference.com/w/cpp/language/template_specialization
-* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm
-
 Partial Template Specialization Examples
 ----------------------------------------
 
@@ -427,3 +420,10 @@ The compiler would not allow the template specialization definition that would o
 The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
 
 A friend declaration cannot declare an explicit specialization
+
+Links to Articles on Template specialization and partial specialization
+-----------------------------------------------------------------------
+
+* https://en.cppreference.com/w/cpp/language/partial_specialization 
+* https://en.cppreference.com/w/cpp/language/template_specialization
+* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm
