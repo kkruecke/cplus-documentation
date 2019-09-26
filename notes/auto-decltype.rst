@@ -125,8 +125,8 @@ type of ``v2`` is determined from the theorectical invocation of ``f(Example{})`
 When should you use ``auto&&``?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and the ``auto&&`` discussion within the article `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_
-gives such an example:
+The cppreference.com entry `Range-based for loop <https://en.cppreference.com/w/cpp/language/range-for>`_ explains ``auto&&`` is prefered in range-based for loop in generic code, and  an example (taken from `Auto Type Deduction in Range-Based For Loops <https://blog.petrzemek.net/2016/08/17/auto-type-deduction-in-range-based-for-loops/>`_)
+is:
 
 .. code-block:: cpp
 
@@ -140,12 +140,15 @@ gives such an example:
         }
     }
 
-The article `Use auto&& for range-based for loops <https://edmundv.home.xs4all.nl/blog/2014/01/28/use-auto-and-and-for-range-based-for-loops/>`_ also gives an example and succinctly explains ``auto&&`` "works with both const and non-const containers, but also works with proxy objects. It is always correct and efficient!"
+.. todo:: Read the article referenced immediately below, understand it, and explain it.
+
+The article `Use auto&& for range-based for loops <https://edmundv.home.xs4all.nl/blog/2014/01/28/use-auto-and-and-for-range-based-for-loops/>`_ also gives an example and succinctly explains ``auto&&`` "works with both const and non-const containers,
+but also works with proxy objects. It is always correct and efficient!"
     
 decltype(*name*) and decltype(*expression*) deduction rules
 -----------------------------------------------------------
 
-**decltype** means the 'declared type'. If you use decltype with a name, it will give you the declared type of that name
+**decltype** means the 'declared type'. If you use ``decltype`` with a name, it will give you the declared type of that name
 
 .. code-block:: cpp
 
