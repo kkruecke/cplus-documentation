@@ -7,11 +7,10 @@ Value Categories
 Helpful Articles
 ----------------
 
+* `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
-* `Value Categories in C++17 <https://medium.com/@barryrevzin/value-categories-in-c-17-f56ae54bccbe>`_
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
-* `Building Intuition on Value Categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_
 
 C++11 introduced the concept of (an expression's) **value category**. The articles `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains::
 
