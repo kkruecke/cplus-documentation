@@ -8,7 +8,7 @@ Prefer std::make_shared and std::make_unique to new
 ---------------------------------------------------
 
 Prefer ``shared_ptr<T> ptr = make_shared<T>(parm1, parm2)`` to ``shared_ptr<T> ptr = new T(parm1, parm2)``. The same comment applies to ``std::make_unique<T>``. It is more efficient because only one memory allocation occurs; for example,
-in the case of ``std::make_shared<T>`` the control block that contains the shared count and the weak count for the share_ptr is contained within the same chunk of memory is allocated to also hold object T.
+in the case of ``std::make_shared<T>`` the control block that contains the shared count and the weak count for the share_ptr is contained within the same chunk of memory allocated to hold T.
 
 std::weak_ptr: Use of and Use Cases for
 ---------------------------------------
