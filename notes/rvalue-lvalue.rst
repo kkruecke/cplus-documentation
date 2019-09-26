@@ -6,17 +6,8 @@
 Rvalue References and Lvalue References in C++
 ==============================================
 
-Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
----------------------------------------------------------------------------------------------
-
-* `Understanding lvalues and rvalues in C and C++ <https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c>`_
-* `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
-* `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
-
 The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We look here at rvlaue references.
 
-.. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
-        
 Rvalue References and Their Role
 --------------------------------
     
@@ -115,3 +106,13 @@ Note: *rvalue* reference variables are *lvalues* when used in expressions. To se
    
 The parameter x is a reference to an rvalue that refers to a temporary SomeClass instantiated at the point f is invoked. But within the body of f, *x* is an lvalue because it has a name. x refers to a object about to die, an rvalue, 
 but x itself is not about to die. It will exist for the lifetime of f. This fact, the fact that an rvalue reference parameter is itself an lvalue, will have important implications later when move constructors and move assignment operators are introduced.
+
+
+Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
+---------------------------------------------------------------------------------------------
+
+* `Understanding lvalues and rvalues in C and C++ <https://eli.thegreenplace.net/2011/12/15/understanding-lvalues-and-rvalues-in-c-and-c>`_
+* `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
+* `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
+
+.. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
