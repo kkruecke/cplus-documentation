@@ -7,13 +7,13 @@ Value Categories
 Very Helpful Articles
 ---------------------
 
-* `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
-* `Open-std.org article <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3055.pdf>`_
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
+* `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_
 * `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
+* `Open-std.org article <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3055.pdf>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
-* `Lvalues, rvalues and references <https://akrzemi1.wordpress.com/2011/11/09/lvalues-rvalues-and-references>`_.
+.. * `Lvalues, rvalues and references <https://akrzemi1.wordpress.com/2011/11/09/lvalues-rvalues-and-references>`_.
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 C++11 introduced the concept of (an expression's) **value category**, which the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains
@@ -38,8 +38,8 @@ Expressions are catgorized according to the following taxonomy:
 
 .. figure:: ../images/value-categories.jpg
    :alt: Value Categories
-   :align: center 
-   :scale: 100 %
+   :align: center
+   :scale: 75 %
 
 * An **lvalue** (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designates a function or an object. [Example: If E is an expression of pointer type, then \*E is an lvalue expression referring to the object or function to which E points. As another example, the result of calling a function whose return type is an lvalue reference is an lvalue.]
 * An **xvalue** (an “eXpiring” value) also refers to an object, usually near the end of its lifetime (so that its resources may be moved, for example). An xvalue is the result of certain kinds of expressions involving rvalue references. [Example: The result of calling a function whose return type is an rvalue reference is an xvalue.]
