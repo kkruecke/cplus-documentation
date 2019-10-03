@@ -4,8 +4,8 @@
 Value Categories
 ================
 
-Helpful Articles
-----------------
+Very Helpful Articles
+---------------------
 
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
 * `Quick Q: What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://isocpp.org/blog/2016/04/quick-q-what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_
