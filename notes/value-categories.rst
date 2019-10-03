@@ -34,6 +34,13 @@ Some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
+Expressions are catgorized according to the following taxonomy:
+
+.. figure:: ../images/value-categories.jpg
+   :alt: Value Categories
+   :align: center 
+   :scale: 100 %
+
 * An **lvalue** (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designates a function or an object. [Example: If E is an expression of pointer type, then \*E is an lvalue expression referring to the object or function to which E points. As another example, the result of calling a function whose return type is an lvalue reference is an lvalue.]
 * An **xvalue** (an “eXpiring” value) also refers to an object, usually near the end of its lifetime (so that its resources may be moved, for example). An xvalue is the result of certain kinds of expressions involving rvalue references. [Example: The result of calling a function whose return type is an rvalue reference is an xvalue.]
 * A **glvalue** (“generalized” lvalue) is an lvalue or an xvalue.
