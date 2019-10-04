@@ -72,6 +72,10 @@ Examples of lvalues include:
 6. ``*x``, build-in indirection operator expression.
 7. ``x[i]``, built-in subscript expressions, except when x is an array rvalue.
 
+STOPPED VIDEO at 5:00 minutes
+
+.. todo:: Use lvalue examples from cppreference.com
+
 .. todo:: Old stuff below
 
 On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
