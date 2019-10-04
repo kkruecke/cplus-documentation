@@ -35,6 +35,8 @@ Some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
+The three primary value categories--prvaue, xvalue and lvalue--are distinguished by whether they 'have identity' and whether they 'can be moved from'.
+ 
 Expressions are catgorized according to the following taxonomy:
 
 .. figure:: ../images/value-categories.jpg
@@ -43,7 +45,8 @@ Expressions are catgorized according to the following taxonomy:
    :scale: 75 %
 
 * An **lvalue** (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designates a function or an object. [Example: If E is an expression of pointer type, then \*E is an lvalue expression referring to the object or function to which E points. As another example, the result of calling a function whose return type is an lvalue reference is an lvalue.]
-* An **xvalue** (an “eXpiring” value) also refers to an object, usually near the end of its lifetime (so that its resources may be moved, for example). An xvalue is the result of certain kinds of expressions involving rvalue references. [Example: The result of calling a function whose return type is an rvalue reference is an xvalue.]
+* An **xvalue** (an “eXpiring” value) also refers to an object, usually near the end of its lifetime (so that its resources may be moved, for example). An xvalue is the result of certain kinds of expressions involving rvalue references. [Example:
+  The result of calling a function whose return type is an rvalue reference is an xvalue.]
 * A **glvalue** (“generalized” lvalue) is an lvalue or an xvalue.
 * An **rvalue** (so-called, historically, because rvalues could appear on the right-hand side of an assignment expression) is an xvalue, a temporary object or subobject thereof, or a value that is not associated with an object.
 * A **prvalue** (“pure” rvalue) is an rvalue that is not an xvalue. [Example: The result of calling a function whose return type is not a reference is a prvalue]
