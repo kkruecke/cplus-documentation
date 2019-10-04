@@ -65,7 +65,7 @@ What are Examples of lvalue expressions?
 Examples of lvalues include:
 
 1. the name of a variable, a function or a data member. Even if the variable's type is rvlaue reference, the expression consisting of its name is an lvalue expression.
-2. A function call or an overloadws operator expression STOPPED VIDEO AT 13:10.
+2. A function call or an overloadws operator expression STOPPED VIDEO AT 3:51.
 
 .. todo:: Old stuff below
 
