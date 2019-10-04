@@ -57,7 +57,7 @@ The bit picture:
 * An **xvalue** (an eXpiring value) has identiy and can be moved from.
 * A **prvalue** (pure rvalue) is an rvalue that is not an xvalue.
 
-Points to note: As in C++03, in C++11, too, every expression is either an lvalue or an rvalue.
+Point to note: The statement that held ture in C++03, that every expression is either an lvalue or an rvalue, still holds true in C++1, still holds true in C++11. 
 
 What are Examples of lvalue expressions?
 ----------------------------------------
@@ -65,7 +65,12 @@ What are Examples of lvalue expressions?
 Examples of lvalues include:
 
 1. the name of a variable, a function or a data member. Even if the variable's type is rvlaue reference, the expression consisting of its name is an lvalue expression.
-2. A function call or an overloadws operator expression STOPPED VIDEO https://www.youtube.com/watch?v=yIOH95oIKbo AT 3:51.
+2. A function call or an overloadws operator expression whose return type is an lvalue reference.
+3. ``x = y``, ``x += y``, ``x %= y``, and all other built-in assignement and compound assigment expressions.
+4. A cast expression that casts to an lvalue reference: ``static_cast<int&>(x)``.
+5. Built-in pre-increment and post-incremant expressions.
+6. ``*x``, build-in indirection operator expression.
+7. ``x[i]``, built-in subscript expressions, except when x is an array rvalue.
 
 .. todo:: Old stuff below
 
