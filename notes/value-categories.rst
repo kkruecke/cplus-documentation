@@ -17,6 +17,9 @@ Very Helpful Articles
 
 .. * `Lvalues, rvalues and references <https://akrzemi1.wordpress.com/2011/11/09/lvalues-rvalues-and-references>`_.
 
+Introduction
+------------
+
 C++11 introduced the concept of (an expression's) **value category**, which the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
@@ -35,25 +38,36 @@ Some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-These three primary value categories--prvaue, xvalue and lvalue--are characterized by two properties: do they 'have identity' and can they 'be moved from'. If an expression has identity then it is possible to determine whether the expression
-refers to the same entity as another expression, such as  by comparing addresses of the objects or the function they identify(obtained directly or indirectly). If an expression can be 'moved from', then the move constructor, move assignment
-operator or any function that implements move semantics can bind to the expression.
+The three primary value categories--prvaue, xvalue and lvalue--are characterized by two properties: whether they 'have identity' and whether they 'be moved from'. If an expression *has identity* then it is possible to determine whether the expression
+refers to the same entity as another expression, such as  by comparing addresses of the objects or the function they identify(obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, move assignment
+operator or any other function that implements move semantics can bind to the expression.
 
-Any expression that 'has identity' is called a *glvalue(generalized lvalue)*. An *rvlaue* is an expression that 'can be moved from'
- 
-Expressions are catgorized according to the following taxonomy:
+Any expression that 'has identity' is an *glvalue(generalized lvalue)*. An *rvlaue* is an expression that 'can be moved from'. The primary value categories are catgorized according to the following taxonomy:
 
 .. figure:: ../images/value-categories.jpg
    :alt: Value Categories
    :align: center
    :scale: 75 %
 
-* An **lvalue** (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designates a function or an object. [Example: If E is an expression of pointer type, then \*E is an lvalue expression referring to the object or function to which E points. As another example, the result of calling a function whose return type is an lvalue reference is an lvalue.]
-* An **xvalue** (an “eXpiring” value) also refers to an object, usually near the end of its lifetime (so that its resources may be moved, for example). An xvalue is the result of certain kinds of expressions involving rvalue references. [Example:
-  The result of calling a function whose return type is an rvalue reference is an xvalue.]
-* A **glvalue** (“generalized” lvalue) is an lvalue or an xvalue.
-* An **rvalue** (so-called, historically, because rvalues could appear on the right-hand side of an assignment expression) is an xvalue, a temporary object or subobject thereof, or a value that is not associated with an object.
-* A **prvalue** (“pure” rvalue) is an rvalue that is not an xvalue. [Example: The result of calling a function whose return type is not a reference is a prvalue]
+The bit picture:
+
+* A **glvalue** (generalized lvalue) has identity.
+* An **rvalue** can be moved from.
+* An **lvalue** has identity but cannot be moved from. lvalues (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designate a function or an object.
+* An **xvalue** (an eXpiring value) has identiy and can be moved from.
+* A **prvalue** (pure rvalue) is an rvalue that is not an xvalue.
+
+Points to note: As in C++03, in C++11, too, every expression is either an lvalue or an rvalue.
+
+What are Examples of lvalue expressions?
+----------------------------------------
+
+Examples of lvalues include:
+
+1. the name of a variable, a function or a data member. Even if the variable's type is rvlaue reference, the expression consisting of its name is an lvalue expression.
+2. A function call or an overloadws operator expression STOPPED VIDEO AT 13:10.
+
+.. todo:: Old stuff below
 
 On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
 Stroustrup explains what *lvalue* means:
