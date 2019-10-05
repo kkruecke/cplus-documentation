@@ -20,12 +20,12 @@ Very Helpful Articles
 Introduction
 ------------
 
-C++11 introduced the concept of (an expression's) **value category**, which the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains
+C++11 introduced the concept of an expression's **value category**, which the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
 
-Some examples of expressions:
+Here are some examples of expressions:
 
 .. code-block:: cpp
 
@@ -38,18 +38,18 @@ Some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-The three primary value categories--prvaue, xvalue and lvalue--are characterized by two properties: whether they 'have identity' and whether they 'be moved from'. If an expression *has identity* then it is possible to determine whether the expression
+The three primary value categories--prvaue, xvalue and lvalue--are characterized by two properties: whether they 'have identity' and whether they 'can be moved from'. If an expression *has identity* then it is possible to determine whether the expression
 refers to the same entity as another expression, such as  by comparing addresses of the objects or the function they identify(obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, move assignment
 operator or any other function that implements move semantics can bind to the expression.
 
-Any expression that 'has identity' is an *glvalue(generalized lvalue)*. An *rvlaue* is an expression that 'can be moved from'. The primary value categories are catgorized according to the following taxonomy:
+Any expression that 'has identity' is an *glvalue(generalized lvalue)*. An expression that 'can be moved from' is an  *rvlaue*. The primary value categories are categorized according to the following taxonomy:
 
 .. figure:: ../images/value-categories.jpg
    :alt: Value Categories
    :align: center
    :scale: 75 %
 
-The bit picture:
+The big picture:
 
 * A **glvalue** (generalized lvalue) has identity.
 * An **rvalue** can be moved from.
