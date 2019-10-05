@@ -38,7 +38,7 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-The three primary value categories--prvaue, xvalue and lvalue--are characterized by two properties: whether they 'have identity' and whether they 'can be moved from'. If an expression *has identity* then it is possible to determine whether the expression
+The three primary value categories--prvaue, xvalue and lvalue--are characterized by one or both of two properties: whether they 'have identity' and whether they 'can be moved from'. If an expression *has identity* then it is possible to determine whether the expression
 refers to the same entity as another expression, such as  by comparing addresses of the objects or the function they identify(obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, move assignment
 operator or any other function that implements move semantics can bind to the expression.
 
