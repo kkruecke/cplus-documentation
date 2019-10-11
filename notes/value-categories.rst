@@ -51,13 +51,17 @@ Any expression that 'has identity' is termed an *glvalue(generalized lvalue)*. A
    :align: center
    :scale: 75 %
 
-The big picture:
+In C++11, expressions that:
 
-* A **glvalue** (generalized lvalue) are expression that has *identity*.
-* An **rvalue** can be moved from.
-* An **lvalue** has identity but cannot be moved from. lvalues (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designate a function or an object.
-* An **xvalue** (an eXpiring value) has identiy and can be moved from.
-* A **prvalue** (pure rvalue) is an rvalue that is not an xvalue; it doesn't have identity.
+    * have identity and cannot be moved from are called lvalue expressions;
+    * have identity and can be moved from are called xvalue expressions;
+    * do not have identity and can be moved from are called prvalue ("pure rvalue") expressions;
+    * do not have identity and cannot be moved from are not used. 
+
+The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). 
+The expressions that can be moved from are called "rvalue expressions". 
+
+.. todo:: Add the Venn Diagram here.
 
 Point to note: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11 and above. 
 
