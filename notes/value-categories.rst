@@ -59,15 +59,6 @@ The big picture:
 * An **xvalue** (an eXpiring value) has identiy and can be moved from.
 * A **prvalue** (pure rvalue) is an rvalue that is not an xvalue; it doesn't have identity.
 
-Another visualization of the taxonomy of primary tha usesd *i* for identity and *m* for *can be moved from*:
-
-.. todo:: Redo this image as a gliffy diagram
-
-.. figure:: ../images/value-categories2.jpg
-   :alt: Value Categories
-   :align: center
-   :scale: 100 %
-
 Point to note: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11 and above. 
 
 What are Examples of lvalue expressions?
