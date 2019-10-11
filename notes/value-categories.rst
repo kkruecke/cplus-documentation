@@ -58,7 +58,8 @@ In the figure, **i** means *has identity* and **m** means *can be moved from*. I
     * do not have identity and can be moved from are called **prvalue** ("pure rvalue") expressions;
     * do not have identity and cannot be moved from are not used. 
 
-The expressions that have identity are **glvalue** expressions (glvalue stands for "generalized lvalue"), and expressions that can be moved from are **rvalue** expressions. 
+The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from
+are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
 
 .. todo:: Add the Venn Diagram here.
 
