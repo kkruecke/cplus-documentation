@@ -55,13 +55,12 @@ The primary value categories are categorized according to the following taxonomy
 
 In C++11, expressions that:
 
-    * have identity and cannot be moved from are called lvalue expressions;
-    * have identity and can be moved from are called xvalue expressions;
-    * do not have identity and can be moved from are called prvalue ("pure rvalue") expressions;
+    * have identity and cannot be moved from are called **lvalue** expressions;
+    * have identity and can be moved from are called **xvalue** expressions;
+    * do not have identity and can be moved from are called **prvalue** ("pure rvalue") expressions;
     * do not have identity and cannot be moved from are not used. 
 
-The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). 
-The expressions that can be moved from are called "rvalue expressions". 
+The expressions that have identity are **glvalue** expressions (glvalue stands for "generalized lvalue"), and expressions that can be moved from are **rvalue** expressions. 
 
 .. todo:: Add the Venn Diagram here.
 
