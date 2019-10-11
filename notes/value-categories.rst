@@ -38,18 +38,20 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-The three primary value categories--prvaue, xvalue and lvalue--are characterized by one or both of two properties: 'has identity' and 'can be moved from'. If an expression *has identity*, then it is possible to determine whether the expression
+The three primary value categories are prvaue, xvalue and lvalue. They are characterized by one or both of two properties: 'has identity' and 'can be moved from'. If an expression *has identity*, then it is possible to determine whether the expression
 refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the move assignment
 operator or any function that implements move semantics can bind to the expression.
 
 .. todo:: Compare what is writen blow and the graphic used with the explantion at `cppreference.com Value Categories article <https://en.cppreference.com/w/cpp/language/value_category>`_.
 
-Any expression that 'has identity' is termed an *glvalue(generalized lvalue)*. An expression that 'can be moved from' is termed an  *rvlaue*. The primary value categories are categorized according to the following taxonomy:
+The primary value categories are categorized according to the following taxonomy:
 
 .. figure:: ../images/value-categories.jpg
    :alt: Value Categories
    :align: center
    :scale: 75 %
+
+**i** in the graphic means *has identity* and **m** means *can be moved from*.
 
 In C++11, expressions that:
 
