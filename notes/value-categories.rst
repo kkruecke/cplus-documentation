@@ -61,6 +61,8 @@ The big picture:
 
 Another visualization of the taxonomy of primary tha usesd *i* for identity and *m* for *can be moved from*:
 
+.. todo:: Redo this image as a gliffy diagram
+
 .. figure:: ../images/value-categories2.jpg
    :alt: Value Categories
    :align: center
