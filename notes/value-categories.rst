@@ -38,28 +38,54 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-The three primary value categories are prvaue, xvalue and lvalue. They are characterized by one or both of two properties: 'has identity' and 'can be moved from'. If an expression *has identity*, then it is possible to determine whether the expression
-refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the move assignment
-operator or any function that implements move semantics can bind to the expression.
+On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
+Bjarne Stroustrup explains what an *lvalue* expression is:
 
-.. todo:: Compare what is writen blow and the graphic used with the explantion at `cppreference.com Value Categories article <https://en.cppreference.com/w/cpp/language/value_category>`_.
+    *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
+    in memory" and not to the notion of class object.
 
-The primary value categories are categorized according to the following taxonomy:
+On page 166, he explains the term *rvalue* and elaborates on the differences between *lvalues* and *rvalues*:
+ 
+    An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
+    a function).
+
+    There are two properties that matter for an object when it comes to addressing, copying and moving:
+
+    * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
+    * *Movable*: the object may be moved from (i.e. we are allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying).
+
+    It turns out that three of the four possibilities of these two properites are needed to precisely describe the C++ language rules (we have no need for object that do not have identity and cannot be moved). Using "**m**
+    for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
 
 .. figure:: ../images/value-categories.jpg
-   :alt: Value Categories
-   :align: center
-   :scale: 75 %
+   :alt: value categories
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
 
-In the figure, **i** means *has identity* and **m** means *can be moved from*. In C++11, expressions that:
+   **Figure: value categories** 
+..
+
+    So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. The other alternatives 
+    are *prvalue* ("pure rvalue"), *glvalue* ("generalized lvalue"), and *xvalue* ("x" for "extraordinary"). For example:
+
+If an expression *has identity*, then it is possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the
+move assignment operator or any function that implements move semantics can bind to the expression.
+
+.. todo:: Compare what is writen above and blow and comsolidate the key information without repetition. As a further source of input, look at `cppreference.com Value Categories article <https://en.cppreference.com/w/cpp/language/value_category>`_.
+
+In the figure, **i** means *has identity* and **m** means *can be moved from*. If an expression *has identity*, then it is possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses
+of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the move assignment operator or any function that implements move semantics can bind to the expression.
+In C++11, expressions that:
 
     * have identity and cannot be moved from are called **lvalue** expressions;
     * have identity and can be moved from are called **xvalue** expressions;
     * do not have identity and can be moved from are called **prvalue** ("pure rvalue") expressions;
     * do not have identity and cannot be moved from are not used. 
 
-The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from
-are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
+The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
+
+The three primary value categories--the categories to which every C++ expression must belong--are prvaue, xvalue and lvalue. 
 
 .. todo:: Add the Venn Diagram here.
 
@@ -85,7 +111,7 @@ STOPPED VIDEO at 5:00 minutes
 .. todo:: Old stuff below
 
 On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
-Stroustrup explains what *lvalue* means:
+Bjarne Stroustrup explains what an *lvalue* expression is:
 
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
