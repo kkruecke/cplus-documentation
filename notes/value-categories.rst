@@ -38,9 +38,11 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-The three primary value categories--prvaue, xvalue and lvalue--are characterized by one or both of these two properties: the 'has identity' property and the 'can be moved from' property. If an expression *has identity*, then it is possible to determine
-whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the function they identify(obtained directly or indirectly). If an expression can be *moved from*, then the move constructor,
-the move assignment operator or any function that implements move semantics can bind to the expression.
+The three primary value categories--prvaue, xvalue and lvalue--are characterized by one or both of two properties: 'has identity' and 'can be moved from'. If an expression *has identity*, then it is possible to determine whether the expression
+refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the move assignment
+operator or any function that implements move semantics can bind to the expression.
+
+.. todo:: Compare what is writen blow and the graphic used with the explantion at `cppreference.com Value Categories article <https://en.cppreference.com/w/cpp/language/value_category>`_.
 
 Any expression that 'has identity' is termed an *glvalue(generalized lvalue)*. An expression that 'can be moved from' is termed an  *rvlaue*. The primary value categories are categorized according to the following taxonomy:
 
@@ -51,13 +53,20 @@ Any expression that 'has identity' is termed an *glvalue(generalized lvalue)*. A
 
 The big picture:
 
-* A **glvalue** (generalized lvalue) has identity.
+* A **glvalue** (generalized lvalue) are expression that has *identity*.
 * An **rvalue** can be moved from.
 * An **lvalue** has identity but cannot be moved from. lvalues (so-called, historically, because lvalues could appear on the left-hand side of an assignment expression) designate a function or an object.
 * An **xvalue** (an eXpiring value) has identiy and can be moved from.
-* A **prvalue** (pure rvalue) is an rvalue that is not an xvalue.
+* A **prvalue** (pure rvalue) is an rvalue that is not an xvalue; it doesn't have identity.
 
-Point to note: The statement that held ture in C++03, that every expression is either an lvalue or an rvalue, still holds true in C++1, still holds true in C++11. 
+Another visualization of the taxonomy of primary tha usesd *i* for identity and *m* for *can be moved from*:
+
+.. figure:: ../images/value-categories.jpg2
+   :alt: Value Categories
+   :align: center
+   :scale: 100 %
+
+Point to note: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11 and above. 
 
 What are Examples of lvalue expressions?
 ----------------------------------------
