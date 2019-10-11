@@ -9,11 +9,11 @@ Very Helpful Articles
 
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
+* `cppreference.com Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_
 * `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_
 * `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
-* `Open-std.org article <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3055.pdf>`_
 
 .. * `Lvalues, rvalues and references <https://akrzemi1.wordpress.com/2011/11/09/lvalues-rvalues-and-references>`_.
 
