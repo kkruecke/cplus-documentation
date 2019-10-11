@@ -69,13 +69,6 @@ On page 166, he explains the term *rvalue* and elaborates on the differences bet
     So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. The other alternatives 
     are *prvalue* ("pure rvalue"), *glvalue* ("generalized lvalue"), and *xvalue* ("x" for "extraordinary"). For example:
 
-If an expression *has identity*, then it is possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the
-move assignment operator or any function that implements move semantics can bind to the expression.
-
-.. todo:: Compare what is writen above and blow and comsolidate the key information without repetition. As a further source of input, look at `cppreference.com Value Categories article <https://en.cppreference.com/w/cpp/language/value_category>`_.
-
-In the figure, **i** means *has identity* and **m** means *can be moved from*. If an expression *has identity*, then it is possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses
-of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the move assignment operator or any function that implements move semantics can bind to the expression.
 In C++11, expressions that:
 
     * have identity and cannot be moved from are called **lvalue** expressions;
@@ -83,9 +76,12 @@ In C++11, expressions that:
     * do not have identity and can be moved from are called **prvalue** ("pure rvalue") expressions;
     * do not have identity and cannot be moved from are not used. 
 
+If an expression *has identity*, then it is possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly). If an expression can be *moved from*, then the move constructor, the
+move assignment operator or any function that implements move semantics can bind to the expression.
+
 The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
 
-The three primary value categories--the categories to which every C++ expression must belong--are prvaue, xvalue and lvalue. 
+The three primary value categories--the categories to which every C++ expression must belong--are prvaue, xvalue and lvalue. <-- Where to place this sentence.
 
 .. todo:: Add the Venn Diagram here.
 
