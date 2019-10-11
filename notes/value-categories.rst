@@ -83,7 +83,7 @@ move assignment operator or any function that implements move semantics can bind
 
 The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
 
-As mentioned, in C++11, every expression is one of these three: lvalue, xvalue, prvalue. A Venn diagram would look like this:
+Again, in C++11, every expression is one of these three: lvalue, xvalue, prvalue. A Venn diagram would look like this:
 
 .. figure:: ../images/venn-value-categories.jpg
    :alt: value categories as Venn Diagram
@@ -92,8 +92,6 @@ As mentioned, in C++11, every expression is one of these three: lvalue, xvalue, 
    :figclass: custom-figure
 
    **Figure: value categories as Venn Diagram** 
-
-.. Note::
 
 What are Examples of lvalue expressions?
 ----------------------------------------
