@@ -9,6 +9,7 @@ Very Helpful Articles
 
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
+* http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
 * `cppreference.com Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_
 * `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_
 * `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
@@ -20,7 +21,7 @@ Very Helpful Articles
 Introduction
 ------------
 
-C++11 introduced the concept of an expression's **value category**, which the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains
+C++11 introduced the concept of an expression's **value category**, explained in the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com:
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
@@ -38,14 +39,15 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
-On page 165 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
-Bjarne Stroustrup explains what an *lvalue* expression is:
+In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two subgroups, xvalues and
+prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. A Venn diagram would look like this:
+
+On pages 165 and 166 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
+Bjarne Stroustrup gives a practical explanation of all these vlaue categories:
 
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
 
-On page 166, he explains the term *rvalue* and elaborates on the differences between *lvalues* and *rvalues*:
- 
     An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
     a function).
 
@@ -69,7 +71,7 @@ On page 166, he explains the term *rvalue* and elaborates on the differences bet
     So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. The other alternatives 
     are *prvalue* ("pure rvalue"), *glvalue* ("generalized lvalue"), and *xvalue* ("x" for "extraordinary"). For example:
 
-In C++11, expressions that:
+To sum up, in C++11, expressions that:
 
     * have identity and cannot be moved from are called **lvalue** expressions;
     * have identity and can be moved from are called **xvalue** expressions;
@@ -81,11 +83,17 @@ move assignment operator or any function that implements move semantics can bind
 
 The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.  The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. 
 
-The three primary value categories--the categories to which every C++ expression must belong--are prvaue, xvalue and lvalue. <-- Where to place this sentence.
+As mentioned, in C++11, every expression is one of these three: lvalue, xvalue, prvalue. A Venn diagram would look like this:
 
-.. todo:: Add the Venn Diagram here.
+.. figure:: ../images/venn-value-categories.jpg
+   :alt: value categories as Venn Diagram
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
 
-.. Note:: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11. 
+   **Figure: value categories as Venn Diagram** 
+
+.. Note::
 
 What are Examples of lvalue expressions?
 ----------------------------------------
@@ -101,6 +109,8 @@ Examples of lvalues include:
 7. ``x[i]``, built-in subscript expressions, except when x is an array rvalue.
 
 STOPPED VIDEO at 5:00 minutes
+
+Important of Value categories in determining the function to call. See
 
 .. todo:: Use lvalue examples from cppreference.com
 
