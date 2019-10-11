@@ -51,7 +51,7 @@ The primary value categories are categorized according to the following taxonomy
    :align: center
    :scale: 75 %
 
-**i** in the graphic means *has identity* and **m** means *can be moved from*.
+In the figure, **i** means *has identity* and **m** means *can be moved from*.
 
 In C++11, expressions that:
 
@@ -64,7 +64,7 @@ The expressions that have identity are **glvalue** expressions (glvalue stands f
 
 .. todo:: Add the Venn Diagram here.
 
-Point to note: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11 and above. 
+Point to note: In C++03, every expression was either an lvalue or an rvalue. This still holds true in C++11. 
 
 What are Examples of lvalue expressions?
 ----------------------------------------
