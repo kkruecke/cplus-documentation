@@ -96,8 +96,8 @@ Again, in C++11, every expression is one of these three: lvalue, xvalue, prvalue
 
    **Figure: value categories as Venn Diagram** 
 
-What are Examples of lvalue expressions?
-----------------------------------------
+Examples
+--------
 
 Examples of lvalues include:
 
