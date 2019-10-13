@@ -91,7 +91,7 @@ Again, in C++11, every expression is one of these three: lvalue, xvalue, prvalue
 .. figure:: ../images/venn-value-categories.jpg
    :alt: value categories as Venn Diagram
    :align: center 
-   :scale: 100 %
+   :scale: 85 %
    :figclass: custom-figure
 
    **Figure: value categories as Venn Diagram** 
@@ -111,7 +111,8 @@ Examples of lvalues include:
 
 STOPPED VIDEO at 5:00 minutes
 
-Important of Value categories in determining the function to call. See
+Significance of Value categories
+--------------------------------
 
 .. todo:: Use lvalue examples from cppreference.com
 
