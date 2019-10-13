@@ -21,7 +21,7 @@ Very Helpful Articles
 Introduction
 ------------
 
-The cppreferecne.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com explains:
+The www.cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ explains:
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
