@@ -21,7 +21,7 @@ Very Helpful Articles
 Introduction
 ------------
 
-C++11 introduced the concept of an expression's **value category**, explained in the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com:
+The concept of an expression's **value category** is explained in the article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ at en.cppreference.com:
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
@@ -42,8 +42,8 @@ Here are some examples of expressions:
 In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two subgroups, xvalues and
 prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. A Venn diagram would look like this:
 
-On pages 165 and 166 of `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
-Bjarne Stroustrup gives a practical explanation of all these vlaue categories:
+In `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programming-Language-hardcover-4th/dp/0321958322/ref=sr_1_fkmrnull_1?crid=47A4W3MV3W0Y&keywords=the+c%2B%2B+programming+language+hardcover+4th+edition&qid=1553447852&s=gateway&sprefix=the+c%2B%2B+prog%2Caps%2C206&sr=8-1-fkmrnull>`_,
+(on pages 165 and 166) Bjarne Stroustrup explains in practical terms the expression value categories of C++11:
 
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
