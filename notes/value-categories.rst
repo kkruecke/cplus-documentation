@@ -21,12 +21,9 @@ Very Helpful Articles
 Introduction
 ------------
 
-The `cppreference.com <https://www.cppreference.com>`_ article on `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ begins:
-
-    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
-    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
-
 Here are some examples of expressions:
+
+.. todo:: Change the example to also include prvalues, lvalue, and xvalues. Then after the subsequent two paragraphs, re-who the expression with comments explaining their value categoris.
 
 .. code-block:: cpp
 
@@ -39,10 +36,13 @@ Here are some examples of expressions:
     int b = fun(42); // A declaration statement with an expression initializer
                      // fun(42) is an expression
 
+The `cppreference.com <https://www.cppreference.com>`_ article on `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ begins:
+
+    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
+    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
+
 In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two subgroups, xvalues and
 prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. [#stackoverflow_quote]_ 
-
-.. todo:: Taken from 3rd response to Stackoverflow question:  `What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_.
 
 Further Elabloration
 --------------------
