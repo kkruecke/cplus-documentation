@@ -9,7 +9,7 @@ Very Helpful Articles
 
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 * `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
-* http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
+*  http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
 * `cppreference.com Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_
 * `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_
 * `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
@@ -21,7 +21,7 @@ Very Helpful Articles
 Introduction
 ------------
 
-The `cppreference.com <https://www.cppreference.com>`_ article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ explains:
+The `cppreference.com <https://www.cppreference.com>`_ article on `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ begins:
 
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
@@ -40,7 +40,9 @@ Here are some examples of expressions:
                      // fun(42) is an expression
 
 In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two subgroups, xvalues and
-prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. 
+prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. [#stackoverflow_quote]_ 
+
+.. todo:: Taken from 3rd response to Stackoverflow question:  `What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_.
 
 Further Elabloration
 --------------------
@@ -128,3 +130,7 @@ Significance of Value categories
     Here ``std::move(vs)`` is an xvalue: it clearly has idenity (we can refer to it as ``vs``), but we have explicitly given permission for it to be moved from by calling ``std::move()``.
     
     For praictical programming, thinking in terms of rvalue and lvalue is usually sufficient. Note that every expression is either an lvalue or an rvalue, but not both.
+
+.. rubric:: Footnotes
+
+.. [#stackoverflow_quote] This paragraph is quotes from the third response to the Stackoverflow question:  `What are rvalues, lvalues, xvalues, glvalues, and prvalues? <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_.
