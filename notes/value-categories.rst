@@ -27,22 +27,32 @@ Here are some examples of expressions:
 
 .. code-block:: cpp
 
-    x = 42; // Assignment expression
+     string c;
+     string d{"some string"};
+
+     // lvalues
+     c = d; // assignment expression;
+     c += d;
+
+     double e = 1.5;
+ 
+     ++e; // pre increment
+     --e; // pre decrement
+
+     a[n] = 10; // where: array<int, 4> a = {1, 2, 3, 4};
+     *p = 15;   // where: int *p = &a[0]; 
+
+     // prvalues
+     42; // An expression as well, with no side effects
     
-    42; // An expression as well, with no side effects
-    
-    int a; // A declaration statement (not an expression)
-    
-    int b = fun(42); // A declaration statement with an expression initializer
-                     // fun(42) is an expression
 
 The `cppreference.com <https://www.cppreference.com>`_ article on `Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_ begins:
 
-    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a type and a value category.
-    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: prvalue, xvalue, and lvalue.
+    Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a *type* and a *value category*.
+    Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: *prvalue*, *xvalue*, and *lvalue*.
 
-In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two subgroups, xvalues and
-prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. [#stackoverflow_quote]_ 
+Here C++ means C++11. In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two
+subgroups, xvalues and prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. [#stackoverflow_quote]_ 
 
 Further Elabloration
 --------------------
