@@ -1,3 +1,6 @@
+Variadic Templates
+==================
+
 See these articles on the use an implement C++ Variadic Templates:
 
 * `C++ Variadic Template Recursive Example <https://raymii.org/s/snippets/Cpp_variadic_template_recursive_example.html>`_
