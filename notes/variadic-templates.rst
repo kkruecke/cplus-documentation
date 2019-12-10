@@ -9,9 +9,9 @@ given in the article is at https://github.com/eliben/code-for-blog/blob/master/2
 
 .. note:: Can the tuple implementation take advantage of C++17 iteration features. See my bookmarks for clues.
     
-`C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
-
-`An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
+* `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
+* `Wkipedia Article on Variadic Template <https://en.wikipedia.org/wiki/Variadic_template>`_
+* `An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
 
 Variadic Class Template
 -----------------------
