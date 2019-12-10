@@ -3,5 +3,5 @@ Variadic Templates
 
 Articles on implementing C++ Variadic Templates:
 
-* `C++ Variadic Template Recursive Example <https://raymii.org/s/snippets/Cpp_variadic_template_recursive_example.html>`_
+* `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_
 * `C++ Core Guidelines: Rules for Variadic Templates <https://www.modernescpp.com/index.php/c-core-guidelines-rules-for-variadic-templates>`_
