@@ -7,6 +7,7 @@ Good articles on implementing C++ Variadic Templates
 In addition to variadic function template examples, `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_ has an excellent example of how ``std::tuple`` is implemented using a variadic data structure. The code for the tuple implementation
 given in the article is at https://github.com/eliben/code-for-blog/blob/master/2014/variadic-tuple.cpp.
 
+.. note:: Can the tuple implementation take advantage of C++17 iteration features. See my bookmarks for clues.
     
 `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
 
