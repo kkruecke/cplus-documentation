@@ -15,7 +15,7 @@ given in the article is at https://github.com/eliben/code-for-blog/blob/master/2
 Variadic Class Template
 -----------------------
 
-`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that "A variadic class template can be instantiated with any number of template arguments:"
+`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that: A variadic class template can be instantiated with any number of template arguments:
 
 .. code-block:: cpp
 
@@ -28,7 +28,7 @@ Variadic Class Template
 Variadic Function Template
 --------------------------
  
-`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction):"
+`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)":
 
 .. code-block:: cpp
 
@@ -72,10 +72,6 @@ In C++ a variadic template function like ``sum`` below required two versions of 
       return first + adder(args...);
     }
     
-And here are a couple of ways we could call it:
-    
-.. code-block:: cpp
-
     long sum = adder(1, 2, 3, 8, 7);
     
     std::string s1 = "x", s2 = "aa", s3 = "bb", s4 = "yy";
