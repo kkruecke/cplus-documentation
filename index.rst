@@ -9,6 +9,7 @@ Notes on Features of C++-17
    notes/understanding-const.rst 
    notes/observing-deduced-types.rst
    notes/templates.rst
+   notes/variadic-templates.rst
    notes/variant.rst
    notes/regex.rst
    notes/managed-ptrs.rst
