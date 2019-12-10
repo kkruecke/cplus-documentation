@@ -10,4 +10,8 @@ As the article explains:
 
 The code for the tuple implementation given in the article is at https://github.com/eliben/code-for-blog/blob/master/2014/variadic-tuple.cpp.
 
-`C++ Core Guidelines: Rules for Variadic Templates <https://www.modernescpp.com/index.php/c-core-guidelines-rules-for-variadic-templates>`_
+`C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
+
+`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_
+
+`An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
