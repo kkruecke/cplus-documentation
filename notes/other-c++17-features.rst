@@ -29,3 +29,5 @@ In C++17 we can now write
     vector v1{1, 2, 3};     // deduce v1's element type from the initializer element type
 
     vector v2 = v1;      // deduce v2's element type from v1's element type  
+
+See Filiped p. 54.
