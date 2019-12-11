@@ -6,8 +6,8 @@ static_assert()
 
 ``static_assert()`` does compile time checking, so it is an efficient technique. 
 
-Automatic Deduction of template parameters from constructor arguments
----------------------------------------------------------------------
+Class Template Agument Deduction
+--------------------------------
 
 In C++14 ``make_pair()`` ws a utility that eliminated the tedium of specfying the template argument manually:
 
@@ -17,17 +17,24 @@ In C++14 ``make_pair()`` ws a utility that eliminated the tedium of specfying th
    
    pair pr = {1, 5.2};          // Compiler error in C++14
 
-   auto p = make_pair(1,5.2);    // In C++14 we must use make_pair to avoid the tedium of manually specifying the template types.
-
-   pair pr = {1, 5.2};          // In C++17, we can write this because the template argument types are automatically deduced from the
-                                // constructor parameters.
-
-In C++17 we can now write
+``std::make_pair`` takes advantage of template argument deduction for function templates.
 
 .. code-block:: cpp
 
-    vector v1{1, 2, 3};     // deduce v1's element type from the initializer element type
+   auto p = make_pair(1,5.2);    // In C++14 we must use make_pair to avoid the tedium of manually specifying the template types.
 
-    vector v2 = v1;      // deduce v2's element type from v1's element type  
+In C++17 template argument deduction for class templates is supported. The constructor arguments will be used to deduce class templates arguments 
+
+   pair pr = {1, 5.2};        // In C++17, we can write this because the template argument types are automatically deduced from the
+                              // constructor parameters.
+
+   array ar{1, 2, 3};         // instead of array<int, 3> ar{1, 2, 3};
+
+   tuple tup{1, 10,2, 5L};    // instead of tuple<int, double, long> tup{1, 10.2, 5L};
+   
+
+   vector v1{1, 2, 3};       // deduce v1's element type from the initializer element type
+
+   vector v2 = v1;           // deduce v2's element type from v1's element type  
 
 See Filiped p. 54.
