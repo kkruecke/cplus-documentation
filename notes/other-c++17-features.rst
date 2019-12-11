@@ -25,6 +25,11 @@ In C++14 ``make_pair()`` ws a utility that eliminated the tedium of specfying th
 
 In C++17 template argument deduction for class templates is supported. The constructor arguments will be used to deduce class templates arguments 
 
+   using namespace std;
+	
+   pair p(1729, "taxicab");
+   static_assert(std::is_same_v<decltype(p), std::pair<int, const char *>>);    
+
    pair pr = {1, 5.2};        // In C++17, we can write this because the template argument types are automatically deduced from the
                               // constructor parameters.
 
@@ -35,6 +40,16 @@ In C++17 template argument deduction for class templates is supported. The const
 
    vector v1{1, 2, 3};       // deduce v1's element type from the initializer element type
 
-   vector v2 = v1;           // deduce v2's element type from v1's element type  
+   vector v2 = v1;           // deduce v2's element type from v1's element type
 
-See Filiped p. 54.
+   template<class T> struct A { A(T,T) {} }; // declared elsewhere
+
+   auto y = new A{1,2};      // allocated type is A<int>  
+   A a{1, 2};
+
+   template <typename T> struct point { // declared elsewahere
+      T x;
+      T y;
+    };
+
+    point pt{0L,0L};
