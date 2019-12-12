@@ -4,11 +4,11 @@ Variadic Templates
 Good articles on implementing C++ Variadic Templates
 ----------------------------------------------------
 
-In addition to variadic function template examples, `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_ has an excellent example of how ``std::tuple`` is implemented using a variadic data structure. The code for the tuple implementation
+In addition to variadic function template examples, `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_ has an example of how ``std::tuple`` is implemented using a variadic data structure. The code for the tuple implementation
 given in the article is at https://github.com/eliben/code-for-blog/blob/master/2014/variadic-tuple.cpp.
 
 .. note:: Can the tuple implementation take advantage of C++17 iteration features. See my bookmarks for clues.
-    
+
 * `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
 * `Wkipedia Article on Variadic Template <https://en.wikipedia.org/wiki/Variadic_template>`_
 * `An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
@@ -25,6 +25,12 @@ Variadic Class Template
     Tuple<int> t1;        // Types contains one argument: int
     Tuple<int, float> t2; // Types contains two arguments: int and float
     Tuple<0> error;       // error: 0 is not a type
+
+Variadic template Data Structures
+---------------------------------
+
+`Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
+`Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
 
 Variadic Function Template
 --------------------------
