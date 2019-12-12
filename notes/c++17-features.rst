@@ -54,14 +54,13 @@ In C++17 template argument deduction for class templates is supported. The const
 
    auto y = new A{1,2};      // allocated type is A<int>  
    A a{1, 2};
+ 
+Class Template Agument Deduction Guides
+---------------------------------------
 
-   template <typename T> struct point { // declared elsewahere
-      T x;
-      T y;
-    };
+See the Automatic Deduction Guides section of the article `Modern C++ Features – Class Template Argument Deduction <https://arne-mertz.de/2017/06/class-template-argument-deduction/>`_.
 
-    point pt{0L,0L};
-
+  
 Compile-Time if: ``if constexpr``
 ---------------------------------
 
