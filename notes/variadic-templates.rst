@@ -29,8 +29,8 @@ Variadic Class Template
 Variadic template Data Structures
 ---------------------------------
 
-`Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
-`Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
+* `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
+* `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
 
 Variadic Function Template
 --------------------------
