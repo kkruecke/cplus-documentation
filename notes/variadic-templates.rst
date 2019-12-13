@@ -31,8 +31,72 @@ Variadic Class Template
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
 
-.. todo:: Use the tuple implementation by the Eli Berskensky listed first below as a teaching example.
+.. todo:: Use the tuple implementation by the Eli Berskensky listed first below as a teaching example. Use __PRETTY_FUNCTION__  to layout of tupe<Ts ...>.
 
+If Tuple is defined recursively as 
+
+.. code-block:: cpp
+
+    template <class... Ts> struct Tuple { // <-- This Tuple definition is needed. It will be the final base Tuple of all Tuple<Ts...>'s.
+    
+        Tuple()
+        {
+  	    std::cout << "In base Tuple constructor, which has NO member tail." << std::endl;
+        }
+    }; 
+    
+    template <class T, class... Ts> struct Tuple<T, Ts...> : Tuple<Ts...> { // public inheritance is the default for structs.
+    
+    
+        Tuple(T t, Ts... ts) : Tuple<Ts...>(ts...), tail(t)
+        {
+            std::cout << "In constructor of " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
+        }
+    
+        T tail;
+    };
+    
+the generated definition of ``tuple<double, int, const char*>`` is
+
+.. code-block:: cpp
+
+    struct Tuple<double, int, const char *> : struct Tuple<int, const char *> : struct Tuple<const char *> : Tuple<> {
+
+       double tail; // top level of hierachy: level 3 (where level 0 represetns the bottom of the hierarchy.
+    };    
+    
+    struct Tuple<int, const char *> : struct Tuple<const char *> : Tuple<> {
+
+       int tail; // next to top level: level 2
+    };    
+
+    struct Tuple<const char *> : struct Tuple {
+
+       const char *int tail; // next to bottom: level 1
+    };    
+
+    struct Tuple {
+
+        // bottom of hierachy: level 0.
+    };    
+
+The construction of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` shows these four levels being constructed 
+
+    In base Tuple constructor, which has NO member tail.
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = const char*; Ts = {}] where tail = big
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = int; Ts = {const char*}] where tail = 42
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
+
+This gives a layout of
+
+.. figure:: ../images/recursive-tuple-layout.jpg
+   :alt: recursive tuple layout
+   :align: center 
+   :scale: 100 %
+   :figclass: tuple-layout
+
+   **Figure: layout of tuple inheritance hierarchy** 
+    
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
 * `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
