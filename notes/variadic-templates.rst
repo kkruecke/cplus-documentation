@@ -56,7 +56,7 @@ If Tuple is defined recursively as
         T tail;
     };
     
-the generated definition of ``tuple<double, int, const char*>`` is
+the generated definition of ``tuple<double, int, const char*>`` will be
 
 .. code-block:: cpp
 
