@@ -62,22 +62,22 @@ the generated definition of ``tuple<double, int, const char*>`` will be
 
     struct Tuple<double, int, const char *> : struct Tuple<int, const char *> : struct Tuple<const char *> : Tuple<> {
 
-       double tail; // top level of hierachy: level 3 (where level 0 represetns the bottom of the hierarchy.
+       double tail; // top level of hierachy
     };    
     
     struct Tuple<int, const char *> : struct Tuple<const char *> : Tuple<> {
 
-       int tail; // next to top level: level 2
+       int tail; // next to top level
     };    
 
     struct Tuple<const char *> : struct Tuple {
 
-       const char *int tail; // next to bottom: level 1
+       const char *int tail; // next to bottom level 
     };    
 
     struct Tuple {
 
-        // bottom of hierachy: level 0.
+        // bottom of hierachy
     };    
 
 The construction of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` shows these four levels being constructed 
@@ -103,9 +103,9 @@ This gives a layout of
 
 If we use zero to designate the bottom of the hierachy, then the top level is at level three (of the four levels). 
 
-Now that we can instantiate Tuples of varying types, how to we access the values of its recursive data structure? How do we retrieve or change, say, ``int`` value above or that ``const char *``? The trick is to use a different recursive data structure that keeps track of 
-depth in the hierachy, using an integer template parameter....  
-    
+Now that we can instantiate Tuples of varying types, how to we access the values of its recursive data structure? How do we retrieve or change, say, ``int`` value above or that ``const char *``? The access method is a variadic template function called ``get`` whose template argument is
+of type ``int``. ``get<int>()`` works uses a another recursive data structure that parelells the structure of ``tuple<Ts ...>`` to determine the depth in the tuple hierachy, using an integer template parameter. 
+
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
 * `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
