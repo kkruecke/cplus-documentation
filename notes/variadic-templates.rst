@@ -56,7 +56,7 @@ If Tuple is defined recursively as
         T tail;
     };
     
-the generated definition of ``tuple<double, int, const char*>`` will be
+the definition of ``tuple<double, int, const char*>`` that is generated will be
 
 .. code-block:: cpp
 
@@ -91,7 +91,7 @@ The construction of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` s
     In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
    </pre>
 
-This gives a layout of
+This show that the layout of ``tuple<double, int, const char *>`` looks like this
 
 .. figure:: ../images/recursive-tuple-layout.jpg
    :alt: recursive tuple layout
@@ -101,10 +101,24 @@ This gives a layout of
 
    **Figure: layout of tuple inheritance hierarchy** 
 
-If we use zero to designate the bottom of the hierachy, then the top level is at level three (of the four levels). 
+There are four levels to the layout hierachy. The bottom level is empty. All the other layers have a ``tail`` member.
 
-Now that we can instantiate Tuples of varying types, how to we access the values of its recursive data structure? How do we retrieve or change, say, ``int`` value above or that ``const char *``? The access method is a variadic template function called ``get`` whose template argument is
-of type ``int``. ``get<int>()`` works uses a another recursive data structure that parelells the structure of ``tuple<Ts ...>`` to determine the depth in the tuple hierachy, using an integer template parameter. 
+We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing
+where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``get<int, tuple<Ts ...>``. The integer template argument is the key
+to locating ``int tail``. 
+
+``get<....>()`` uses a another recursive data structure called ``struct elem_type_holder<int, tuple<Ts ...>>`` to determine the where the tuple layout hierachy the correct tail element is located. For example, ``get<0>(example)`` must locate .../ ``get<1>(example)`` must locate ...
+and ``get<3>(example)`` must locate ....
+
+.. todo:: Follow the recursive calls for each of these instantions of get<>--get<0>(example), get<1>(example), get<2>(example>--and how the recursive instantiate (I guess) the correct elem_type_holder<int, tupel<Ts ...>> that ....??? 
+
+
+
+
+It determines the correct ``tail`` in the layout of ``tuple<double, int, const char *>`` 
+to retrieve.
+
+``get<int>()`` is a recursive function whose recursive calls are resolved at run-time.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
