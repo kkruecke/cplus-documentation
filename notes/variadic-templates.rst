@@ -1,6 +1,8 @@
 Variadic Templates
 ==================
 
+.. todo:: Read these articles and synthesize their contents with examples that explain what variadic templates are and how they can be used.
+
 Good articles on implementing C++ Variadic Templates
 ----------------------------------------------------
 
@@ -16,7 +18,7 @@ given in the article is at https://github.com/eliben/code-for-blog/blob/master/2
 Variadic Class Template
 -----------------------
 
-`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that: A variadic class template can be instantiated with any number of template arguments:
+`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that: A variadic class template can be instantiated with a varying number of template arguments.
 
 .. code-block:: cpp
 
@@ -26,9 +28,12 @@ Variadic Class Template
     Tuple<int, float> t2; // Types contains two arguments: int and float
     Tuple<0> error;       // error: 0 is not a type
 
-Variadic template Data Structures
----------------------------------
+Defining Recursive Data Structures Using Variadic Class Templates
+-----------------------------------------------------------------
 
+.. todo:: Use the tuple implementation by the Eli Berskensky listed first below as a teaching example.
+
+* `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
 * `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
 
