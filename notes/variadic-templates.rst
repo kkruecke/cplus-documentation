@@ -56,7 +56,7 @@ If Tuple is defined recursively as
         T tail;
     };
     
-the definition of ``tuple<double, int, const char*>`` that is generated will be
+the definition of ``tuple<double, int, const char*>`` generated these template instations
 
 .. code-block:: cpp
 
@@ -65,22 +65,25 @@ the definition of ``tuple<double, int, const char*>`` that is generated will be
        double tail; // top level of hierachy
     };    
     
+    // The struct above will in turn cause this struct to be instantiated... 
     struct Tuple<int, const char *> : struct Tuple<const char *> : Tuple<> {
 
        int tail; // next to top level
     };    
 
+    // which in turn will cause this template to be instantiated
     struct Tuple<const char *> : struct Tuple {
 
        const char *int tail; // next to bottom level 
     };    
 
+    // which in turn will cause this last base template to be instantiated
     struct Tuple {
 
         // bottom of hierachy
     };    
 
-The construction of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` shows these four levels being constructed 
+The constructor of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` generate this output showing these four levels being instantiated 
 
 .. raw:: html
  
@@ -112,6 +115,7 @@ and ``get<3>(example)`` must locate ....
 
 .. todo:: Follow the recursive calls for each of these instantions of get<>--get<0>(example), get<1>(example), get<2>(example>--and how the recursive instantiate (I guess) the correct elem_type_holder<int, tupel<Ts ...>> that ....??? 
 
+get<...>() is a recursive template function. It terminate when k is zero. It is specialized for k, the first template argment, equal to zero.
 
 
 
