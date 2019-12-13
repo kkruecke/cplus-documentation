@@ -75,21 +75,23 @@ struct elem_type_holder is also a recursive data structure. But instead of data 
 
     tuple<int, string, double> t3;
 
-then we have for template argument k == 0, the nested 'type' is nested to be 'int':
+then we have for template argument k == 0, the nested 'type' is nested to be 'int':<-- KEY QUESTION TO ANSWER: Should this be 'tuple<double>' instead?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  struct elem_type_holder<0, tuple<int, string, double>> { <-- KEY QUESTION TO ANSWER: Should this be 'tuple<double>' instead?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   THE KEY QUESTION TO ANSWER: Should the struct below be 'tuple<double>' or 'tuple<int, string, double>' instead?
+   The answer is found in the definitions of the get template functions.
+  struct elem_type_holder<0, tuple<double>> { 
   
       using type = int; // Where T is the first class template type of int 
   };
 
 
-Then for each integer n greater than 0, the nested 'type' typedef if defined by this pattern
+For each integer n greater than 0, the nested 'type' typedef if defined by this pattern
 
 For k == 1, we have
 
    struct elem_type_holder<1, tuple<string, double >> {
 
-     using type = typename elem_type_holder<0, tuple<Ts...>>::type;
+     using type = typename elem_type_holder<0, tuple<double>>::type;
    } 
 
 For k == 2, we have
