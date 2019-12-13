@@ -18,5 +18,6 @@ Notes on Features of C++-17
    notes/move-semantics.rst
    notes/auto-decltype.rst
    notes/overloading-on-perfect-fwded-methods.rst
+   notes/sfinae.rst
    notes/c++17-features.rst
    notes/concepts.rst

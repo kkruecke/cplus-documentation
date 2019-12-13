@@ -78,7 +78,7 @@ struct elem_type_holder is also a recursive data structure. But instead of data 
 then we have for template argument k == 0, the nested 'type' is nested to be 'int':<-- KEY QUESTION TO ANSWER: Should this be 'tuple<double>' instead?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
    THE KEY QUESTION TO ANSWER: Should the struct below be 'tuple<double>' or 'tuple<int, string, double>' instead?
-   The answer is found in the definitions of the get template functions.
+   The answer is found in the definitions of the get template functions. To understand it, read Eli Bendersky's article https://eli.thegreenplace.net/2014/variadic-templates-in-c/.
   struct elem_type_holder<0, tuple<double>> { 
   
       using type = int; // Where T is the first class template type of int 
@@ -122,10 +122,9 @@ template <size_t k, class T, class... Ts> struct elem_type_holder<k, tuple<T, Ts
   using type = typename elem_type_holder<k - 1, tuple<Ts...>>::type;
 };
 
-template <size_t k, class... Ts>
-typename std::enable_if<
-    k == 0, typename elem_type_holder<0, tuple<Ts...>>::type&>::type
-get(tuple<Ts...>& t) {
+template <size_t k, class... Ts> typename std::enable_if<  k == 0, typename elem_type_holder<0, tuple<Ts...>>::type&  >::type
+     get(tuple<Ts...>& t)
+{
   return t.tail;
 }
 
