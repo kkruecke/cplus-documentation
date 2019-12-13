@@ -77,7 +77,7 @@ struct elem_type_holder is also a recursive data structure. But instead of data 
 
 then we have for template argument k == 0, the nested 'type' is nested to be 'int':
 
-  struct elem_type_holder<0, tuple<int, string, double>> { <-- Should this be 'tuple<double>' instead?
+  struct elem_type_holder<0, tuple<int, string, double>> { <-- KEY QUESTION TO ANSWER: Should this be 'tuple<double>' instead?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
       using type = int; // Where T is the first class template type of int 
   };
