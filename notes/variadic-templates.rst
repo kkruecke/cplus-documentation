@@ -82,20 +82,29 @@ the generated definition of ``tuple<double, int, const char*>`` will be
 
 The construction of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` shows these four levels being constructed 
 
+.. raw:: html
+ 
+    <pre>
     In base Tuple constructor, which has NO member tail.
     In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = const char*; Ts = {}] where tail = big
     In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = int; Ts = {const char*}] where tail = 42
     In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
+   </pre>
 
 This gives a layout of
 
 .. figure:: ../images/recursive-tuple-layout.jpg
    :alt: recursive tuple layout
-   :align: center 
-   :scale: 100 %
+   :align: left 
+   :scale: 75 %
    :figclass: tuple-layout
 
    **Figure: layout of tuple inheritance hierarchy** 
+
+If we use zero to designate the bottom of the hierachy, then the top level is at level three (of the four levels). 
+
+Now that we can instantiate Tuples of varying types, how to we access the values of its recursive data structure? How do we retrieve or change, say, ``int`` value above or that ``const char *``? The trick is to use a different recursive data structure that keeps track of 
+depth in the hierachy, using an integer template parameter....  
     
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
