@@ -33,6 +33,165 @@ Defining Recursive Data Structures Using Variadic Class Templates
 
 .. todo:: Use the tuple implementation by the Eli Berskensky listed first below as a teaching example. Use __PRETTY_FUNCTION__  to layout of tupe<Ts ...>.
 
+Consider this series of derived structs, where each struct in the hierarchy has the member variable tail:
+
+.. code-block:: cpp
+
+    struct bottom {};
+    
+    struct A : bottom {
+    
+        A(const string& s) : tail{s}
+        {
+        }
+        string tail;
+    };
+    
+    struct B : A {
+
+	B(double d, const string& s) : A(s), tail{d}
+	{
+	}
+	double tail;
+    };
+    
+    struct C : B {
+	C(int i, double d, const string& s) : tail{i}, B(d, s)
+        {
+        }
+	int tail;
+    };
+
+Now given an instance of C, like that below, how do we access each tail member at each level of the hierarchy?
+
+.. code-block:: cpp
+    
+    auto i = 5;
+    auto d = 10.5;
+    auto string s{"hello world!"}; 
+
+    C c(i, d, s);
+
+    auto x1 = c.tail; // tail is C::tail
+
+    auto x2 = static_cast<B&>(c).tail; // tail is B::tail
+
+    auto x3 = static_cast<A&>(c).tail; // tail is A::tail
+
+Likewise, using variadic templates we can easily recursively define such a hierarchy:
+
+.. code-block:: cpp
+
+    template <class... Ts> struct Tuple { // This will be the final base Tuple of the hierarchy all all Tuple<Ts...> instances.
+    
+        Tuple()
+        {
+  	    std::cout << "In base Tuple constructor, which has NO member tail." << std::endl;
+        }
+    }; 
+    
+    template <class T, class... Ts> struct Tuple<T, Ts...> : Tuple<Ts...> { // public inheritance is the default for structs.
+    
+        Tuple(T t, Ts... ts) : Tuple<Ts...>(ts...), tail(t)
+        {
+            std::cout << "In constructor of " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
+        }
+    
+        T tail;
+    };
+    
+The instantiation of ``tuple<double, int, const char*>`` will recursively generate these template instiations
+
+.. code-block:: cpp
+
+    Tuple<> { // base of inheritance hierarchy
+        Tuple() {
+  	    std::cout << "In base Tuple constructor, which has NO member tail." << std::endl;
+        }
+    }
+
+    struct Tuple<const char *> : Tuple<> { // next to bottom level
+
+        Tuple(const char *t) : tail(t)
+        {
+            std::cout << "In constructor of " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
+        }
+
+        const char *tail; 
+    };
+
+    struct Tuple<int, const char *> : struct Tuple<const char *> { // next to top level of hierachy
+       Tuple(int t) : tail(t)
+       {
+          std::cout << "In constructor of " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
+       }
+       int tail; 
+    };    
+    
+    struct Tuple<double> : struct Tuple<int, const char *> {
+       Tuple(double t) : tail(t)
+       {
+          std::cout << "In constructor of " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
+       }
+
+       double tail; // top level 
+    };    
+
+If we now instantiate ``tuple<double, int, const char *>`` 
+
+.. code-block:: cpp
+
+    auto i = 10;
+    auto d = 10.5;
+    const char *p = "hellow orld!";
+
+    tuple<double, int, const char *> t(i, d, p);
+
+the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` will enerate this output showing these four levels being instantiated 
+
+.. raw:: html
+ 
+    <pre>
+    In base Tuple constructor, which has NO member tail.
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = const char*; Ts = {}] where tail = big
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = int; Ts = {const char*}] where tail = 42
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
+   </pre>
+
+Thus the layout of ``tuple<double, int, const char *>`` looks like this
+
+.. figure:: ../images/recursive-tuple-layout.jpg
+   :alt: recursive tuple layout
+   :align: left 
+   :scale: 75 %
+   :figclass: tuple-layout
+
+   **Figure: layout of tuple inheritance hierarchy** 
+
+For k = 0, we have
+
+struct elem_type_holder<0, tuple<double>> { 
+  
+    using type = int; // Where T is the first class template type of int 
+};
+
+For each integer n greater than 0, the nested 'type' typedef if defined by this pattern
+
+For k == 1, we have
+
+   struct elem_type_holder<1, tuple<string, double >> {
+
+     using type = typename elem_type_holder<0, tuple<double>>::type;
+   } 
+
+For k == 2, we have
+
+   struct elem_type_holder<2, tuple<int, string, double >> {
+
+     using type = typename elem_type_holder<0, tuple<Ts...>>::type;
+   }
+
+
 If Tuple is defined recursively as 
 
 .. code-block:: cpp
@@ -56,7 +215,7 @@ If Tuple is defined recursively as
         T tail;
     };
     
-the definition of ``tuple<double, int, const char*>`` generated these template instations
+the definition of ``Tuple<double, int, const char*>`` generated these template instations
 
 .. code-block:: cpp
 
@@ -83,7 +242,7 @@ the definition of ``tuple<double, int, const char*>`` generated these template i
         // bottom of hierachy
     };    
 
-The constructor of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` generate this output showing these four levels being instantiated 
+An the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` will enerate this output showing these four levels being instantiated 
 
 .. raw:: html
  
@@ -94,7 +253,7 @@ The constructor of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` ge
     In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
    </pre>
 
-This show that the layout of ``tuple<double, int, const char *>`` looks like this
+Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
 .. figure:: ../images/recursive-tuple-layout.jpg
    :alt: recursive tuple layout
@@ -104,25 +263,71 @@ This show that the layout of ``tuple<double, int, const char *>`` looks like thi
 
    **Figure: layout of tuple inheritance hierarchy** 
 
-There are four levels to the layout hierachy. The bottom level is empty. All the other layers have a ``tail`` member.
+.. todo:: See Eli Bendersky's article https://eli.thegreenplace.net/2014/variadic-templates-in-c/.
 
-We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing
-where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``get<int, tuple<Ts ...>``. The integer template argument is the key
-to locating ``int tail``. 
+We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the
+bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``Get<int, tuple<Ts ...>``, and ``Get()`` in turn uses another recursive data structure ``elem_type_holder`` that paralells ``Tuple``. But unlike ``Tuple`` that contains the sole
+``tail`` data member at all level of its recursive structure, ``elem_type_holder`` contains no data members. Instead it contains a *type definition* at each level (defined by means of a using statement).
 
-``get<....>()`` uses a another recursive data structure called ``struct elem_type_holder<int, tuple<Ts ...>>`` to determine the where the tuple layout hierachy the correct tail element is located. For example, ``get<0>(example)`` must locate .../ ``get<1>(example)`` must locate ...
-and ``get<3>(example)`` must locate ....
+Here is the definition of ``elem_type_holder`` and ``Get()``:
 
-.. todo:: Follow the recursive calls for each of these instantions of get<>--get<0>(example), get<1>(example), get<2>(example>--and how the recursive instantiate (I guess) the correct elem_type_holder<int, tupel<Ts ...>> that ....??? 
+.. code-block:: cpp
+ 
+    template <std::size_t, class> struct elem_type_holder;
+    
+    // partial template specializtion of elem_type_holder when size_t==0.
+    template <class T, class... Ts> struct elem_type_holder<0, Tuple<T, Ts...>> {
+    
+       using type = T;
+    };
+    
+    template <std::size_t k, class T, class... Ts> struct elem_type_holder<k, Tuple<T, Ts...>> {
+    
+        // Define 'type' of, say, elemen_type_holder<4, T1, T2, T3, T4> to be elemen_type_holder<3, T2, T3, T4>::type.
+        // Does this have to do with zero-base indexing?
+        using type = typename elem_type_holder<k - 1, Tuple<Ts...>>::type;
+    };
+   
+    template <std::size_t k, class... Ts>  typename std::enable_if<  k == 0, typename elem_type_holder<0, Tuple<Ts...>>::type&  >::type  Get(Tuple<Ts...>& t)
+    {
+      std::cout << "In Get<0>(t) returning t.tail = " << t.tail << "\n-----------" << std::endl;
+      return t.tail;
+    }
+    
+    template <std::size_t k, class T, class... Ts>  typename std::enable_if<  k != 0, typename elem_type_holder<k, Tuple<T, Ts...>>::type&  >::type  Get(Tuple<T, Ts...>& t)
+    {
+       std::cout << "In Get<" << k << ">(Tuple<T, Ts...>& t)" << " calling Get<" << k - 1 << ">(static_cast<Tuple<Ts...>&>(t))" << std::endl;
+       
+       // Invoke Get<k - l>(on immediate base class of t)
+ 
+       return Get<k - 1>(static_cast<Tuple<Ts...>&>(t));
+    } 
+    
+We now instantiate ``Tuple<double, int, const char*>`` and examine the ouput from ``Get<int>(some_instance)``:
 
-get<...>() is a recursive template function. It terminate when k is zero. It is specialized for k, the first template argment, equal to zero.
+.. raw:: html
+ 
+    <pre>
+    In base Tuple constructor, which has NO member tail.
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = const char*; Ts = {}] where tail = big
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = int; Ts = {const char*}] where tail = 42
+    In constructor of Tuple<T, Ts ...>::Tuple(T, Ts ...) [with T = double; Ts = {int, const char*}] where tail = 12.2
+    In Get<0>(t) returning t.tail = 12.2
+    -----------
+    In Get<1>(Tuple<T, Ts...>& t) calling Get<0>(static_cast<Tuple<Ts...>&>(t))
+    In Get<0>(t) returning t.tail = 42
+    -----------
+    In Get<2>(Tuple<T, Ts...>& t) calling Get<1>(static_cast<Tuple<Ts...>&>(t))
+    In Get<1>(Tuple<T, Ts...>& t) calling Get<0>(static_cast<Tuple<Ts...>&>(t))
+    In Get<0>(t) returning t.tail = big
+    -----------
+   </pre>
+
+Get<...>() is a recursive template function.  It terminates when k is zero, and the partial template specialization ``template<std::size_t, class... Ts> Get<0, Tuple<Ts...>& t)`` is then invoked that returns ``t.tail``.
+
+.. todo:: Explain how Get() returns the correct tail member of the hierarchy. Lastly explain how elem_type_holder deteremines the return type.
 
 
-
-It determines the correct ``tail`` in the layout of ``tuple<double, int, const char *>`` 
-to retrieve.
-
-``get<int>()`` is a recursive function whose recursive calls are resolved at run-time.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_

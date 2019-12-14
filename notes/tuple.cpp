@@ -70,8 +70,8 @@ template <size_t, class> struct elem_type_holder; // fwd declar.
 
 /*
 
-struct elem_type_holder is also a recursive data structure. But instead of data members or functions, it contains only a single typedef. Its recursive definition defines the typedef as follows. When the integer template argument is 0, then
-'type' is define to be the type of the first template argument. Thus, given
+struct elem_type_holder is also a recursive data structure. Rather than containing data members or functions, it contains only a single typedef. Its recursive definition defines the typedef as follows. When the integer template argument is 0, then
+'type' is define to be the type of the first template argument. For example, given this tuple
 
     tuple<int, string, double> t3;
 
@@ -83,7 +83,6 @@ then we have for template argument k == 0, the nested 'type' is nested to be 'in
   
       using type = int; // Where T is the first class template type of int 
   };
-
 
 For each integer n greater than 0, the nested 'type' typedef if defined by this pattern
 
@@ -100,8 +99,6 @@ For k == 2, we have
 
      using type = typename elem_type_holder<0, tuple<Ts...>>::type;
    }
-
-
 
 */
 
