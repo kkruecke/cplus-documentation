@@ -1,3 +1,9 @@
+.. include <isopub.txt>
+
+.. |nbsp| unicode:: 0xA0 
+   :trim:
+
+
 Variadic Templates
 ==================
 
@@ -166,15 +172,9 @@ we see the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "he
 
 Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
-.. figure:: ../images/recursive-tuple-layout.jpg
-   :alt: recursive tuple layout
+.. image:: ../images/recursive-tuple-layout.jpg
    :align: left 
    :scale: 75 %
-   :figclass: tuple-layout
-
-   **Figure: layout of tuple inheritance hierarchy** 
-
-.. code-block:: cpp
 
 The definition of ``tuple<double, int, const char*>`` generates these template instantiations:
 
