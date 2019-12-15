@@ -1,15 +1,8 @@
 Variadic Templates
 ==================
 
-.. todo:: Read these articles and synthesize their contents with examples that explain what variadic templates are and how they can be used.
-
 Good articles on implementing C++ Variadic Templates
 ----------------------------------------------------
-
-In addition to variadic function template examples, `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_ has an example of how ``std::tuple`` is implemented using a variadic data structure. The code for the tuple implementation
-given in the article is at https://github.com/eliben/code-for-blog/blob/master/2014/variadic-tuple.cpp.
-
-.. note:: Can the tuple implementation take advantage of C++17 iteration features. See my bookmarks for clues.
 
 * `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
 * `Wkipedia Article on Variadic Template <https://en.wikipedia.org/wiki/Variadic_template>`_
@@ -22,7 +15,14 @@ Variadic Class Template
 
 .. code-block:: cpp
 
-    template<class ... Types> struct Tuple {};
+    template<class ... Types> struct Tuple; // fwd ref.
+
+    template<class ... Types> struct Tuple<> {}; // No arguments partial template specialization
+
+    template <class T, class... Ts> struct Tuple<T, Ts...> : Tuple<Ts...> { // public inheritance is the default for structs.
+        Tuple(T t, Ts... ts) : Tuple<Ts...>(ts...), tail(t) {}
+        T tail;
+    };
     Tuple<> t0;           // Types contains no arguments
     Tuple<int> t1;        // Types contains one argument: int
     Tuple<int, float> t2; // Types contains two arguments: int and float
@@ -263,7 +263,7 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
    **Figure: layout of tuple inheritance hierarchy** 
 
-.. todo:: See Eli Bendersky's article https://eli.thegreenplace.net/2014/variadic-templates-in-c/.
+.. todo:: `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_
 
 We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the
 bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``Get<int, tuple<Ts ...>``, and ``Get()`` in turn uses another recursive data structure ``elem_type_holder`` that paralells ``Tuple``. But unlike ``Tuple`` that contains the sole
@@ -325,9 +325,8 @@ We now instantiate ``Tuple<double, int, const char*>`` and examine the ouput fro
 
 Get<...>() is a recursive template function.  It terminates when k is zero, and the partial template specialization ``template<std::size_t, class... Ts> Get<0, Tuple<Ts...>& t)`` is then invoked that returns ``t.tail``.
 
-.. todo:: Explain how Get() returns the correct tail member of the hierarchy. Lastly explain how elem_type_holder deteremines the return type.
-
-
+.. todo:: Explain how Get() returns the correct tail member of the hierarchy. Lastly explain how elem_type_holder deteremines the return type. Finally, add a template member ctor
+    that takes forwarding arguments modeled after std::tuple.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
