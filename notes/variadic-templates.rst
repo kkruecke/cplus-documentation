@@ -235,7 +235,7 @@ are not actually needed, but are included here help understand what is going on:
       return static_cast<base_tuple_type&>(_tuple).tail;
     }
     
-When we now instantiate ``tuple<double, int, const char*>``, we can examine the ouput from ``get<int>(some_instance)``:
+If we instantiate ``element_tupe<3, tuple<double, int, const char*>>``, we will see these constructor calls. 
 
 .. raw:: html
  
@@ -243,8 +243,10 @@ When we now instantiate ``tuple<double, int, const char*>``, we can examine the 
     TODO: Add this.<-------------------------------------
     </pre>
 
-``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
+we can examine the ouput from ``get<int>(some_instance)``:
 
+
+``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
 
 .. todo:: Finish the explanation.
 
