@@ -237,8 +237,8 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
 .. todo:: `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_
 
-.. todo:: Switch the implementation of ``get<int, tuple<class T, class...Rest>>()`` to that in the Netbeans version. Explain how the recursive struct ``tuple_elem`` expands and how the
-    typedef/using statements appear only at the base of the hierarchy, so get<int>() is not recursive. Instead it immediately casts to the base of the hierarchy.
+.. todo:: Switch the implementation of ``get<int, tuple<class T, class...Rest>>()`` to that in the Netbeans version. Explain how the recursive struct ``tuple_elem`` expands by temporarily adding default ctors with print statements, and showing how the
+    typedef/using only occurs in the the base of the hierarchy, so get<int>() is not recursive. Instead it immediately gets casts to the base of the hierarchy.
 
 We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the
 bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``Get<int, tuple<Ts ...>``, and ``Get()`` in turn uses another recursive data structure ``elem_type_holder`` that paralells ``Tuple``. But unlike ``Tuple`` that contains the sole
