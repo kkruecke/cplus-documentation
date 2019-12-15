@@ -300,6 +300,8 @@ Get<...>() is a recursive template function.  It terminates when k is zero, and 
 .. todo:: Explain how Get() returns the correct tail member of the hierarchy. Lastly explain how elem_type_holder deteremines the return type. Finally, add a template member ctor
     that takes forwarding arguments modeled after std::tuple.
 
+.. todo:: Show a better way to inmplement `tupple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
+
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
 * `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
