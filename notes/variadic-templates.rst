@@ -17,7 +17,8 @@ Good articles on implementing C++ Variadic Templates
 Variadic Class Template
 -----------------------
 
-A variadic class template can be instantiated with a varying number of template arguments. For example, a heterogenous data structure like a tuple can be defined recursively using variadic class templates:
+A variadic class template can be instantiated with a varying number of template arguments. A good use case for such recursive data structures defined using variadic templates is a tuple struct 
+that can hold a mixed set of varying types:
 
 .. code-block:: cpp
 
@@ -43,7 +44,7 @@ A variadic class template can be instantiated with a varying number of template 
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
 
-Consider this series of derived structs, where each struct in the hierarchy has a member variable named *tail*:
+Consider this series of derived structs, where each struct in the hierarchy has a sole data member *tail*:
 
 .. code-block:: cpp
 
@@ -72,7 +73,7 @@ Consider this series of derived structs, where each struct in the hierarchy has 
 	int tail;
     };
 
-Now given an instance of ``C``, like that below, here is how we access each tail member at each level of the hierarchy:
+To access each tail member of a ``C`` instance, like that below, we would have to use ``static_cast<class T>()`` as below:
 
 .. code-block:: cpp
     
@@ -88,7 +89,7 @@ Now given an instance of ``C``, like that below, here is how we access each tail
 
     auto x3 = static_cast<A&>(c).tail; // tail is A::tail
 
-Using variadic templates we can recursively define a recursive data structure hierarchy for ``struct tuple<class...Types>``:
+This is the sort of use case where variadic templates can be effectively applied. We can define a recursive data structure hierarchy for ``struct tuple<class...Types>``:
 
 .. code-block:: cpp
 
@@ -115,7 +116,7 @@ Using variadic templates we can recursively define a recursive data structure hi
         T tail;
     };
     
-The instantiation of ``tuple<double, int, const char*>`` will recursively generate these template instantiations
+An instantiation of, say, ``tuple<double, int, const char*>`` will recursively generate these template instantiations
 
 .. code-block:: cpp
 
@@ -153,13 +154,13 @@ The instantiation of ``tuple<double, int, const char*>`` will recursively genera
        double tail; // top level 
     };    
 
-If we now instantiate ``tuple<double, int, const char *>`` 
+The instantiated hierarch can be seens in the code below where we now instantiate ``tuple<double, int, const char *>`` 
 
 .. code-block:: cpp
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-we see the output of the  constructor calls for ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")``, in which the four levels of the struct hierarchy are instantiated: 
+The output of the  constructor calls for ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")`` show the four levels of the struct hierarchy being instantiated: 
 
 .. raw:: html
  
@@ -180,15 +181,16 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this:
 
 .. todo:: For an example of print the type_info see `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_
 
-We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level
-from the bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``get<size_t, tuple<Ts ...>``, which has a partial template specialization for ``get<0, tuple<class...Ts>()`` that contains two type definitions that define the type of:
+We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing where the ``int tail;`` member is in the hierarchy. We know the ``int tail`` member it 
+in the third level from the bottom. To retrieve the corresponding ``int tail`` member, we use the variadic template function called ``get<size_t, tuple<Ts ...>``, which has a partial template specialization for ``get<0, tuple<class...Ts>()`` . This partial template specialization,
+in turn, contains two critical type definitions that define:
 
 1. The base type of the tuple hierarchy for ``tuple<int, double, const char*>``
 2. The type of ...
 
-These type definitions rely on another recursive data structure also defined using variadic class templates, ``tuple_elelment``. ``tuple_element`` paralells the ``tuple`` hierachy. But unlike ``tuple``, which contains a sole ``tail`` data member at all level of its recursive structure,
-``elem_type_holder`` contains no data members. Instead it contains two *type definitions* (defined by means of a using statement) at the bottom level of its hierarchy, and we can better see this by adding print statements to ``tuple_element``'s default constructors. Theses constructors
-are not actually needed, but included here for pedalogical purposes:
+These type definitions rely on another recursive data structure (also defined using variadic class templates), ``tuple_elelment``. ``tuple_element`` paralells the ``tuple`` hierachy. But unlike ``tuple``, which contains a sole ``tail`` data member at all level of its recursive structure,
+``elem_type_holder`` contains no data members. Instead it contains two *type definitions*, defined by means of a using statement, at the bottom level of its hierarchy. We can see this by adding print statements to ``tuple_element``'s default constructors. These constructors
+are not actually needed, but are included here help understand what is going on:
 
 .. code-block:: cpp
 
@@ -233,15 +235,16 @@ are not actually needed, but included here for pedalogical purposes:
       return static_cast<base_tuple_type&>(_tuple).tail;
     }
     
-We now instantiate ``tuple<double, int, const char*>`` and examine the ouput from ``get<int>(some_instance)``:
+When we now instantiate ``tuple<double, int, const char*>``, we can examine the ouput from ``get<int>(some_instance)``:
 
 .. raw:: html
  
     <pre>
-    TODO: Add this.
+    TODO: Add this.<-------------------------------------
     </pre>
 
-``get<size_t, ...>`` is a recursive template function.  It works by casting its input argument to the corresponding base struct of ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` using the type defintion ``base_tuple_type`` contained in....
+``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
+
 
 .. todo:: Finish the explanation.
 
