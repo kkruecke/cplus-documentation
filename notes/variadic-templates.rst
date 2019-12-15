@@ -11,27 +11,33 @@ Good articles on implementing C++ Variadic Templates
 Variadic Class Template
 -----------------------
 
-`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that: A variadic class template can be instantiated with a varying number of template arguments.
+A variadic class template can be instantiated with a varying number of template arguments. For example, a heterogenous data structure like a tuple can be defined recursively using variadic class templates:
 
 .. code-block:: cpp
 
-    template<class ... Types> struct Tuple; // fwd ref.
+    template<class... Types> struct tuple; // Forward declaration 
 
-    template<class ... Types> struct Tuple<> {}; // No arguments partial template specialization
+    // Partial template specialization for the case when no template arguments are supplied 
+    template<class... Types> struct tuple<> {}; 
 
-    template <class T, class... Ts> struct Tuple<T, Ts...> : Tuple<Ts...> { // public inheritance is the default for structs.
-        Tuple(T t, Ts... ts) : Tuple<Ts...>(ts...), tail(t) {}
+    // public inheritance is the default for structs.
+    template <class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
+
+        // Invoke immediate base struct template with remaining arguments sans T argument,
+        // and construct taiil using t, of type T.
+        tuple(T t, Rest... ts) : tuple<Ts...>(ts...), tail(t) {}
         T tail;
     };
-    Tuple<> t0;           // Types contains no arguments
-    Tuple<int> t1;        // Types contains one argument: int
-    Tuple<int, float> t2; // Types contains two arguments: int and float
-    Tuple<0> error;       // error: 0 is not a type
+
+    tuple<> t0;           // Types contains no arguments. Same as: tuple t0;
+    tuple<int> t1;        // Types contains one argument: int
+    tuple<int, float> t2; // Types contains two arguments: int and float
+    tuple<0> error;       // error: 0 is not a type
 
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
 
-Consider this series of derived structs, where each struct in the hierarchy has the member variable tail:
+Consider this series of derived structs, where each struct in the hierarchy has a member variable named *tail*:
 
 .. code-block:: cpp
 
@@ -60,7 +66,7 @@ Consider this series of derived structs, where each struct in the hierarchy has 
 	int tail;
     };
 
-Now given an instance of C, like that below, how do we access each tail member at each level of the hierarchy?
+Now given an instance of ``C``, like that below, here is how we access each tail member at each level of the hierarchy:
 
 .. code-block:: cpp
     
@@ -76,7 +82,7 @@ Now given an instance of C, like that below, how do we access each tail member a
 
     auto x3 = static_cast<A&>(c).tail; // tail is A::tail
 
-Likewise, using variadic templates we can easily recursively define such a hierarchy:
+Using variadic templates we can recursively define a recursive data structure hierarchy for ``struct tuple<class...Types>``:
 
 .. code-block:: cpp
 
@@ -147,7 +153,7 @@ If we now instantiate ``tuple<double, int, const char *>``
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")`` will generate this output showing these four levels being instantiated 
+we see the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")`` generate this output showing the four levels of the struct hierarchy being instantiated 
 
 .. raw:: html
  
@@ -170,7 +176,7 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
 .. code-block:: cpp
 
-the definition of ``Tuple<double, int, const char*>`` generated these template instations
+The definition of ``tuple<double, int, const char*>`` generates these template instantiations:
 
 .. code-block:: cpp
 
@@ -202,11 +208,11 @@ the definition of ``Tuple<double, int, const char*>`` generated these template i
 
 .. todo:: For an example of print the type_info see `Variadic templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_
 
-We can now instantiate Tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the
-bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``Get<int, tuple<Ts ...>``, and ``Get()`` in turn uses another recursive data structure ``elem_type_holder`` that paralells ``Tuple``. But unlike ``Tuple`` that contains the sole
-``tail`` data member at all level of its recursive structure, ``elem_type_holder`` contains no data members. Instead it contains a *type definition* at each level (defined by means of a using statement).
+We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, ``int`` value above or that ``const char *``? This boils down to determing where the ``int tail;`` member is in the layout hierarchy. We know it is third level from the
+bottom. To retrieve the corresponding ``int tail`` member, we use a variadic template function called ``get<size_t, tuple<Ts ...>``, and ``get<size_t>()`` in turn uses another recursive data structure ``tuple_elelment`` that paralells the ``tuple`` hierachy. But unlike ``Tuple`` that
+contains the sole ``tail`` data member at all level of its recursive structure, ``elem_type_holder`` contains no data members. Instead it contains two *type definitions* (defined by means of a using statement) at the bottom level of the hierarchy.
 
-Here is the definition of ``tuple_element`` and ``get<std::size_t>(some_tuple)``:
+We can see this by adding print statements to the default constructors (which are actually not needed) of ``tuple_element``.  Here, then, is the definition of ``tuple_element`` and ``get<std::size_t>(some_tuple)``:
 
 .. code-block:: cpp
 
@@ -256,12 +262,12 @@ We now instantiate ``tuple<double, int, const char*>`` and examine the ouput fro
 .. raw:: html
  
     <pre>
+    TODO: Add this.
     </pre>
 
-Get<...>() is a recursive template function.  It terminates when k is zero, and the partial template specialization ``template<std::size_t, class... Ts> Get<0, Tuple<Ts...>& t)`` is then invoked that returns ``t.tail``.
+``get<size_t, ...>`` is a recursive template function.  It works by casting its input argument to the corresponding base struct of ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` using the type defintion ``base_tuple_type`` contained in....
 
-.. todo:: Explain how get() returns the correct tail member of the hierarchy. Lastly explain how elem_type_holder deteremines the return type. Finally, add a template member ctor
-    that takes forwarding arguments modeled after std::tuple.
+.. todo:: Finish the explanation.
 
 .. todo:: Show a better way to inmplement `tupple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
