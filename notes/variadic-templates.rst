@@ -31,8 +31,6 @@ Variadic Class Template
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
 
-.. todo:: Use the tuple implementation by the Eli Berskensky listed first below as a teaching example. Use __PRETTY_FUNCTION__  to layout of tupe<Ts ...>.
-
 Consider this series of derived structs, where each struct in the hierarchy has the member variable tail:
 
 .. code-block:: cpp
@@ -104,7 +102,7 @@ The instantiation of ``tuple<double, int, const char*>`` will recursively genera
 
 .. code-block:: cpp
 
-    Tuple<> { // base of inheritance hierarchy
+    struct Tuple<> { // base of inheritance hierarchy
         Tuple() {
   	    std::cout << "In base Tuple constructor, which has NO member tail." << std::endl;
         }
