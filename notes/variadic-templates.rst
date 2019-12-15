@@ -143,7 +143,7 @@ If we now instantiate ``tuple<double, int, const char *>``
     auto d = 10.5;
     const char *p = "hellow orld!";
 
-    tuple<double, int, const char *> t(i, d, p);
+    Tuple<double, int, const char *> t(i, d, p);
 
 the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "big")`` will enerate this output showing these four levels being instantiated 
 
@@ -165,32 +165,6 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this
    :figclass: tuple-layout
 
    **Figure: layout of tuple inheritance hierarchy** 
-
-For k = 0, we have
-
-struct elem_type_holder<0, tuple<double>> { 
-  
-    using type = int; // Where T is the first class template type of int 
-};
-
-For each integer n greater than 0, the nested 'type' typedef if defined by this pattern
-
-For k == 1, we have
-
-   struct elem_type_holder<1, tuple<string, double >> {
-
-     using type = typename elem_type_holder<0, tuple<double>>::type;
-   } 
-
-For k == 2, we have
-
-   struct elem_type_holder<2, tuple<int, string, double >> {
-
-     using type = typename elem_type_holder<0, tuple<Ts...>>::type;
-   }
-
-
-If Tuple is defined recursively as 
 
 .. code-block:: cpp
 
