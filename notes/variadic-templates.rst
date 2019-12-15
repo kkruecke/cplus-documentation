@@ -235,18 +235,36 @@ are not actually needed, but are included here help understand what is going on:
       return static_cast<base_tuple_type&>(_tuple).tail;
     }
     
-If we instantiate ``element_tupe<3, tuple<double, int, const char*>>``, we will see these constructor calls. 
+If we instantiate ``element_tupe<3, tuple<double, int, const char*>> te2``, we will see these constructor calls. 
 
 .. raw:: html
  
     <pre>
-    TODO: Add this.<-------------------------------------
+    In tuple_element<0, T, Rest...>>::tuple(), where there are these two type definitions:
+	    using value_type = T&
+	    using base_tuple_type = tuple<T, Rest>
+      In tuple_element<1, tuple<T, Rest...>>::tuple(), where there are not type definitions.
+      In tuple_element<2, tuple<T, Rest...>>::tuple(), where there are not type definitions.
     </pre>
 
-we can examine the ouput from ``get<int>(some_instance)``:
+This reflects the actual instantiations of ``template<size_t, tuple<class...Rest>> struct element_tuple`` that occur when ``element_tupe<3, tuple<double, int, const char*>> te2`` is declared: 
+
+.. code-block:: cpp
+
+    struct tuple_element<2, tuple<double, int, const char*>> : struct tuple_element<1, tuple<int, const char*>>   {};
+    struct tuple_element<1, tuple<int, const char*>> : struct tuple_element<0, tuple<const char*>>   {};
+    struct tuple_element<0, tuple<const char*>>  {
+           using value_type = const char *;
+           using base_tuple_type = tuple<const char *>;
+    }; 
+ 
+We see that only the base struct of the hierarchy has type definitions. Putting all we have looked at so far together, we can examine the ouput from ``get<int>(some_instance)``:
+
+.. code-block:: cpp
 
 
-``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
+
+we see ``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
 
 .. todo:: Finish the explanation.
 
