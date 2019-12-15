@@ -173,7 +173,6 @@ we see the constructors of ``tuple<double, int, const char*> tuple(12.2, 43, "he
 Thus the layout of ``tuple<double, int, const char *>`` looks like this
 
 .. image:: ../images/recursive-tuple-layout.jpg
-   :align: left 
    :scale: 75 %
 
 The definition of ``tuple<double, int, const char*>`` generates these template instantiations:
