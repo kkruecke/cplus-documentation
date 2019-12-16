@@ -75,7 +75,7 @@ To better understand variadic class templates, first consider this series of der
 	int tail;
     };
 
-To access each tail member of a ``C`` instance, like that below, we use ``static_cast``: 
+To access individual tail members of a ``C`` instance, like the one below, use ``static_cast<base_type_here>(tup)``: 
 
 .. code-block:: cpp
     
@@ -94,18 +94,19 @@ To access each tail member of a ``C`` instance, like that below, we use ``static
 A Recursive Data Structure Example Using a Variadic Class Template
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The preceeding code is just the sort of use case where variadic templates can be effectively applied. We begin by using the variadic struct ``struct tuple<class...Types>`` to define a recursive data structure. 
+The preceeding code is just the sort of use case where variadic templates can make life easier. We begin by defining ``struct tuple<class...Types>`` that implements tuple as a recursive data structure. 
 
-.. note:: The source is available on `github <https://github.com/kurt-krueckeberg/tuple>`_.
+.. note:: The complete ``tuple`` source is at `github <https://github.com/kurt-krueckeberg/tuple>`_.
 
 .. code-block:: cpp
 
     template<class... Ts> struct tuple; //forward reference
 
-    // Template specializtion for empty list of template arguments, the base struct of the recursive tuple data structure.
+    // Template specializtion for empty list of template arguments, which serves as the 
+    // base struct for tuples.
     template<> struct tuple<> { 
     
-        tuple()
+        tuple() // The default constructor is only include to help exlain the code.
         {
   	    std::cout << "In template<> tuple<>::tuple() constructor, which has NO member tail." << std::endl;
         }
@@ -116,13 +117,14 @@ The preceeding code is just the sort of use case where variadic templates can be
     
         tuple(T t, Ts... ts) : tuple<Ts...>(ts...), tail(t)
         {
+            // To help explain what is going on: 
             std::cout << "  In constructor for " <<  __PRETTY_FUNCTION__ << " where tail = " << tail << std::endl;
         }
     
         T tail;
     };
     
-The instantiation of, say, ``tuple<double, int, const char*>`` generates these template instantiations
+The instantiation of, say, ``tuple<double, int, const char*>`` will generate these various template instantiations
 
 .. code-block:: cpp
 
@@ -160,13 +162,13 @@ The instantiation of, say, ``tuple<double, int, const char*>`` generates these t
        double tail; // top level 
     };    
 
-And the instantiated hierarchy above can also be seen from the default constructor print statements that occurs: 
+And the instantiated hierarchy above can also be seen from the output of the default constructors. The output of: 
 
 .. code-block:: cpp
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-The output looks like this and shows the four levels of the struct hierarchy being instantiated: 
+looks like this and shows the four levels of the struct hierarchy being instantiated: 
 
 .. raw:: html
  
@@ -185,17 +187,17 @@ Visually the layout of ``tuple<double, int, const char *>`` looks like this:
 Accessing Elements of the Recursive Data Structure
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing where the ``int tail;`` member is in the hierarchy. We know the ``int tail`` member is 
-in the next to top level (which is also the third level from the bottom). To retrieve the corresponding ``int tail`` member, we use the variadic template function ``get<size_t, tuple<Ts ...>>``, which has a partial template specialization for ``get<0, tuple<class...Ts>()`` . This partial
-template specialization, in turn, contains two critical type definitions:
+We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing at what level the ``int tail`` member is in the inheritance hierarchy, and then casting the
+tuple to state type adn retrieving that base's ``tail`` member. We use the variadic template function ``get<size_t, tuple<Ts ...>>`` to do this. ``get<size_t, tuple<Ts ...>>`` uses  another recursive data structure that is also defined using variadic class templates, 
+``template<std::size_t Index, class _tuple> struct tuple_element``. 
 
-1. ``using value_type = T&;``                     // Reference to tail's type.
-2. ``using base_tuple_type = tuple<T, Rest...>;`` // The type of the tuple instance that contains the tail member we want.
+``tuple_element``'s sole purpose is to provide type information about each particular level of the ``tuple`` hierachy. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
+contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element``, in the tuple_element specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
 
-These two type definitions appear in another recursive data structure that is also defined using variadic class templates, ``tuple_elelment``. Its whole purpose is to provide type information for each particular level of the ``tuple`` hierachy. Unlike ``tuple``, which contains
-a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only contains the two *type definitions* mentioned above. These these two type definitions only occur at the bottom level of the ``tuple_element`` hierarchy. 
+1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the type of the base struct that contains the tail member we want.
+2. ``using value_type = T&;``                     // This is a reference to tail's type.
 
-To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` works we add print statements to its default constructors. The default constructor is not actually needed, but is added to show how ``tuple_element`` works:
+To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` works with ``get<size_t, tuple<Ts...>>`` we add print statements to tuple_element's default constructors. The default constructor is not actually needed, but was added to show how ``tuple_element`` works:
 
 .. code-block:: cpp
 
