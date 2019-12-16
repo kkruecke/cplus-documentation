@@ -402,11 +402,11 @@ Each tail element in the recursive tuple data structure is copy constructed. We 
 Template Deduction Guides for Variadic Class Templates
 ------------------------------------------------------
 
-.. todo:: definition with examples from std::pair, etc.
+The article `Modern C++ Features – Class Template Argument Deduction <https://arne-mertz.de/2017/06/class-template-argument-deduction/>`_ describes Template Deduction Guides. 
 
-.. todo:: Show how the deduction guide for tuple works.
+.. todo:: Show how the deduction guide for tuple works and how to implement one for our tuple class.
 
-.. todo:: Show a better way to implement `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
+.. todo:: Mention an alternate implmentation for `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
