@@ -43,6 +43,9 @@ A variadic class template can be instantiated with a varying number of template 
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
 
+Introduction
+++++++++++++
+
 To better understand variadic class templates, first consider this series of derived structs, where each struct in the hierarchy has a sole data member *tail*:
 
 .. code-block:: cpp
@@ -87,6 +90,9 @@ To access each tail member of a ``C`` instance, like that below, we use ``static
     auto x2 = static_cast<B&>(c).tail; // tail is B::tail
 
     auto x3 = static_cast<A&>(c).tail; // tail is A::tail
+
+A Recursive Data Structure Example Using a Variadic Class Template
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The preceeding code is just the sort of use case where variadic templates can be effectively applied. We begin by using the variadic struct ``struct tuple<class...Types>`` to define a recursive data structure: 
 
@@ -173,6 +179,9 @@ Visually the layout of ``tuple<double, int, const char *>`` looks like this:
 
 .. image:: ../images/recursive-tuple-layout.jpg
    :scale: 75 %
+
+Accessing Elements of the Recursive Data Structure
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing where the ``int tail;`` member is in the hierarchy. We know the ``int tail`` member is 
 in the next to top level (which is also the third level from the bottom). To retrieve the corresponding ``int tail`` member, we use the variadic template function ``get<size_t, tuple<Ts ...>>``, which has a partial template specialization for ``get<0, tuple<class...Ts>()`` . This partial
@@ -356,6 +365,37 @@ simplifies to
       return static_cast< tuple<int, double, const char *>& >(_tuple).tail; // This returns the 'const char * tail;' member of the base struct.
     }
 
+Avoiding Needless Copy Construction
++++++++++++++++++++++++++++++++++++
+
+Each tail element in the recursive tuple data structure is copy constructed. We really want a tuple constructor that takes forwarding references so that both lvalue and rvalue constructor parameters, for each element of the tuple, can be forwarded to the element's
+constructor. This template member function constructor does that:
+
+.. code-block:: cpp
+
+    template<class... Ts> struct tuple; //forward reference
+    
+    // Template specializtion for empty list of template arguments, the base struct of the recursively implemented tuple 
+    // data structure.
+    template<> struct tuple<> { 
+    
+        tuple()
+        {
+  	    std::cout << "In template<> tuple<>::tuple() constructor, which has NO member tail." << std::endl;
+        }
+    }; 
+    
+    // Recall that public inheritance is the default for structs.
+    template<class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
+    
+        template<class Arg1, class... Args> tuple(Arg1&& arg1, Args&&...args) : tuple<Ts...>(std::forward<Args>(args)...), tail(std::forward<Arg1>(arg1))
+        {
+            std::cout << "  In constructor for " <<  __PRETTY_FUNCTION__ /* << " where tail = " << tail */ << std::endl;
+        }
+    
+        T tail;
+    };
+    
 .. todo:: Show how to add constructors that can take a mixuture of lvalue and rvalue constructor parameters.
 
 .. todo:: Show a better way to implement `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
