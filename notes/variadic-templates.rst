@@ -94,7 +94,9 @@ To access each tail member of a ``C`` instance, like that below, we use ``static
 A Recursive Data Structure Example Using a Variadic Class Template
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The preceeding code is just the sort of use case where variadic templates can be effectively applied. We begin by using the variadic struct ``struct tuple<class...Types>`` to define a recursive data structure: 
+The preceeding code is just the sort of use case where variadic templates can be effectively applied. We begin by using the variadic struct ``struct tuple<class...Types>`` to define a recursive data structure. 
+
+.. note:: The source is available on `github <https://github.com/kurt-krueckeberg/tuple>`_.
 
 .. code-block:: cpp
 
