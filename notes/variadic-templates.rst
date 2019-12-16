@@ -153,13 +153,13 @@ An instantiation of, say, ``tuple<double, int, const char*>`` will recursively g
        double tail; // top level 
     };    
 
-And the instantiated hierarchy above can be seen from its constructor print outs that occurs when we instantiate a tuple like ``tuple<double, int, const char *>`` below: 
+And the instantiated hierarchy above can be seen from the default constructor print statements that occurs when we instantiate a tuple like ``tuple<double, int, const char *>`` below: 
 
 .. code-block:: cpp
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-The output looks like this and show the four levels of the struct hierarchy instantiated: 
+The output looks like this and shows the four levels of the struct hierarchy instantiated: 
 
 .. raw:: html
  
