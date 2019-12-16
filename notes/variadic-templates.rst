@@ -369,7 +369,7 @@ Avoiding Needless Copy Construction
 +++++++++++++++++++++++++++++++++++
 
 Each tail element in the recursive tuple data structure is copy constructed. We really want a tuple constructor that takes forwarding references so that both lvalue and rvalue constructor parameters, for each element of the tuple, can be forwarded to the element's
-constructor. This template member function constructor does that:
+constructors. This template member function constructor does that:
 
 .. code-block:: cpp
 
