@@ -17,7 +17,7 @@ Good articles on implementing C++ Variadic Templates
 Variadic Class Template
 -----------------------
 
-A variadic class template can be instantiated with a varying number of template arguments. A good use case for such recursive data structures defined using variadic templates is a tuple struct 
+A variadic class template can be instantiated with a varying number of template arguments. A good use case for such a recursive data structures that can be defined using variadic templates is a tuple 
 that can hold a mixed set of varying types:
 
 .. code-block:: cpp
@@ -95,8 +95,7 @@ This is the sort of use case where variadic templates can be effectively applied
 
     template<class... Ts> struct tuple; //forward reference
 
-    // Template specializtion for empty list of template arguments, the base struct of the recursively implemented tuple 
-    // data structure.
+    // Template specializtion for empty list of template arguments, the base struct of the recursive tuple data structure.
     template<> struct tuple<> { 
     
         tuple()
@@ -154,13 +153,13 @@ An instantiation of, say, ``tuple<double, int, const char*>`` will recursively g
        double tail; // top level 
     };    
 
-The instantiated hierarch can be seens in the code below where we now instantiate ``tuple<double, int, const char *>`` 
+And the instantiated hierarchy can be seen when we instantiate a tuple like ``tuple<double, int, const char *>`` below: 
 
 .. code-block:: cpp
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-The output of the  constructor calls for ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")`` show the four levels of the struct hierarchy being instantiated: 
+The output of the  constructor calls for ``tuple<double, int, const char*> tuple(12.2, 43, "hello world!")`` looks like this and show the four levels of the struct hierarchy instantiated: 
 
 .. raw:: html
  
@@ -171,7 +170,7 @@ The output of the  constructor calls for ``tuple<double, int, const char*> tuple
     In constructor for tuple<T, Ts ...>::tuple(T, Ts ...) [with T = int; Ts = {double, const char*}] where tail = 5
    </pre>
 
-Thus the layout of ``tuple<double, int, const char *>`` looks like this:
+Visually the layout of ``tuple<double, int, const char *>`` looks like this:
 
 .. image:: ../images/recursive-tuple-layout.jpg
    :scale: 75 %
@@ -183,14 +182,14 @@ Thus the layout of ``tuple<double, int, const char *>`` looks like this:
 
 We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing where the ``int tail;`` member is in the hierarchy. We know the ``int tail`` member it 
 in the third level from the bottom. To retrieve the corresponding ``int tail`` member, we use the variadic template function called ``get<size_t, tuple<Ts ...>``, which has a partial template specialization for ``get<0, tuple<class...Ts>()`` . This partial template specialization,
-in turn, contains two critical type definitions that define:
+in turn, contains two critical type definitions:
 
 1. The base type of the tuple hierarchy for ``tuple<int, double, const char*>``
-2. The type of ...
+2. The type of FINISH THIS 
 
-These type definitions rely on another recursive data structure (also defined using variadic class templates), ``tuple_elelment``. ``tuple_element`` paralells the ``tuple`` hierachy. But unlike ``tuple``, which contains a sole ``tail`` data member at all level of its recursive structure,
-``elem_type_holder`` contains no data members. Instead it contains two *type definitions*, defined by means of a using statement, at the bottom level of its hierarchy. We can see this by adding print statements to ``tuple_element``'s default constructors. These constructors
-are not actually needed, but are included here help understand what is going on:
+These type definitions rely on another recursive data structure (also defined using variadic class templates) ``tuple_elelment``. which paralells the ``tuple`` hierachy. But unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure,
+``elem_type_holder`` contains no data members. Instead it contains only the two *type definitions* mentioned above, defined by means of a using statement, at the bottom level of its hierarchy. By adding print statements to ``tuple_element``'s default constructors (which aren't actually
+needed) we can better see this:
 
 .. code-block:: cpp
 
@@ -258,15 +257,17 @@ This reflects the actual instantiations of ``template<size_t, tuple<class...Rest
            using base_tuple_type = tuple<const char *>;
     }; 
  
-We see that only the base struct of the hierarchy has type definitions. Putting all we have looked at so far together, we can examine the ouput from ``get<int>(some_instance)``:
+We see that only the base struct of the hierarchy has the two type definitions. Putting all this together, when we can examine the ouput from ``get<int>(some_instance)``:
 
-.. code-block:: cpp
+.. raw:: html
+ 
+    <pre>
+    FILL IN 
+    </pre>
 
+we see ``get<size_t, ...>`` works by casting its input argument to the base type of the inheritance hierarchy ...FINISH
 
-
-we see ``get<size_t, ...>`` works by casting its input argument to the ?????? type define in the base struct of the ``template<std::size_t, class... Ts> tuple_element<size_t, tuple<Ts...>& t)`` hierarchy. ...
-
-.. todo:: Finish the explanation.
+.. todo:: Finish the explanation and show a code snippet of using a tuple. 
 
 .. todo:: Show a better way to inmplement `tupple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
