@@ -191,13 +191,13 @@ We can now instantiate tuples of varying types, but how do we access its element
 tuple to state type adn retrieving that base's ``tail`` member. We use the variadic template function ``get<size_t, tuple<Ts ...>>`` to do this. ``get<size_t, tuple<Ts ...>>`` uses  another recursive data structure that is also defined using variadic class templates, 
 ``template<std::size_t Index, class _tuple> struct tuple_element``. 
 
-``tuple_element``'s sole purpose is to provide type information about each particular level of the ``tuple`` hierachy. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
+``tuple_element``'s sole purpose is to provide type information about a given level of the ``tuple`` hierachy. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
 contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element``, in the tuple_element specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
 
 1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the type of the base struct that contains the tail member we want.
 2. ``using value_type = T&;``                     // This is a reference to tail's type.
 
-To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` works with ``get<size_t, tuple<Ts...>>`` we add print statements to tuple_element's default constructors. The default constructor is not actually needed, but was added to show how ``tuple_element`` works:
+To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` works we add print statements to tuple_element's default constructors. The default constructor is not actually needed, but was added to show how ``tuple_element`` works:
 
 .. code-block:: cpp
 
@@ -280,7 +280,7 @@ The actual instantiations that would occur when, say, ``element_tuple<1, tuple<i
 
     struct tuple_element<1, tuple<double, int, const char*>> : struct tuple_element<0, tuple<int, const char*>> {};
  
-Notice that only the base struct of the ``tuple_element`` hierarchy has the two type definitions seen in the output above. If we next look at the ouput from ``get<int>(some_instance)``
+Notice that only the base struct of the ``tuple_element`` hierarchy has the two type definitions seen in the output above. If we next look at the ouput from ``get<2>(some_instance)``
 
 .. code-block:: cpp
 
@@ -315,8 +315,15 @@ To understand the ``static_cast`` in ``get<2>(tup1)``, we look first at the inst
     }
 
 ``_tuple`` will be cast to the ``tuple_element<2, tuple<int, double, const char *>>::base_tuple_type``, where ``base_tuple_type`` is defined in the base struct of ``tuple_element<2, tuple<int, double, const char *>>::base_tuple_type``, which is ``tuple_element<0, tuple<const char *>>``,
-and is as ``using base_tuple_type = tuple<const char *>;``. Likewise ``tuple_element<2, tuple<int, double, const char *>>::value_type`` is also defined in ``tuple_element<0, tuple<const char *>>``, and is ``using value_type=const char *;``.  Substituting these values into the
-instantiation of ``get<2>(tup1)`` gives us
+and is:
+
+``using base_tuple_type = tuple<const char *>;``
+
+Likewise ``tuple_element<2, tuple<int, double, const char *>>::value_type`` is also defined in ``tuple_element<0, tuple<const char *>>``, and is:
+
+ ``using value_type=const char *;``
+
+Substituting these values into the instantiation of ``get<2>(tup1)`` gives us
 
 .. code-block:: cpp
 
