@@ -11,7 +11,6 @@ Good articles on implementing C++ Variadic Templates
 ----------------------------------------------------
 
 * `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
-* `Wkipedia Article on Variadic Template <https://en.wikipedia.org/wiki/Variadic_template>`_
 * `An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
 
 Variadic Class Template
@@ -411,15 +410,17 @@ Each tail element in the recursive tuple data structure is copy constructed. We 
 Template Deduction Guides for Variadic Class Templates
 ------------------------------------------------------
 
-The article `Modern C++ Features – Class Template Argument Deduction <https://arne-mertz.de/2017/06/class-template-argument-deduction/>`_ describes Template Deduction Guides. 
+See:
+
+* The article `Modern C++ Features – Class Template Argument Deduction <https://arne-mertz.de/2017/06/class-template-argument-deduction/>`_ describes Template Deduction Guides. 
+
+* `Class template argument deduction(since C++17) <https://en.cppreference.com/w/cpp/language/class_template_argument_deduction>`_.
 
 .. todo:: Show how the deduction guide for tuple works and how to implement one for our tuple class.
 
 .. todo:: Mention an alternate implmentation for `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
-* `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
-* `Tuple implementation via variadic templates <https://voidnish.wordpress.com/2013/07/13/tuple-implementation-via-variadic-templates/>`_ also discusses how to implement tuple using variadic templates.
 
 Variadic Function Template
 --------------------------
@@ -449,8 +450,8 @@ be deduced from the function arguments, or have default arguments:"
      
     valid(1.0, 1, 2, 3);      // OK: deduces U as double, Ts as {int,int,int} 
 
-C++17 Offers Limited Iteration Over a Parameter Pack
-----------------------------------------------------
+C++17 Does Offer Limited Iteration Over a Parameter Pack
+--------------------------------------------------------
 
 In C++ a variadic template function like ``sum`` below required two versions of ``sum`` to be implemented, one taking just one parameter type and the other taking at least two or more parameters types:
 
