@@ -368,8 +368,7 @@ simplifies to
 Avoiding Needless Copy Construction
 +++++++++++++++++++++++++++++++++++
 
-Each tail element in the recursive tuple data structure is copy constructed. We really want a tuple constructor that takes forwarding references so that both lvalue and rvalue constructor parameters, for each element of the tuple, can be forwarded to the element's
-constructors. This template member function constructor does that:
+Each tail element in the recursive tuple data structure is copy constructed. We really want a tuple constructor that takes forwarding references so that both lvalue and rvalue parameters can be forwarded to each element's constructor. This template member function constructor does that:
 
 .. code-block:: cpp
 
@@ -387,16 +386,23 @@ constructors. This template member function constructor does that:
     
     // Recall that public inheritance is the default for structs.
     template<class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
-    
+
+        //  std::forward<Args>(args) below forwards the constructor arguments to each element's, preserving lvalue and rvalue parameters.
+
         template<class Arg1, class... Args> tuple(Arg1&& arg1, Args&&...args) : tuple<Ts...>(std::forward<Args>(args)...), tail(std::forward<Arg1>(arg1))
         {
-            std::cout << "  In constructor for " <<  __PRETTY_FUNCTION__ /* << " where tail = " << tail */ << std::endl;
+            std::cout << "  In constructor for " <<  __PRETTY_FUNCTION__ << std::endl;
         }
     
         T tail;
     };
-    
-.. todo:: Show how to add constructors that can take a mixuture of lvalue and rvalue constructor parameters.
+ 
+Template Deduction Guides for Variadic Class Templates
+------------------------------------------------------
+
+.. todo:: definition with examples from std::pair, etc.
+
+.. todo:: Show how the deduction guide for tuple works.
 
 .. todo:: Show a better way to implement `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
