@@ -231,7 +231,17 @@ To better grasp what is going on, we add print statements to ``tuple_element``'s
         return static_cast<base_tuple_type&>(_tuple).tail;
     }
     
-If we instantiate ``element_tupe<3, tuple<double, int, const char*>> te2``, we will see these constructor calls. 
+If we instantiate ``tuple_element<1, tuple<double, int, const char*>> te1`` and ``tuple_element<2, tuple<double, int, const char*>> te2``
+
+.. code-block:: cpp
+
+    tuple_element<1, tuple<double, int, const char*>> te1;
+
+    std::cout << "\n";
+
+    tuple_element<2, tuple<double, int, const char*>> te2;
+
+we will see this output: 
 
 .. raw:: html
  
@@ -240,18 +250,23 @@ If we instantiate ``element_tupe<3, tuple<double, int, const char*>> te2``, we w
 	    using value_type = T&
 	    using base_tuple_type = tuple<T, Rest>
       In tuple_element<1, tuple<T, Rest...>>::tuple(), where there are not type definitions.
+
+    In tuple_element<0, T, Rest...>>::tuple(), where there are these two type definitions:
+	    using value_type = T&
+	    using base_tuple_type = tuple<T, Rest>
+      In tuple_element<1, tuple<T, Rest...>>::tuple(), where there are not type definitions.
       In tuple_element<2, tuple<T, Rest...>>::tuple(), where there are not type definitions.
     </pre>
-
-This reflects the actual instantiations of ``template<size_t, tuple<class...Rest>> struct element_tuple`` that occur when, say, ``element_tupe<3, tuple<double, int, const char*>> te2`` is declared: 
+    
+This reflects the actual instantiations of ``template<size_t, tuple<class...Rest>> struct element_tuple`` that occur when, say, ``element_tupe<1, tuple<double, int, const char*>> te2`` is declared: 
 
 .. code-block:: cpp
 
-    struct tuple_element<2, tuple<double, int, const char*>> : struct tuple_element<1, tuple<int, const char*>>   {};
-    struct tuple_element<1, tuple<int, const char*>> : struct tuple_element<0, tuple<const char*>>   {};
-    struct tuple_element<0, tuple<const char*>>  {
-           using value_type = const char *;
-           using base_tuple_type = tuple<const char *>;
+    struct tuple_element<1, tuple<double, int, const char*>> : struct tuple_element<0, tuple<int, const char*>> {};
+
+    struct tuple_element<0, tuple<int, const char*>>  {
+           using value_type = int;
+           using base_tuple_type = tuple<int, const char *>;
     }; 
  
 As mentioned, only the base struct of the hierarchy has the two type definitions, which is what we see in the output above. Next, let's examine the ouput from ``get<int>(some_instance)``
@@ -291,39 +306,54 @@ as ``tuple<const char *>``. Likewise ``tuple_element<2, tuple<int, double, const
 
 .. code-block:: cpp
 
-    const char * get<1>(tuple<int, double, const char *>& _tuple)
+    const char *get<1>(tuple<int, double, const char *>& _tuple)
     {
-      // We will cast _tuple to the base type of the corresponding tuple_element<Index,  tuple<Type...>> recursive struct's base type.
-      using base_tuple_type = tuple<const char *>;
-    
-      return static_cast<base_tuple_type&>(_tuple).tail; // This returns 'const char * tail;' member of the base struct.
+      return static_cast< tuple<const char *>& >(_tuple).tail; // This returns 'const char * tail;' member of the base struct.
     }
 
 Similarly the instantiation of ``get<1`>(tup1)`` 
 
 .. code-block:: cpp
 
-    tuple_element<1, tuple<double int>>::value_type get<1>(tuple<int, double, const char *>& _tuple)
+    tuple_element<1, tuple<double, int, const char *>>::value_type get<1>(tuple<int, double, const char *>& _tuple)
     {
       // We will cast _tuple to the base type of the corresponding tuple_element<Index,  tuple<Type...>> recursive struct's base type.
-      using base_tuple_type = tuple_element<1, tuple<int, double>::base_tuple_type;
+      using base_tuple_type = tuple_element<1, tuple<int, double, const char *>::base_tuple_type;
     
       return static_cast<base_tuple_type&>(_tuple).tail; // This returns 'const char * tail;' member of the base struct.
     }
 
-simplifies to
+which simplifies to
 
 .. code-block:: cpp
 
-    int get<1>(tuple<int, double, const char *>& _tuple)
+    double get<1>(tuple<int, double, const char *>& _tuple)
     {
-      using base_tuple_type = tuple<int, double>; //<----TODO: Double check. Doesn't seem right.
-    
-      return static_cast<base_tuple_type&>(_tuple).tail; // This returns 'const char * tail;' member of the base struct.
+      return static_cast< tuple<int, double>& >(_tuple).tail; // This returns the 'double tail;' member of the base struct.
     }
 
+Finally, the instantiation of ``get<0>(tup1)`` 
 
+.. code-block:: cpp
 
+    tuple_element<0, tuple<int, double, const char *>>::value_type get<2>(tuple<int, double, const char *>& _tuple)
+    {
+      // We will cast _tuple to the base type of the corresponding tuple_element<Index,  tuple<Type...>> recursive struct's base type.
+      using base_tuple_type = tuple_element<0, tuple<int, double, const char *>>::base_tuple_type;
+    
+      std::cout << "In get<" << Index << ">(some_tuple)" << " doing this cast: static_cast<base_tuple_type&>(_tuple).tail\n---------" << std::endl;
+    
+      return static_cast<base_tuple_type&>(_tuple).tail;
+    }
+
+which simplifies to
+
+.. code-block:: cpp
+
+    int get<0>(tuple<int, double, const char *>& _tuple)
+    {
+      return static_cast< tuple<int, double, const char *>& >(_tuple).tail; // This returns the 'const char * tail;' member of the base struct.
+    }
 
 .. todo:: Show a better way to inmplement `tupple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
