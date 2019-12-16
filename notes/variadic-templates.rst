@@ -356,7 +356,9 @@ simplifies to
       return static_cast< tuple<int, double, const char *>& >(_tuple).tail; // This returns the 'const char * tail;' member of the base struct.
     }
 
-.. todo:: Show a better way to inmplement `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
+.. todo:: Show how to add constructors that can take a mixuture of lvalue and rvalue constructor parameters.
+
+.. todo:: Show a better way to implement `tuple using C++17 <https://medium.com/@mortificador/implementing-std-tuple-in-c-17-3cc5c6da7277>`_.
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 * `Variadic template data structures <https://riptutorial.com/cplusplus/example/19276/variadic-template-data-structures>`_
