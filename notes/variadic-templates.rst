@@ -193,7 +193,7 @@ tuple to its subtype type and retrieving that subtype's ``tail`` member. The var
 ``tuple_element``'s sole purpose is to provide type information about a specific level of the ``tuple`` hierachy, the level where the correct ``tail`` member is located. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
 contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element`` hierarchy, in the partial template specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
 
-1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the type of the base struct that contains the tail member we want.
+1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the subtype where the correct tail member resides.
 2. ``using value_type = T&;``                     // This is a reference to tail's type.
 
 To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` works we add print statements to tuple_element's default constructors. The default constructor is not actually needed, but was added to show how ``tuple_element`` works:
