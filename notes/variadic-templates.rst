@@ -190,7 +190,7 @@ We can now instantiate tuples of varying types, but how do we access its element
 tuple to its subtype type and retrieving that subtype's ``tail`` member. The variadic template function ``get<size_t, tuple<Ts ...>>`` does this. ``get<size_t, tuple<Ts ...>>`` uses another recursive data structure, also defined using variadic class templates, 
 ``template<std::size_t Index, class _tuple> struct tuple_element``, to retrieve the appropriate subtype. 
 
-``tuple_element``'s sole purpose is to provide type information about a given level of the ``tuple`` hierachy. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
+``tuple_element``'s sole purpose is to provide type information about a specific level of the ``tuple`` hierachy, the level where the correct ``tail`` member is located. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
 contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element`` hierarchy, in the partial template specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
 
 1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the type of the base struct that contains the tail member we want.
