@@ -16,7 +16,7 @@ Good articles on implementing C++ Variadic Templates
 Variadic Class Template
 -----------------------
 
-A variadic class template can be instantiated with a varying number of template arguments. A use case for such a recursive data structures is a tuple data structure that can hold a varying size set of varying types:
+A variadic class template can be instantiated with a varying number of template arguments. One use case for a variadic class template is a recursive data structure. A tuple can be implemented as recursive data structure using a variadic class template.
 
 .. code-block:: cpp
 
@@ -45,7 +45,7 @@ Defining Recursive Data Structures Using Variadic Class Templates
 Introduction
 ++++++++++++
 
-To better understand variadic class templates, first consider this series of derived structs, where each struct in the hierarchy has a sole data member *tail*:
+To better motivate a sample tuple implementation, first consider this series of derived structs, where each struct in the hierarchy has a sole data member *tail*:
 
 .. code-block:: cpp
 
@@ -93,7 +93,7 @@ To access individual tail members of a ``C`` instance, like the one below, use `
 A Recursive Data Structure Example Using a Variadic Class Template
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The preceeding code is just the sort of use case where variadic templates can make life easier. We begin by defining ``struct tuple<class...Types>`` that implements tuple as a recursive data structure. 
+The preceeding code is just the sort of recursive data structure where variadic templates can make life easier. We begin by defining ``struct tuple<class...Types>``:
 
 .. note:: The complete ``tuple`` source is at `github <https://github.com/kurt-krueckeberg/tuple>`_.
 
@@ -123,7 +123,7 @@ The preceeding code is just the sort of use case where variadic templates can ma
         T tail;
     };
     
-The instantiation of, say, ``tuple<double, int, const char*>`` will generate these various template instantiations
+The instantiation of, say, ``tuple<double, int, const char*>`` will generate these template instantiations
 
 .. code-block:: cpp
 
@@ -161,13 +161,13 @@ The instantiation of, say, ``tuple<double, int, const char*>`` will generate the
        double tail; // top level 
     };    
 
-And the instantiated hierarchy above can also be seen from the output of the default constructors. The output of: 
+The instantiated class hierarchy above can also be seen from the output of the default constructors. The output of: 
 
 .. code-block:: cpp
 
     tuple<double, int, const char *> t(10, 10.5, "hello world!");
 
-looks like this and shows the four levels of the struct hierarchy being instantiated: 
+shows the four levels of the struct hierarchy being instantiated: 
 
 .. raw:: html
  
@@ -187,11 +187,11 @@ Accessing Elements of the Recursive Data Structure
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing at what level the ``int tail`` member is in the inheritance hierarchy, and then casting the
-tuple to state type adn retrieving that base's ``tail`` member. We use the variadic template function ``get<size_t, tuple<Ts ...>>`` to do this. ``get<size_t, tuple<Ts ...>>`` uses  another recursive data structure that is also defined using variadic class templates, 
-``template<std::size_t Index, class _tuple> struct tuple_element``. 
+tuple to its subtype type and retrieving that subtype's ``tail`` member. The variadic template function ``get<size_t, tuple<Ts ...>>`` does this. ``get<size_t, tuple<Ts ...>>`` uses another recursive data structure, also defined using variadic class templates, 
+``template<std::size_t Index, class _tuple> struct tuple_element``, to retrieve the appropriate subtype. 
 
 ``tuple_element``'s sole purpose is to provide type information about a given level of the ``tuple`` hierachy. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
-contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element``, in the tuple_element specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
+contains the two *type definitions* below. And these two type definitions only occur in the at the bottom level of the ``tuple_element`` hierarchy, in the partial template specialization ``template<std::size_t Index, class _tuple> struct tuple_element<0, class _tuple>``:
 
 1. ``using base_tuple_type = tuple<T, Rest...>;`` // This is the type of the base struct that contains the tail member we want.
 2. ``using value_type = T&;``                     // This is a reference to tail's type.
