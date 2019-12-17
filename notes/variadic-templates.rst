@@ -74,7 +74,7 @@ To better motivate a sample tuple implementation, first consider this series of 
 	int tail;
     };
 
-To access individual tail members of a ``C`` instance, like the one below, use ``static_cast<base_type_here>(tup)``: 
+To access individual tail members of a ``C`` instance, like the one below, use ``static_cast<subtype_here>(tup)``: 
 
 .. code-block:: cpp
     
@@ -186,8 +186,8 @@ Visually the layout of ``tuple<double, int, const char *>`` looks like this:
 Accessing Elements of the Recursive Data Structure
 ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing at what level the ``int tail`` member is in the inheritance hierarchy, and then casting the
-tuple to its subtype type and retrieving that subtype's ``tail`` member. The variadic template function ``get<size_t, tuple<Ts ...>>`` does this. ``get<size_t, tuple<Ts ...>>`` uses another recursive data structure, also defined using variadic class templates, 
+We can now instantiate tuples of varying types, but how do we access its elements? How do we retrieve or change, say, the ``int`` value above or that ``const char *``? It boils down to determing at what subtype level the ``int tail`` member is in the inheritance hierarchy, and then casting the
+tuple to this subtype and retrieving that subtype's ``tail`` member. The variadic template function ``get<size_t, tuple<Ts ...>>`` does this. ``get<size_t, tuple<Ts ...>>`` uses another recursive data structure, also defined using variadic class templates, 
 ``template<std::size_t Index, class _tuple> struct tuple_element``, to retrieve the appropriate subtype. 
 
 ``tuple_element``'s sole purpose is to provide type information about a specific level of the ``tuple`` hierachy, the level where the correct ``tail`` member is located. Unlike ``tuple``, which contains a sole ``tail`` data member at each level of its recursive structure, ``tuple_element`` contains no data members. Instead it only
