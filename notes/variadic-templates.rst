@@ -438,10 +438,10 @@ See:
 Variadic Template Function
 --------------------------
  
-As `Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explainst: "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)".
+As `Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains: "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)".
 
-Recursive calls are often used in the implementation of variadic template funtions like the one below, which converts its input into a vector of strings. But there are `Pack expansion tricks <https://arne-mertz.de/2016/11/more-variadic-templates/>`_ to simplify convoluted recursive code
-like that below. 
+Recursive calls are often used in the implementation of variadic template funtions like the one below, which converts its input into a vector of strings. But `pack expansion tricks <https://arne-mertz.de/2016/11/more-variadic-templates/>`_ can simplify convoluted recursive code
+like this. 
 
 .. code-block:: cpp 
 
@@ -492,8 +492,7 @@ like that below.
         return {};
     }
 
-By using a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_, the parameter pack expansion can be done in a ``initializer_list<string>`` that is then used by the ``vector<string>( std::initializer_list<string> init,
-const Allocator& alloc = Allocator() );`` constructor.
+By using a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_, the parameter pack expansion can be done within the `list-initialization <https://en.cppreference.com/w/cpp/language/list%20initialization>`_.  
 
 .. code-block:: cpp
 
