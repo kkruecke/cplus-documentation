@@ -456,7 +456,8 @@ like that below.
     
     // Forward declarations
     template<class T, class... Rest> std::vector<std::string> stringify(const T& t1, const Rest& ... params);
-    
+   
+    // Overload that takes no parameters 
     std::vector<std::string> stringify(); 
     
     template<class T, class... Rest> std::vector<std::string> stringify(const T& t, const Rest& ... params)
@@ -491,7 +492,8 @@ like that below.
         return {};
     }
 
-By using  a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_, in which the parameter pack expansion is a call to the method doing the real work like this example:
+By using a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_, the parameter pack expansion can be done in a ``initializer_list<string>`` that is then used by the ``vector<string>( std::initializer_list<string> init,
+const Allocator& alloc = Allocator() );`` constructor.
 
 .. code-block:: cpp
 
