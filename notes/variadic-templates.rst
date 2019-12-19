@@ -223,7 +223,7 @@ To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` 
         }
     };
     
-    // Specialization when first parameter is zero: tuple_element<0, tuple<T, Rest...>>.
+    // Partial specialization when first parameter of the primary template is zero: tuple_element<0, tuple<T, Rest...>>.
     template<class T, class... Rest>  struct tuple_element<0, tuple<T, Rest...>>  {
     
       using value_type = T&;                 // Reference to tail's type.
