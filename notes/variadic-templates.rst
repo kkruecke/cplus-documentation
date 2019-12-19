@@ -21,12 +21,14 @@ A variadic class template can be instantiated with a varying number of template 
 
 .. code-block:: cpp
 
-    template<class... Types> struct tuple; // Forward declaration 
+    // Forward declaration of primary template
+    template<class... Types> struct tuple; 
 
-    // Partial template specialization for the case when no template arguments are supplied 
+    // Definition of primary template.  
     template<class... Types> struct tuple<> {}; 
 
-    // public inheritance is the default for structs.
+    // Partial template specialization. 
+    // Recall: public inheritance is the default for structs.
     template <class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
 
         // Invoke immediate base struct template with remaining arguments sans T argument,
@@ -39,6 +41,9 @@ A variadic class template can be instantiated with a varying number of template 
     tuple<int> t1;        // Types contains one argument: int
     tuple<int, float> t2; // Types contains two arguments: int and float
     tuple<0> error;       // error: 0 is not a type
+
+When class template **tuple** is instantiated with a list of type arguments, the partial specialization is matched in all cases where there are one or more arguments. In that case, the template parameter **T** holds the first parameter, and the pack expansion **Ts...** contains the rest
+of the argument list. In the case of an empty list, the partial specialization is not matched, so the instantiation matches the primary template **template<class... Types> struct tuple**. 
 
 Defining Recursive Data Structures Using Variadic Class Templates
 -----------------------------------------------------------------
@@ -100,18 +105,19 @@ The preceeding code is just the sort of recursive data structure where variadic 
 
 .. code-block:: cpp
 
-    template<class... Ts> struct tuple; //forward reference
+    template<class... Ts> struct tuple; //Forward declaration of primary template
 
     // Template specializtion for empty list of template arguments, which serves as the 
     // base struct for tuples.
-    template<> struct tuple<> { 
+    template<class... Ts> struct tuple<> { 
     
         tuple() // The default constructor is only include to help exlain the code.
         {
   	    std::cout << "In template<> tuple<>::tuple() constructor, which has NO member tail." << std::endl;
         }
     }; 
-    
+
+    // Partial template specialization of template<class... Ts> struct tuple;    
     // Recall that public inheritance is the default for structs.
     template<class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
     
@@ -123,6 +129,9 @@ The preceeding code is just the sort of recursive data structure where variadic 
     
         T tail;
     };
+
+When class template **tuple** is instantiated with a list of type arguments, the partial specialization is matched in all cases where there are one or more arguments. In that case, the template parameter **T** holds the first parameter, and the pack expansion **Ts...** contains the rest
+of the argument list. In the case of an empty list, the partial specialization is not matched, so the instantiation matches the primary template **template<class... Types> struct tuple**. 
     
 The instantiation of, say, ``tuple<double, int, const char*>`` will generate these template instantiations
 
@@ -201,10 +210,10 @@ To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` 
 
 .. code-block:: cpp
 
-    // tuple_element forward declaration.
+    // Primary tuple_element class template forward declaration.
     template<std::size_t Index, class _tuple> struct tuple_element;
     
-    // recursive data structure tuple_element definition
+    // Partial specialization (that has recursive data structure definition)
     template <std::size_t Index, class T, class... Rest>  struct tuple_element<Index, tuple<T, Rest...>> : 
          public tuple_element<Index - 1, tuple<Rest...> > {
     
@@ -214,7 +223,7 @@ To better grasp how ``tuple_element<std:size_t, tuple<class T, class...Rest>>`` 
         }
     };
     
-    // partial template specialization when first parameter is zero: tuple_element<0, tuple<T, Rest...>>.
+    // Specialization when first parameter is zero: tuple_element<0, tuple<T, Rest...>>.
     template<class T, class... Rest>  struct tuple_element<0, tuple<T, Rest...>>  {
     
       using value_type = T&;                 // Reference to tail's type.
