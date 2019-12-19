@@ -430,7 +430,7 @@ A friend declaration cannot declare an explicit specialization
 Partial Template Specialization and Variadic Class Templates
 ------------------------------------------------------------
 
-Variadic class templates often do have partial template specializations. Examples can be found within the code blocks in the :ref:`variadic-class-templates` discussion.
+Variadic class templates often have partial template specializations, and examples of these can be found within the code blocks in the :ref:`variadic-class-templates` discussion.
 
 Links to Articles on Template specialization and partial specialization
 -----------------------------------------------------------------------
