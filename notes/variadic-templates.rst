@@ -500,6 +500,8 @@ can be eliminate by using a `return braced-init-list <https://en.cppreference.co
        return { stringify_impl(param)... };
    }
 
+The compiler uses the RVO and/or the NRVO to elide copy or move construction. 
+
 Further Explanation
 -------------------
 
