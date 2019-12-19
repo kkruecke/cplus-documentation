@@ -425,17 +425,80 @@ See:
 
 * `Variadic Templates in C++ <https://eli.thegreenplace.net/2014/variadic-templates-in-c/>`_.
 
-Variadic Function Template
+Variadic Template Function
 --------------------------
  
 `Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)":
 
+Recursive calls typical of a variadic template funtion implementation like that for ``template<class T, class... Rest> std::vector<std::string> stringify(const T& t1, const Rest& ... params);``, which converts its input into a vector of strings: 
+
+.. code-block:: cpp 
+
+    #include <vector>
+    #include <string>
+    #include <sstream>
+    #include <iostream>
+    #include <algorithm>
+    #include <iterator>
+    
+    template<class T> std::string stringify_impl(const T& t); // Fwd declaration
+    
+    // Forward declarations
+    template<class T, class... Rest> std::vector<std::string> stringify(const T& t1, const Rest& ... params);
+    
+    std::vector<std::string> stringify(); 
+    
+    template<class T, class... Rest> std::vector<std::string> stringify(const T& t, const Rest& ... params)
+    {
+      std::cout << "In stringify(" << t << ", const Rest& ... params) " << std::endl;
+              
+      std::vector<std::string> s;
+    
+      s.push_back(stringify_impl(t));
+      
+      auto remainder = stringify(params...);
+      
+      s.insert(s.end(), remainder.begin(), remainder.end());
+      
+      //print(s, "After call to s.insert(s.end(), remainder.begin(), remainder.end()), s = " );
+      return s;
+    }
+    
+    // Convert input to a std::string
+    template<class T> std::string stringify_impl(const T& t)
+    {
+        std::stringstream ss;
+        ss << t;
+        return ss.str();
+    }
+    
+    // Overload that takes no arguments and returns empty std::vector<std::string>.
+    std::vector<std::string> stringify()
+    {
+        std::cout << "In non-template version stringify() that returns an empty std::vector<std::string>." << std::endl;
+            
+        return {};
+    }
+
+can be eliminate by using a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_ in which the parameter pack expansion is a call to the method doing the real work like this example:
+
 .. code-block:: cpp
 
-    template<class ... Types> void f(Types ... args);
-    f();       // OK: args contains no arguments
-    f(1);      // OK: args contains one argument: int
-    f(2, 1.0); // OK: args contains two arguments: int and double
+    #include <vector>
+    #include <string>
+    #include <sstream>
+    
+    template<class ... Param> std::vector<std::string> stringify(const Param& ... param)
+    {
+       auto stringify_impl = [] (const auto& t) {
+           
+           std::stringstream ss;
+           ss << t;
+           return ss.str();
+       };
+       
+       return { stringify_impl(param)... };
+   }
 
 Further Explanation
 -------------------
