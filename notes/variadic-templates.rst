@@ -428,9 +428,10 @@ See:
 Variadic Template Function
 --------------------------
  
-`Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explains that "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)":
+As `Parameter pack(since C++11) <https://en.cppreference.com/w/cpp/language/parameter_pack>`_ explainst: "A variadic function template can be called with any number of function arguments (the template arguments are deduced through template argument deduction)".
 
-Recursive calls typical of a variadic template funtion implementation like that for ``template<class T, class... Rest> std::vector<std::string> stringify(const T& t1, const Rest& ... params);``, which converts its input into a vector of strings: 
+Recursive calls are often used in the implementation of variadic template funtions like the one below, which converts its input into a vector of strings. But there are `Pack expansion tricks <https://arne-mertz.de/2016/11/more-variadic-templates/>`_ to simplify convoluted recursive code
+like that below. 
 
 .. code-block:: cpp 
 
@@ -480,7 +481,7 @@ Recursive calls typical of a variadic template funtion implementation like that 
         return {};
     }
 
-can be eliminate by using a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_ in which the parameter pack expansion is a call to the method doing the real work like this example:
+By using  a `return braced-init-list <https://en.cppreference.com/w/cpp/language/return>`_, in which the parameter pack expansion is a call to the method doing the real work like this example:
 
 .. code-block:: cpp
 
@@ -500,7 +501,7 @@ can be eliminate by using a `return braced-init-list <https://en.cppreference.co
        return { stringify_impl(param)... };
    }
 
-The compiler uses the RVO and/or the NRVO to elide copy or move construction. 
+The compilers the RVO/NRVO elides copy or move construction. 
 
 Further Explanation
 -------------------
