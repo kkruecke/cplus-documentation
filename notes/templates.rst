@@ -6,21 +6,23 @@ Templates and Specializations
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how to partially specialize a template:
+This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a class template is partially specialized:
 
 .. code-block:: cpp
 
-     template<class T1, class T2, int I>
+     // Primary template
+     template<typename T1, typename T2, int I>
      class A {
         public:
         void describe()
         {
-          cout << "uses primary template." << endl;
+          cout << "Primary class template<typename T1, typename T2, int I>." << endl;
      
         } 
-     };            // primary template
-      
-     template<class T, int I> class A<T, T*, I> { // #1: partial specialization in which the 2nd parameter is a pointer to 'type of the first parameter.' 
+     };  
+
+     // #1: Partial specialization in which the 2nd parameter is always a pointer to the type of the first generic parameter. 
+     template<typename T, int I> class A<T, T*, I> { 
         public:
         void describe()
         {
@@ -28,9 +30,10 @@ This modified example, taken from `partial template specialization <https://en.c
      
         } 
      }; 
-      
-     template<class T, class T2, int I>
-     class A<T*, T2, I> { // #2: partial specialization in which the first parameter is a pointer.
+
+     // #2: Partial specialization in which the first parameter is always a pointer.
+     template<typename T, typename T2, int I>
+     class A<T*, T2, I> { 
         public:
         void describe()
         {
@@ -38,9 +41,11 @@ This modified example, taken from `partial template specialization <https://en.c
         } 
      
      };
-      
-     template<class T>
-     class A<int, T*, 5> { // #3: partial specialization in which first parameter is an int, 2nd is a pointer and the third is the scalar 5
+
+     // #3: Partial specialization in which first parameter is always int, the 2nd parameter is always a pointer
+     //  and the third is the scalar 5
+     template<typename T>
+     class A<int, T*, 5> { 
         public:
         void describe()
         {
@@ -48,9 +53,10 @@ This modified example, taken from `partial template specialization <https://en.c
         } 
      
      }; 
-      
-     template<class X, class T, int I>
-     class A<X, T*, I> {  // #4: partial specialization in which the second parameter is a pointer.
+
+     // #4: Partial specialization in which the second parameter is always a pointer.
+     template<typename X, typename T, int I>
+     class A<X, T*, I> {  
         public:
         void describe()
         {
@@ -188,8 +194,8 @@ define the primary template). In this example:
 
 .. code-block:: cpp
 
-    template<class T> class A;
-    template<> class A<int>;
+    template<class T> class A; // Primary templae
+    template<> class A<int>;   // Explicit specialization for A<int>
     
     template<> class A<int> { /* ... */ };
     
@@ -200,7 +206,7 @@ You can also use the name of an explicit specialization that has been declared b
 .. code-block:: cpp
 
     template<class T> class X { };
-    template<>  class X<char>;
+    template<>  class X<char>; // Declared but not defined
     X<char>* p;
     X<int> i;
     // X<char> j;
@@ -420,6 +426,11 @@ The compiler would not allow the template specialization definition that would o
 The compiler would not allow the template specialization definition that would output "Template 7" because the enclosing class of class Y (which is class X) is not explicitly specialized.
 
 A friend declaration cannot declare an explicit specialization
+
+Partial Template Specialization and Variadic Class Templates
+------------------------------------------------------------
+
+Variadic class templates can have, and often do have, partial template specializations. Examples can be found in the code blocks in the :ref:`variadic-class-templates` discussion.
 
 Links to Articles on Template specialization and partial specialization
 -----------------------------------------------------------------------

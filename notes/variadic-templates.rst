@@ -14,6 +14,8 @@ Good articles on implementing C++ Variadic Templates
 * `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
 * `An introduction to C++'s variadic templates: a thread-safe multi-type map <https://jguegant.github.io/blogs/tech/thread-safe-multi-type-map.html>`_
 
+.. _variadic-class-templates:
+
 Variadic Class Template
 -----------------------
 
