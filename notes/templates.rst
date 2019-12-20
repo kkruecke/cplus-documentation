@@ -430,7 +430,7 @@ A friend declaration cannot declare an explicit specialization
 Partial Template Specialization and Variadic Class Templates
 ------------------------------------------------------------
 
-Variadic class templates can accept a varying number of type argument. Variadic class templates often have partial template specializations, and examples of these can be found within the code blocks where :ref:`variadic-class-templates` are described and discussed.
+A variadic template can take an arbitrary number of template arguments of any type.  Variadic class templates often use partial template specializations, and examples of these can be found within the code blocks where :ref:`variadic-class-templates` are described and discussed.
 
 Links to Articles on Template specialization and partial specialization
 -----------------------------------------------------------------------

@@ -7,8 +7,8 @@
 Variadic Templates
 ==================
 
-Good articles on implementing C++ Variadic Templates
-----------------------------------------------------
+Good articles on a Overview of C++ Variadic Templates
+-----------------------------------------------------
 
 * `What Does Haskell Have to Do with C++? <https://bartoszmilewski.com/2009/10/21/what-does-haskell-have-to-do-with-c/>`_
 * `C++11 - New features - Variadic templates <http://www.cplusplus.com/articles/EhvU7k9E/>`_
@@ -23,18 +23,18 @@ A variadic class template can be instantiated with a varying number of template 
 
 .. code-block:: cpp
 
-    // Forward declaration of primary template that takes zero to many Types.
+    // Forward declaration of the primary template that takes zero to many Types.
     template<class... Types> struct tuple; 
 
     // Definition of primary template.  
     template<class... Types> struct tuple<> {}; 
 
     // Partial template specialization that must take at least one parameter. 
-    // Recall: public inheritance is the default for structs.
+    // (Recall also: public inheritance is the default for structs.)
     template <class T, class... Ts> struct tuple<T, Ts...> : tuple<Ts...> { 
 
-        // Invoke immediate base struct template with remaining arguments sans T argument,
-        // and construct taiil using t, of type T.
+        // Invoke immediate base struct template with remaining arguments sans the first argument,
+        // and construct tail using t, of type T.
         tuple(T t, Rest... ts) : tuple<Ts...>(ts...), tail(t) {}
         T tail;
     };
@@ -43,6 +43,43 @@ A variadic class template can be instantiated with a varying number of template 
     tuple<int> t1;        // Types contains one argument: int
     tuple<int, float> t2; // Types contains two arguments: int and float
     tuple<0> error;       // error: 0 is not a type
+
+Parameter Pack and Pack Expansion
++++++++++++++++++++++++++++++++++
+
+The arguments to a variadic template are called a paramter pack. Pack expansion occurs when a parameter pack is followed by an ellipsis, in which the name of at least one parameter pack appears at least once, is expanded into zero or more comma-separated instantiations of the pattern,
+where the name of the parameter pack is replaced by each of the elements from the pack, in order.
+
+.. code-block:: cpp
+
+    template<class ...Us> void f(Us... pargs) {}
+    template<class ...Ts> void g(Ts... args) {
+        f(&args...); // “&args...” is a pack expansion
+                     // “&args” is its pattern
+
+sizeof... operator 
+++++++++++++++++++
+
+The ``sizeof...`` operator is used to determine the the number of types passed to a variadic template. For example:
+
+.. code-block:: cpp
+
+    template<typename... Types>
+    class VariadicTemplate {
+    private:
+         VariadicTemplate()
+         {
+           std::cout << "The number of type arguments used to instantiate 'VariadicTemplate<typename... Ts>' = " << sizeof...(Types);
+         }   
+    };
+
+    VariadicTemplate<int, std::string, double, std::vector<int>> vt;
+
+would print 
+
+::
+
+     The number of type arguments used to instantiate 'VariadicTemplate<typename... Ts>' = 4
 
 When class template **tuple** is instantiated with a list of type arguments, the partial specialization is matched in all cases where there are one or more arguments. In that case, the template parameter **T** holds the first parameter, and the pack expansion **Ts...** contains the rest
 of the argument list. In the case of an empty list, the partial specialization is not matched, so the instantiation matches the primary template **template<class... Types> struct tuple**. 
