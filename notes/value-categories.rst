@@ -1,6 +1,8 @@
 .. include:: <isopub.txt>
 .. include:: <isonum.txt>
 
+.. _value-catgories:
+
 Value Categories
 ================
 
