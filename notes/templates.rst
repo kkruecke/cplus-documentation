@@ -234,7 +234,7 @@ example demonstrates a class template specialization:
        a.g(1234);
     }
 
-.. note:: Explicit specialization ``A<int>`` contains member function ``g()``, **not in the primary template**. So full template specializations can exclude functions found in the primary template, and they can include extra methods not found in the primary template.
+.. note:: Explicit specialization ``A<int>`` contains member function ``g()``, which is **not in the primary template**. So full template specializations can exclude functions found in the primary template, and they can include extra methods not found in the primary template.
 
 Explicit specialization of function templates
 +++++++++++++++++++++++++++++++++++++++++++++
@@ -429,10 +429,10 @@ A friend declaration cannot declare an explicit specialization
 Partial Template Specialization and Variadic Class Templates
 ------------------------------------------------------------
 
-A variadic template can take an arbitrary number of template arguments of any type.  Variadic class templates often use partial template specializations, and examples of these can be found within the code blocks where :ref:`variadic-class-templates` are described and discussed.
+A variadic template can take an arbitrary number of template arguments.  Variadic class templates often use partial template specializations. Example of variadic templates can be found within the code blocks where :ref:`variadic-class-templates` are described and discussed.
 
-Links to Articles on Template specialization and partial specialization
------------------------------------------------------------------------
+Articles on Template specialization and partial specialization
+--------------------------------------------------------------
 
 * https://en.cppreference.com/w/cpp/language/partial_specialization 
 * https://en.cppreference.com/w/cpp/language/template_specialization
