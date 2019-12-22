@@ -14,15 +14,15 @@ Important Article that Explains Forwarding References and Perfect Forwarding
 Forwarding References
 ---------------------
 
-The same notation used for rvalue references, the double ampersand *&&*, is also used to denote a forwarding reference. A **forwarding reference** is a template function parameter of type ``T&&`` such as
+The same notation used for rvalue references, the double ampersand *&&*, is also used to denote a forwarding reference. However, a **forwarding reference** is always a template function parameter of a generic type ``T&&`` such as that below
 
 .. code-block:: cpp
 
    template<typename T> void f(T&& t);
 
 While ``T&&`` looks just like an rvalue reference (:ref:`rvalue-reference`), when ``&&`` is used for a function template parameter, it is called a **forwarding refernence**, and unlike an rvalue reference, a forwarding reference can bind to
-both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything. Its purpose is to support *argument forwarding*, to allow you to pass the argument on unchanged to other function(s). An example of this
-use of *argument forwarding* is the ``emplace`` method of many STL containers. ``emplace (Args&&... args)`` allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
+both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything. Its purpose is to support *argument forwarding*: to allow you to pass the argument on unchanged to other function(s). An example of *argument forwarding* is the ``emplace`` method of many STL containers.
+``emplace (Args&&... args)`` allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
 
 Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
 
