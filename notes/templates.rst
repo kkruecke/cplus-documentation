@@ -6,7 +6,7 @@ Templates and Specializations
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a class template is partially specialized:
+This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a primary class template can be partially specialized:
 
 .. code-block:: cpp
 
@@ -64,7 +64,7 @@ This modified example, taken from `partial template specialization <https://en.c
         } 
      }; 
      
-and this code shows when the the primary template or its specializations is instantiated:
+The output from these partial template instantiations further illustrate when a partial template specializations occurs:
 
 .. code-block:: cpp
 
@@ -90,10 +90,7 @@ and this code shows when the the primary template or its specializations is inst
                           //        matches #4 (X=int*, T=int, I=2)
                           // neither one is more specialized than the other
 
-Comments
-++++++++
-
-The output from the above will be:
+The output from the above is:
 
 .. raw:: html
 
@@ -108,8 +105,8 @@ For ``a1`` no specializations exist that match the template parameters, so the p
 template. To say  "A is more specialized than B" means "A accepts a subset of the types that B accepts". In the case of ``a3``, the third parameter of ``5`` and the second parameter of pointer type, make #3 the only template partial specialization that matches.
 For ``a5`` above, no most-specialized template can be found since ``a5`` matches #2 and #4 equally.
 
-std::vector Example of Partial Template Specializaition
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Example of Partial Template Specializaition of std::vector 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Another, real-world example of partial template specialization comes from the GNU implementation of the C++ standard library container ``std::vector``. GNU g++ defines the primary ``std::vector`` template container like:
 
@@ -131,15 +128,21 @@ and it declares a partial specialization of ``vector<T, Alloc>`` for ``bool`` li
       //... 
       };
 
-Explicit (Full) Template Specializations examples
--------------------------------------------------
+Explicit or Full Template Specialization
+----------------------------------------
 
-This material is from IBM Knowledge Base article on template `Explicit specialization <https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/explicit_specialization.htm>`_.
+A class template or a function template can be completely specialized for a particular type(s). In this case, the entire class or functoin has a custom reimplementation. The explict or full template specialization explanation examples below are from the IBM Knowledge Center article
+explaining template `Explicit specialization <https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/explicit_specialization.htm>`_. 
 
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-``template<>`` must be preceed a full template specialization, as the example of ``template<> class Sample<int>`` below illustrates:
+``template<>`` must be preceed a full template specialization, as the example of ``template<> class Sample<int>`` below illustrates.
+ 
+.. note:: 
+
+   Note: However ``template<>`` does not preceeded the definiton of **std::ostream& Sample<int>::print(std::ostream& ostr) const**. Instead the syntax is: **template<class T> std::ostream& Sample<T>::print(std::ostream& ostr)**.
+
 
 .. code-block:: cpp
 
@@ -181,16 +184,12 @@ Definition and declaration of explicit specializations
         
         return 0;
     }
- 
-.. note:: 
-
-   Note: ``template<>`` does not preceeded the definiton of ``std::ostream& Sample<int>::print(std::ostream& ostr) const``
 
 Definition and declaration of explicit specializations
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to
-define the primary template). In this example:
+The definition of an explicitly specialized class is unrelated to the definition of the primary template. You do not have to define the primary template in order to define the specialization (nor do you have to define the specialization in order to define the primary template). In this
+example:
 
 .. code-block:: cpp
 
@@ -209,7 +208,7 @@ You can also use the name of an explicit specialization that has been declared b
     template<>  class X<char>; // Declared but not defined
     X<char>* p;
     X<int> i;
-    // X<char> j;
+    // X<char> j; Error: X<char> not defined
         
 The compiler does not allow the declaration ``X<char> j`` because the explicit specialization ``X<char>`` is not defined(only declared).
 
