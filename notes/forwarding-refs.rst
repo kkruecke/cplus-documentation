@@ -22,7 +22,7 @@ The same notation used for rvalue references, the double ampersand *&&*, is also
 
 While ``T&&`` looks just like an rvalue reference (:ref:`rvalue-reference`), when ``&&`` is used for a function template parameter, it is called a **forwarding refernence**, and unlike an rvalue reference, a forwarding reference can bind to
 both rvalues and lvalues, to *const* and *non-const*, to *volatile*, to everything. Its purpose is to support *argument forwarding*: to allow you to pass the argument on unchanged to other function(s). An example of *argument forwarding* is the ``emplace`` method of many STL containers.
-``template<typename... ARGS>emplace (ARGS&&... args)`` allows the new container element to be constructed using *placement new* avoiding unnecessary copy or move operations. 
+``template<typename... ARGS>emplace (ARGS&&... args)`` allows a new container element to be constructed by forwarding its constructor parameters directly to *placement new* avoiding unnecessary copy or move operations. 
 
 Forwarding reference take advantage of the new **C++11** reference collapsing rules. In **C++11**, unlike previous versions, you can syntactically have a reference to a reference, and the following reference collapsing rules apply:
 
