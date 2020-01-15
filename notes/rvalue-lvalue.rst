@@ -6,6 +6,14 @@
 Rvalue References and Lvalue References in C++
 ==============================================
 
+Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
+---------------------------------------------------------------------------------------------
+
+* `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
+* `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
+
+.. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
+
 The rvalues references and forwarding references introduced in C++11 provide the foundation for move semantics, a way of efficiently creating new object from the resouces of objects about to die. We look here at rvlaue references.
 
 Rvalue References and Their Role
@@ -111,11 +119,3 @@ Further Discussion
 ------------------
 
 The topic of rvalue and lvalues is part of the larger topic of :ref:`value-categories`.
-
-Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
----------------------------------------------------------------------------------------------
-
-* `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
-* `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
-
-.. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
