@@ -25,7 +25,7 @@ Move semantics introduced in C++11 required further revision. (BS start-->) The 
     for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
     for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
 
-.. todo:: Is this image really the best. I think the Venn Diagram is better or better yet the box diagram from the article "...., help" at ../images/value-categories1.png. 
+.. todo:: This image is not what is in the C++PL book, so change it. The add the text from cpprefrence below and the Venn Diagram that I currently am using. Add the image from the "...., help" article. 
 
 .. figure:: ../images/value-categories.jpg
    :alt: value categories
@@ -53,6 +53,5 @@ The expressions that have identity are called "glvalue expressions" (glvalue sta
 
 The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. (<----cppreference end)
 
-
 .. todo:: synthesize any important explanations from the other articles and provide examples that explain each of the value categories. Finally add the conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about
-   C++17 and materialization.
+   C++17 and materialization. Include points from the the Dr. Sheep lecture.
