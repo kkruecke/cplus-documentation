@@ -1,1 +1,3 @@
+v2.rst has the new rewrite oof value categoreis that is now in value-categories.rst. See the "..todo"'s in v2.rst for clues on what to add to finish up this new version.
+
 See c++17-range-base-for.rst

@@ -23,7 +23,7 @@ Introduction
 
 Here are some examples of expressions:
 
-.. todo:: Change the example to also include prvalues, lvalue, and xvalues. Then after the subsequent two paragraphs, re-who the expression with comments explaining their value categoris.
+.. todo:: What below is from B. Stroutrup's book C++PL 4th Ed. and what is from ???? Perhaps include the history of lvalues and rvalues from cppreference. So C++PL, history from cppreference, stuff from the shorter articles with diagrams. 
 
 .. code-block:: cpp
 
@@ -51,7 +51,7 @@ The `cppreference.com <https://www.cppreference.com>`_ article on `Value Categor
     Each C++ expression (an operator with its operands, a literal, a variable name, etc.) is characterized by two independent properties: a *type* and a *value category*.
     Each expression has some non-reference type, and each expression belongs to exactly one of the three primary value categories: *prvalue*, *xvalue*, and *lvalue*.
 
-Here C++ means C++11. In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two
+C++ means C++11 and greater. In C++03, every expression was either an lvalue or an rvalue. While this still holds true in C++11, the introduction of move construction and move assignment required new value categories. Rvalues were divided into two
 subgroups, xvalues and prvalues, and we now refer to lvalues and xvalues as glvalues. Xvalues are a new kind of value category for unnamed rvalue references. Every expression is one of these three: lvalue, xvalue, prvalue. [#stackoverflow_quote]_ 
 
 Further Elabloration
@@ -63,13 +63,13 @@ In `The C++ Programming Language 4th Edition <https://smile.amazon.com/Programmi
     *lvalue* orignally meant an expression that can be on the left-hand side of an assignment. However, this is obviously not true of a *const* object. Note also, that object in this context refers to the low-level notion of "something
     in memory" and not to the notion of class object.
 
-    An *object* is a contiguous region of storage of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
+    An *object* is a contiguous region of storage; an *lvalue* is an expression that refers to an object....To complement the notion of an *lvalue*, we have the notion of an *rvalue* such as a temporary (e.g. the value returned from
     a function).
 
     There are two properties that matter for an object when it comes to addressing, copying and moving:
 
     * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
-    * *Movable*: the object may be moved from (i.e. we are allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying).
+    * *Movable*: the object may be moved from (i.e. we are allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying it).
 
     It turns out that three of the four possibilities of these two properites are needed to precisely describe the C++ language rules (we have no need for object that do not have identity and cannot be moved). Using "**m**
     for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
