@@ -14,7 +14,6 @@ Notes on Features of C++-17
    notes/managed-ptrs.rst
    notes/value-categories.rst
    notes/v2.rst
-
    notes/rvalue-lvalue.rst
    notes/forwarding-refs.rst
    notes/move-semantics.rst
