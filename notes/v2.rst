@@ -1,6 +1,6 @@
-As Nikolia Josuitis notes in `C++17 The Complete Reference <http://www.cppstd17.com/>`_ , on page ??, Value Categories don't apply to values but rather to expressions.
+As Nikolia Josuitis noted in `C++17 The Complete Reference <http://www.cppstd17.com/>`_ , on page ??, Value Categories don't apply to values but rather to expressions.
 
-The cppreference.com article on `Value Categoes <https://en.cppreference.com/w/cpp/language/value_category#History>`_ gives the history value categories:
+Here is a `history of value categories <https://en.cppreference.com/w/cpp/language/value_category#History>`_ from the C programming language to C++17 [take from cppreference and BS].
 
 C 
 ^^
