@@ -53,5 +53,5 @@ The expressions that have identity are called "glvalue expressions" (glvalue sta
 
 The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. (<----cppreference end)
 
-.. todo:: synthesize any important explanations from the other articles and provide examples that explain each of the value categories. Finally add the conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about
-   C++17 and materialization. Include points from the the Dr. Sheep lecture.
+.. todo:: synthesize any important explanations from the other articles and provide examples that explain each of the value categories. Finally add BS's conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about
+   C++17 and materialization. Include points and/or examples from the the Dr. Sheep lecture.
