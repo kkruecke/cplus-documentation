@@ -24,7 +24,7 @@ rvalues. Several non-lvalue C expressions became lvalue expressions in C++.
 C++11
 ^^^^^
 
-Introduced in C++11, move semantics required value categories to be redefined. To quote Bjarne Stroutrup [footnote]::
+Introduced in C++11, move semantics required value categories to be redefined. To quote from page of C++PL, 4th edition[footnote]::
 
     More semantics ..... more refined view of lvalue and rvalue. There are two properties that matter for for an object when it comes to addressing, copying and moving:
 
@@ -44,7 +44,7 @@ Introduced in C++11, move semantics required value categories to be redefined. T
 
     So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." (footnote: BS end).
 
-(ccpreference start --->) cppreference explains the new value categories created for C++11 this way::
+(ccpreference start --->) cppreference explains the change in value categories introduced by C++11 this way::
 
     "???? to identify these two independent properties of expressions:
 
