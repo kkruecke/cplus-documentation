@@ -21,7 +21,7 @@ Value categories Historically
 
 .. todo:: Use footnotes to cite sources
 
-Here is a `history of value categories <https://en.cppreference.com/w/cpp/language/value_category#History>`_ from the C programming language to C++17 [take from cppreference and BS].
+This history of value categories is from `cppreference.com <https://en.cppreference.com/w/cpp/language/value_category#History>`_. 
 
 C Programming Language 
 ^^^^^^^^^^^^^^^^^^^^^^
