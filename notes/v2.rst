@@ -24,7 +24,7 @@ rvalues. Several non-lvalue C expressions became lvalue expressions in C++.
 C++11
 ^^^^^
 
-Introduced in C++11, move semantics required value categories to be redefined. To quote Bjarne Stroutrup [footnote]:
+Introduced in C++11, move semantics required value categories to be redefined. To quote Bjarne Stroutrup [footnote]::
 
     More semantics ..... more refined view of lvalue and rvalue. There are two properties that matter for for an object when it comes to addressing, copying and moving:
 
@@ -44,21 +44,23 @@ Introduced in C++11, move semantics required value categories to be redefined. T
 
     So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." (footnote: BS end).
 
-(ccpreference start --->) cppreference explains value categories were refined in C++11 to identify these two independent properties of expressions:
+(ccpreference start --->) cppreference explains the new value categories created for C++11 this way::
+
+    "???? to identify these two independent properties of expressions:
 
     **has identity**: it's possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly)
     **can be moved from**: move constructor, move assignment operator, or another function overload that implements move semantics can bind to the expression. 
 
-This lead to the following value categories for expressions:
+    This lead to the following value categories for expressions:
 
     **have identity** and **cannot be moved from** are called lvalue expressions;
     **have identity** and **can be moved from** are called xvalue expressions;
     **do not have identity** and **can be moved from** are called prvalue ("pure rvalue") expressions;
     **do not have identity** and **cannot be moved from** are not used. 
 
-The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.
+    The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.
 
-The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
+    The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
 
 .. todo:: include hte the finaly diagram from https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
 
