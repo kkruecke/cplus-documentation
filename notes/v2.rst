@@ -4,11 +4,10 @@ Value Categories: Revision
 Helpful Articles
 ----------------
 
-* `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
+* `Building Intuition on Value Categories <https://marcodiiga.github.io/building-intuition-on-value-categories>`_ is very good!
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 *  http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
-* `cppreference.com Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 
@@ -55,7 +54,7 @@ for movable" and "**i** for has identity", we can represent this classification 
 
 So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. 
 
-Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation :
+Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation:
 
 With the introduction of move semantics in C++11, value categories were redefined to characterize two independent properties of expressions:
 
@@ -71,7 +70,7 @@ This lead to the following value categories for expressions:
 
 The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.
 
-The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
+The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions.
 
 .. todo:: include a similar diagram as the last one on https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
 
