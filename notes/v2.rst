@@ -3,8 +3,8 @@ Value Categories: Revision
 
 As Nikolia Josuitis noted in `C++17 The Complete Reference <http://www.cppstd17.com/>`_ , on page ??, Value Categories don't apply to values but rather to expressions.
 
-History of Value categories
----------------------------
+Value categories Historically
+-----------------------------
 
 .. todo:: Use footnotes to cite sources
 
