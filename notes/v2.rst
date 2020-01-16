@@ -6,7 +6,6 @@ Helpful Articles
 
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
-*  http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 
@@ -76,8 +75,11 @@ The expressions that can be moved from are called "rvalue expressions". Both prv
 Examples
 --------
 
-See the examples and explanation `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_ and at
-`The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_. There is also a `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_.
+.. todo:: Evaluate these articles:
+
+See the examples and explanations `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. How worthwile is this article? 
+Check out this article   http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html. Same question.
+These are two very good sites: `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_ and `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ <-- very good.
 
 .. todo:: Mention C++17 materialization changes impact on value categories.
 
