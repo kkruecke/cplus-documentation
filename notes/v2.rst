@@ -26,7 +26,7 @@ C++11
 
 Introduced in C++11, move semantics required value categories to be redefined. Quoting from page 166 of the C++ Programming Language, 4th Edition:
 
-"There are two properties that matter for for an object when it comes to addressing, copying and moving:
+There are two properties that matter for for an object when it comes to addressing, copying and moving:
 
 * **Has Identity**: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
 * **Movable**: the object may be moved from (i.e. we are allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying it).
@@ -42,7 +42,7 @@ for movable" and "**i** for has identity", we can represent this classification 
 
    **Figure: value categories** 
 
-So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." 
+So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. 
 
 Cppreference's value categories `article <https://en.cppreference.com/w/cpp/language/value_category>`_ offers this explanation of the value categories in C++11:
 
