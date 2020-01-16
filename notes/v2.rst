@@ -26,10 +26,6 @@ C++11
 
 Introduced in C++11, move semantics required value categories to be redefined. Quoting from page 166 of the C++ Programming Language, 4th Edition:
 
-.. raw:: html
-
-   <span style="font-family: Verdana, Geneva, sans-serif;">
-
 There are two properties that matter for for an object when it comes to addressing, copying and moving:
 
 * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
@@ -46,19 +42,11 @@ for movable" and "**i** for has identity", we can represent this classification 
 
    **Figure: value categories** 
 
-So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." (footnote: BS end).
+So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." 
 
-.. raw:: html
+cppreference's value categories `article <https://en.cppreference.com/w/cpp/language/value_category>`_ offers this explanation of the change in value categories introduced by C++11 this way:
 
-   </span>
-
-(ccpreference start --->) cppreference explains the change in value categories introduced by C++11 this way:
-
-.. raw:: html
-
-   <span style="font-family: Verdana, Geneva, sans-serif;">
-
-"???? to identify these two independent properties of expressions:
+With the introduction of move semantics in C++11, value categories were redefined to characterize two independent properties of expressions:
 
 * **has identity**: it's possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly)
 * **can be moved from**: move constructor, move assignment operator, or another function overload that implements move semantics can bind to the expression. 
@@ -74,11 +62,7 @@ The expressions that have identity are called "glvalue expressions" (glvalue sta
 
 The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
 
-.. raw:: html
-
-   </span>
-
-.. todo:: include hte the finaly diagram from https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
+.. todo:: include this final diagram from https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
 
 .. todo:: Use BS's example on page 166 and any cppreference or other articles-above examples. Also synthesize any important explanations from the other articles, including Dr. Sheep's video. The keep thing is to provide examples at top. 
    Finally add BS's conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about C++17 and materialization.
