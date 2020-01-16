@@ -6,11 +6,9 @@ Helpful Articles
 
 * `lvalues, rvalues, glvalues, prvalues, xvalues, help! <https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help/>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
-* `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_.
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 *  http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html
 * `cppreference.com Value Categories <https://en.cppreference.com/w/cpp/language/value_category>`_
-* `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_, which refers to `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_.
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 
@@ -75,8 +73,13 @@ The expressions that have identity are called "glvalue expressions" (glvalue sta
 
 The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
 
+.. todo:: include a similar diagram as the last one on https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
 
-.. todo:: include this final diagram from https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
+Examples
+--------
+
+xvalues. See the examples of xvalues at `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_ and at
+`The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_. There is also a `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_.
 
 .. todo:: Mention C++17 materialization changes impact on value categories.
 
