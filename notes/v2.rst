@@ -32,7 +32,7 @@ references to const can bind to rvalues. Several non-lvalue C expressions became
 C++11
 ^^^^^
 
-Introduced in C++11, move semantics required value categories to be redefined. C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). To explain these categories, we quote from page 166 of the C++ Programming Language, 4th Edition::
+Introduced in C++11, move semantics required value categories to be redefined. C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). To explain these categories, we quote from page 166 of the C++ Programming Language, 4th Edition:
 
     There are two properties that matter for for an object when it comes to addressing, copying and moving:
     
@@ -56,7 +56,9 @@ Introduced in C++11, move semantics required value categories to be redefined. C
 
 .. todo:: Add BS comments on each these terms and an example or two -- all from pa 166. 
 
-    Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation:
+..
+
+Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation:
     
     With the introduction of move semantics in C++11, value categories were redefined to characterize two independent properties of expressions:
     
