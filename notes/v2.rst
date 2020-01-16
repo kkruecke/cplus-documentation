@@ -26,6 +26,10 @@ C++11
 
 Introduced in C++11, move semantics required value categories to be redefined. Quoting from page 166 of the C++ Programming Language, 4th Edition:
 
+.. raw:: html
+
+   <span style="font-family: Verdana, Geneva, sans-serif;">
+
 There are two properties that matter for for an object when it comes to addressing, copying and moving:
 
 * *Has Identity*: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed, etc.
@@ -44,7 +48,15 @@ for movable" and "**i** for has identity", we can represent this classification 
 
 So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from." (footnote: BS end).
 
+.. raw:: html
+
+   </span>
+
 (ccpreference start --->) cppreference explains the change in value categories introduced by C++11 this way:
+
+.. raw:: html
+
+   <span style="font-family: Verdana, Geneva, sans-serif;">
 
 "???? to identify these two independent properties of expressions:
 
@@ -61,6 +73,10 @@ This lead to the following value categories for expressions:
 The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.
 
 The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions. ([footnote]<----cppreference end)
+
+.. raw:: html
+
+   </span>
 
 .. todo:: include hte the finaly diagram from https://blog.knatten.org/2018/03/09/lvalues-rvalues-glvalues-prvalues-xvalues-help
 
