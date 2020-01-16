@@ -55,7 +55,7 @@ for movable" and "**i** for has identity", we can represent this classification 
 
 So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move from. 
 
-Cppreference's value categories `article <https://en.cppreference.com/w/cpp/language/value_category>`_ offers this explanation of the value categories in C++11:
+Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation :
 
 With the introduction of move semantics in C++11, value categories were redefined to characterize two independent properties of expressions:
 
