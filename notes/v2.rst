@@ -6,6 +6,7 @@ Helpful Articles
 
 * `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
+* `CppConn 2019. Ben Saks: Back to Basics: Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
