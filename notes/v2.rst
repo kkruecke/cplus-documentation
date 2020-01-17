@@ -6,35 +6,60 @@ Helpful Articles
 
 * `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
 * `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
-* `CppConn 2019. Ben Saks: Back to Basics: Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
 * `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 
 As Nikolia Josuitis noted in `C++17 The Complete Reference <http://www.cppstd17.com/>`_ , on page ??, Value Categories don't apply to values but rather to expressions.
 
-Value categories Historically
------------------------------
-
-.. todo:: Use footnotes to cite sources
-
-This history of value categories is from `cppreference.com <https://en.cppreference.com/w/cpp/language/value_category#History>`_. 
+Value categories [#fhistory]_
+------------------------------
 
 C Programming Language 
 ^^^^^^^^^^^^^^^^^^^^^^
 
-C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value". 
+In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value", its "home" in memory; 
+for example
 
-C++98
-^^^^^
+.. code-block:: cpp
+
+    int n;
+    n = 1;
+
+in the expression ``n = 1``, the subexpression **n** refers to an integer object, a specific location in memory, so **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
+appear on the left hand side of an assignment, can be assigned to.
+
+lvalue and rvalue relevance in C++98
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions, made functions into lvalues, and added the rule that references can bind to lvalues, but only
-references to const can bind to rvalues. Several non-lvalue C expressions became lvalue expressions in C++. 
+references to const can bind to rvalues. Several non-lvalue C expressions became lvalue expressions in C++. In the expression above ``n = 1;``, **1** is an rvalue because it is not an object, a location in memory, an lvalue.
+
+The reason we distinguished rvalues from lvalues is it allows the compiler to improve the efficiency of the code generated. The compile does not need to place rvalues in storage. When an lvalue is used on the right hand side of an assignment
+
+.. code-block:: cpp
+
+    int n, m;
+    n = 1;
+    m = n; // m undergoes lvalue to rvalue conversion
+
+it is said to undergo lvalue-to-rvalue conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know about the value it holds, we can view the object as an rvalue.
+
+lvalues and rvalues are relevant in other contexts than assignment. The binary operator + is an example. It operands can be either rvalues or lvalues. 
+
+.. code-block:: cpp
+
+    ... x + 2 ... // lvalue + rvalue
+    ... 5 + 2 ... // rvalue + rvalue
+    ... x + y ... // lvalue + lvalue
+
+The result of the + operation is a temporary object that the compiler may place in a register. Since this temporary object is not guaranteed to be in memory, it is therefore an rvalue. STOPPED at 11:03 of https://www.youtube.com/watch?v=XS2JddPq7GQ.
 
 C++11
 ^^^^^
 
-Introduced in C++11, move semantics required value categories to be redefined. C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). To explain these categories, we quote from page 166 of the C++ Programming Language, 4th Edition:
+Introduced in C++11, move semantics required value categories to be redefined. C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). To explain these categories,
+we quote from page 166 of **The C++ Programming Language, 4th Edition**:
 
     There are two properties that matter for for an object when it comes to addressing, copying and moving:
     
@@ -93,3 +118,7 @@ These are two very good sites: `The deal with C++14 xvalues <https://blog.jeaye.
 
 .. todo:: Use BS's example on page 166 and any cppreference or other articles-above examples. Also synthesize any important explanations from the other articles, including Dr. Sheep's video. The keep thing is to provide examples at top. 
    Finally add BS's conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about C++17 and materialization.
+
+.. rubric:: Footnotes
+
+.. [#fhistory] This material is from `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_.
