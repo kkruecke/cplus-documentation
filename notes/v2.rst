@@ -94,7 +94,7 @@ There are actually two kinds of rvalues:
 
 .. note:: As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. These terms exist in the Standard so compiler authors know what needs to be done.
 
-When a temporary is created due to binding to a const reference, it undergoes what is called a "temporary materialization conversion" that converts a prvalue into an xvalue.
+When a temporary is created due to binding to a const reference, it undergoes what is called a "temporary materialization conversion" that converts a prvalue into an xvalue. For example, take
 
 .. code-block:: cpp
 
@@ -112,7 +112,7 @@ When a temporary is created due to binding to a const reference, it undergoes wh
  
    s = s + ", " t; 
 
-The compiler implicitly does 
+Here the compiler implicitly does 
 
 .. code-block:: cpp
 
@@ -128,7 +128,7 @@ C++11
 ^^^^^
 
 What where called "references" in C++03, C++11 calls "lvalue references". This distinguishes them from C++11's "rvalue references". lvalue references in C++11 behave just like references in C++03. rvalue refernces are
-new. lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. You can also use "rvalue references as function parameters and return types, as in:
+new in C++11. lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. You can also use rvalue references as function parameters and return types, as in:
 
 .. code-block:: cpp
 
@@ -137,9 +137,9 @@ new. lvalue references are declared using single `&` and rvalue reference are de
 
     const int&& rci = 20;  // A const rvalue reference is not really of any use.
 
-The primary use of rvalue references is a funciton parameters and return types. They are not primary used to delcare variables like ri above.
+In fact, the primary use of rvalue references is as funciton parameters and return types. They are not primarily to delcare variables like ``ri`` above.
 
-rvalue references only bind to rvalues. This is true even for "rvalue reference to const", for example:
+rvalue references can only bind to rvalues. This is true even for "rvalue reference to const", for example:
 
 .. code-block:: cpp
 
@@ -147,13 +147,13 @@ rvalue references only bind to rvalues. This is true even for "rvalue reference 
     int &&ri = n;       // error: n is an lvalue. 
     const int &&rj = n; // error: n is an lvalue. 
 
-We saw previously that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, resulting in a prvalue being turned into a xvalue. Likewise, binding an "rvalue reference" to an rvalue also triggers
-a temporary materialization conversion.
+We saw previously that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, where a prvalue is turned into a xvalue. The temporary materialization conversion also occurs when we bind an
+"rvalue reference" to an rvalue. An xvalue is created. 
 
 The reason for rvalue references
 ++++++++++++++++++++++++++++++++
 
-Rvalue reference are in C++11 mainly to implement move operations that avoid unnecessary copying.
+rvalue references are in C++11 mainly to provide more efficient move constructors and move assignment operator that the compiler can call when it detects an rvalue.
 
 .. code-block:: cpp
 
@@ -163,7 +163,7 @@ Rvalue reference are in C++11 mainly to implement move operations that avoid unn
          string(const char *);                // converting construcotr
          string& operator=(const string&);
          string(string&&) noexcept;           // constructor
-         string& operator(string&&) noexcept; // assignment 
+         string& operator=(string&&) noexcept; // assignment 
          //...  
     }; 
 
@@ -171,7 +171,39 @@ Rvalue reference are in C++11 mainly to implement move operations that avoid unn
     s1 = s2;         // Because s2 is not expiring, and it must be preserved, the copy constructor is invoked. 
     s1 = s2 + s3;    // Since the result of s1 + s2 expires at the end of the statement, it can be moved from.
 
-STOPPED at 43:30
+rvalue reference parameters are considered lvalues within the body of the function. For example, in
+
+.. code-block:: cpp
+
+    string& string::operator=(string&& other) noexcept
+    {
+        string temp(other); // invoke copy constructor
+        //...
+    }
+
+because the rvalue reference parameter other has a name, it is an lvalue within operator=.
+
+Converting lvalues into xvalues, Expiring values
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+std::swap() is an example where we want to force the compiler to move an object's state instead of copying it. For example,
+
+.. code-block:: cpp
+
+    template<class T> void swap(T& a, T& b)
+    {
+       temp t(a);
+       a = b;
+       b = t;
+    }   
+
+invokes copy constructors. But we know that the state of a does not need to preserved. We to tell the compiler that a does not need to be preserved by converting it from an lvalue to an xvalue. 
+STOPPED AT 47:30.
+
+
+
+
+
 
 .. note:: prior notes below.
 
