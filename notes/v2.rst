@@ -50,20 +50,20 @@ lvalues and rvalues are relevant in other contexts than assignment. The binary o
 
 .. code-block:: cpp
 
-    ... x + 2 ... // lvalue + rvalue
-    ... 5 + 2 ... // rvalue + rvalue
-    ... x + y ... // lvalue + lvalue
+    x + 2   // lvalue + rvalue
+    5 + 2   // rvalue + rvalue
+    x + y   // lvalue + lvalue
 
 The result of the + operation is a temporary object that the compiler may place in a register. Since this temporary object is not guaranteed to be in memory, it is therefore an rvalue. Another of example of an lvalue is the 
-result of the derefence operator:
+result of the derefence operator
 
 .. code-block:: cpp
 
     int a[N];
     int *p = a;
     char *s = nullptr;
-    *p = 3;   // *p is an lvalue  
-    *s = '\0; // *s is an lvalue even though s is null and *s causes undefined behavior.
+    *p = 3;     // *p is an lvalue  
+    *s = '\0';  // *s is an lvalue even though s is null and *s causes undefined behavior.
 
 In C++, rvaluse of class type do occupty data storage. Why? Consider 
 
@@ -85,7 +85,7 @@ const lvlaue   yes                 no
 rvalue*        no                  no
 ============== =================== ============= 
 
-*-rvalues of class type do occupy storage. STOPPED at 30:10.
+.. note:: rvalues of class type do occupy storage. STOPPED at 30:10.
 
 References
 
