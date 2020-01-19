@@ -13,11 +13,8 @@ Helpful Articles
 
 As Nikolia Josuitis noted in `C++17 The Complete Reference <http://www.cppstd17.com/>`_ , on page ??, Value Categories don't apply to values but rather to expressions.
 
-Value categories [#fhistory]_
-------------------------------
-
-C Programming Language 
-^^^^^^^^^^^^^^^^^^^^^^
+From the C Programming Language to C++ [#fhistory]_
+---------------------------------------------------
 
 In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value" in memory; 
 for example,
@@ -30,8 +27,8 @@ for example,
 in the expression ``n = 1``, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
 appear on the left hand side of an assignment and can be assigned to.
 
-lvalue and rvalue relevance in C++98
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+lvalue and rvalue relevances in C++03
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions, made functions into lvalues, and added the rule that references can bind to lvalues, but only
 references to const can bind to rvalues. Several non-lvalue C expressions became lvalue expressions in C++. In the expression above ``n = 1;``, **1** is an rvalue because it is not an object, a location in memory, an lvalue.
@@ -65,7 +62,7 @@ result of the derefence operator
     *p = 3;     // *p is an lvalue  
     *s = '\0';  // *s is an lvalue even though s is null and *s causes undefined behavior.
 
-In C++, rvaluse of class type do occupty data storage. Why? Consider 
+In C++, rvaluse of class type do occupty data storage. Why? Consider this example 
 
 .. code-block:: cpp
 
@@ -73,9 +70,9 @@ In C++, rvaluse of class type do occupty data storage. Why? Consider
     S foo();
     int j = foo().y; // foo() is an rvalue that occupies storage.
 
-To get the y member of the struct S returned by foo(), we need the base address (of the struct S returned by foo()), and any object with an address occupies storage.
+To get the y member of the ``foo().y``, we need the base address of the struct S returned by foo(), and any object with an address occupies storage.
 
-Recap 
+**Recap so far** 
 
 ============== =================== =============
 Value Category Can Take Address Of Can Assign To
@@ -85,12 +82,98 @@ const lvlaue   yes                 no
 rvalue*        no                  no
 ============== =================== ============= 
 
-.. note:: rvalues of class type do occupy storage. STOPPED at 30:10.
+.. note:: Conceptually rvalues don't occupy storage; however, rvalues of class type do occupy storage, and const references to temporaries also must place the temporary in storage. 
 
-References
+Types of rvalues
+++++++++++++++++
+
+There are actually two kinds of rvalues:
+
+* "Pure rvalues" or **prvalues** don't occupy data storage
+* "Expiring values" or **xvalues** do occupy storage
+
+.. note:: As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. These terms exist in the Standard so compiler authors know what needs to be done.
+
+When a temporary is created due to binding to a const reference, it undergoes what is called a "temporary materialization conversion" that converts a prvalue into an xvalue.
+
+.. code-block:: cpp
+
+    class string {
+      public:
+         string(const string&);
+         string(const char *); // converting construcotr
+         string& operator=(const string&);
+         //...  
+    }; 
+
+   string operator+(const string& lo, const string& ro); // reference to const will bind to both lvalues and rvalues. 	
+   string s{"hello"};
+   string t{"world"};
+ 
+   s = s + ", " t; 
+
+The compiler implicitly does 
+
+.. code-block:: cpp
+
+    s = s + string(", ") + t; // lvalue + rvalue + lvalue
+
+Now since ``operator+(const string& lo, const string& ro)`` returns an rvalue, we can't do something like
+
+.. code-block:: cpp
+
+   string *p = &(s + t); // error: can't take address of rvalue.
 
 C++11
 ^^^^^
+
+What where called "references" in C++03, C++11 calls "lvalue references". This distinguishes them from C++11's "rvalue references". lvalue references in C++11 behave just like references in C++03. rvalue refernces are
+new. lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. You can also use "rvalue references as function parameters and return types, as in:
+
+.. code-block:: cpp
+
+    int&& ri = 10; // rvalue reference to int. 
+    double &&f(int &&rint); 
+
+    const int&& rci = 20;  // A const rvalue reference is not really of any use.
+
+The primary use of rvalue references is a funciton parameters and return types. They are not primary used to delcare variables like ri above.
+
+rvalue references only bind to rvalues. This is true even for "rvalue reference to const", for example:
+
+.. code-block:: cpp
+
+    int n = 10; 
+    int &&ri = n;       // error: n is an lvalue. 
+    const int &&rj = n; // error: n is an lvalue. 
+
+We saw previously that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, resulting in a prvalue being turned into a xvalue. Likewise, binding an "rvalue reference" to an rvalue also triggers
+a temporary materialization conversion.
+
+The reason for rvalue references
+++++++++++++++++++++++++++++++++
+
+Rvalue reference are in C++11 mainly to implement move operations that avoid unnecessary copying.
+
+.. code-block:: cpp
+
+    class string {
+      public:
+         string(const string&);
+         string(const char *);                // converting construcotr
+         string& operator=(const string&);
+         string(string&&) noexcept;           // constructor
+         string& operator(string&&) noexcept; // assignment 
+         //...  
+    }; 
+
+    string s1, s2, s3;
+    s1 = s2;         // Because s2 is not expiring, and it must be preserved, the copy constructor is invoked. 
+    s1 = s2 + s3;    // Since the result of s1 + s2 expires at the end of the statement, it can be moved from.
+
+STOPPED at 43:30
+
+.. note:: prior notes below.
 
 Introduced in C++11, move semantics required value categories to be redefined. C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). To explain these categories,
 we quote from page 166 of **The C++ Programming Language, 4th Edition**:
