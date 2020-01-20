@@ -197,13 +197,38 @@ std::swap() is an example where we want to force the compiler to move an object'
        b = t;
     }   
 
-invokes copy constructors. But we know that the state of a does not need to preserved. We to tell the compiler that a does not need to be preserved by converting it from an lvalue to an xvalue. 
-STOPPED AT 47:30.
+invokes copy constructors. But we know that the state of ``a`` does not need to preserved. Therefore, to tell the compiler that ``a`` does not need to be preserved, we must converting it from an lvalue to an xvalue. 
+This is what ``std::move()`` does. It converts the input parameter to an unamed rvalue reference, an xvalue.
 
+.. code-block:: cpp
 
+    template<typename T> constexpr typename std::remove_reference<T>::type&& move(T&& t) noexcept
+    {
+       return static_cast<typename std::remove_reference<T>::type&&>(t); 
+    }
 
+Since return values never have names, calling ``std::move()`` returns an unamed rvalue reference.
 
+.. code-block:: cpp
 
+    template<class T> void swap(T& a, T& b)
+    {
+       temp t(std::move(a));
+       a = std::move(b);
+       b = std::move(t);
+    }   
+
+This figure shows the properties of ...ELABORATE.
+    
+.. figure:: ../images/value-categories-tabular-view.jpg
+   :alt: value categories
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
+
+   **Figure: value categories** 
+
+STOPPED AT 50:00
 
 .. note:: prior notes below.
 
