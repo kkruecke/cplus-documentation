@@ -1,8 +1,8 @@
 Introduction to C++11 Value Categories
 ======================================
 
-lvalues in the C Programming Language
--------------------------------------
+lvalues in the C Programming Language [#fhistory]_ 
+--------------------------------------------------
 
 In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value" in memory; 
 for example,
@@ -303,10 +303,6 @@ Two very good sites: `The deal with C++14 xvalues <https://blog.jeaye.com/2017/0
 .. todo:: Use BS's example on page 166 and any cppreference or other articles-above examples. Also synthesize any important explanations from the other articles, including Dr. Sheep's video. The keep thing is to provide examples at top. 
    Finally add BS's conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about C++17 and materialization.
 
-.. rubric:: Footnotes
-
-.. [#fhistory] This material is from `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_.
-
 Helpful Articles
 ----------------
 
@@ -317,3 +313,7 @@ Helpful Articles
 * `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
 
 .. todo:: footnotes.
+
+.. rubric:: Footnotes
+
+.. [#fhistory] This material is from `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.
