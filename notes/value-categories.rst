@@ -248,11 +248,34 @@ The figure below show that the two key properties that distinguishes the value c
 
 An excellent explantion of the "has identity" and "move-able" properties that distinguish lvalues, xvalues and prvalue is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
 
-.. todo:: Evaluate these articles:
+Examples of xvalues
++++++++++++++++++++
 
-See the examples and explanations `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. 
-Seethis article   http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html. Same question.
-Two very good sites: `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_ and `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ <-- very good.
+.. code-block:: cpp
+
+    void f(vector<string>& vs)
+    {
+       vector<string>& v2 = move(vs); 
+       //...
+    }
+
+``move(vs)`` is an xvalue. It has identity. We can refer to it as **vs**, but we have cast it to an unamed rvalue reference. Since ``move(vs)`` is moveable and has identity it is an xvalue.
+
+.. code-block:: cpp
+
+    struct A { ... };
+    A a;             // a is an lvalue
+    static_cast<A&&>(a); // but this expression is an xvalue.
+
+In the code example above, we haven't moved anything yet. We've just created an xvalue by casting an lvalue to an unnamed rvalue reference. It can still be identified by its lvalue name; but, as an xvalue, it is now capable of being moved. 
+But you can think of the "x" in "xvalue" as meaning "expert-only" if that helps. By casting an lvalue into an xvalue (a kind of rvalue), the value then becomes capable of being bound to an rvalue reference.
+
+Examples of lvalues, xvalues and prvalues 
+-----------------------------------------
+
+Good examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_.
+
+.. todo:: Read this also `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. 
 
 .. todo:: Mention the important change in C++17 having to do with materialization and how this relates to value categories.
 
