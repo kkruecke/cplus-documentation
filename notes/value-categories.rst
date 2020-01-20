@@ -240,7 +240,7 @@ The figure below show that the two key properties that distinguishes the value c
     
 .. figure:: ../images/value-categories-tabular-view.jpg
    :alt: value categories
-   :align: left 
+   :align: center 
    :scale: 100 %
    :figclass: custom-figure
 
