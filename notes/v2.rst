@@ -82,7 +82,7 @@ const lvlaue   yes                 no
 rvalue         no                  no
 ============== =================== ============= 
 
-.. note:: Conceptually rvalues don't occupy storage; however, rvalues of class type do, and const references to temporaries also cause the temporary to be place storage. 
+Conceptually rvalues don't occupy storage; however, rvalues of class type do, and const references to temporaries also cause the temporary to be place storage. 
 
 Types of rvalues
 ++++++++++++++++
@@ -92,7 +92,7 @@ There are actually two kinds of rvalues:
 * "Pure rvalues" or **prvalues** don't occupy data storage
 * "Expiring values" or **xvalues** do occupy storage
 
-.. note:: As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. These terms exist in the Standard so compiler authors know what needs to be done.
+These terms exist in the C++ standard so compiler authors know what needs to be done. As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. 
 
 When a temporary is created due to binding to a const reference, it undergoes what is called a "temporary materialization conversion" that converts a prvalue into an xvalue. For example, take
 
@@ -220,7 +220,7 @@ Since return values never have names, calling ``std::move()`` returns an unamed 
        b = std::move(t);
     }   
 
-This figure shows the properties of ...ELABORATE.
+This figure shows the properties of ...ELABORATE. TODO <--- Use the verbage from Stroutrup of from the '...help" article.
     
 .. figure:: ../images/value-categories-tabular-view.jpg
    :alt: value categories
