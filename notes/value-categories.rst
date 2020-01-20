@@ -12,8 +12,8 @@ for example,
     int n;
     n = 1;
 
-in the expression ``n = 1``, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
-appear on the left hand side of an assignment and can be assigned to, but the "l" is lvalue is no longer of significance. lvalues occur in contexts outside of assignment.
+in the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
+appear on the left hand side of an assignment and can be assigned to, but the "l" in lvalue is no longer of significance. lvalues occur in contexts outside of assignment.
 
 lvalues, rvalues and references in C++03
 ----------------------------------------
@@ -28,7 +28,7 @@ When an lvalue is used on the right hand side of an assignment
 
     int n, m;
     n = 1;
-    m = n; // m undergoes lvalue to rvalue conversion
+    m = n; // m and n are both lvalues. n undergoes lvalue-to-rvalue conversion. 
 
 it is said to undergo **lvalue-to-rvalue** conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
 as an rvalue.
@@ -74,14 +74,14 @@ const lvlaue   yes                 no
 rvalue         no                  no
 ============== =================== ============= 
 
-While conceptually rvalues don't occupy storage; rvalues of class type do, and "const references to a temporary" also causes the temporary to be placed in storage, for example 
+While conceptually rvalues don't occupy storage, rvalues of class type do, and "const references to a temporary" also causes the temporary to be placed in storage. For example 
 
 .. code-block:: cpp
 
     const int& int_ref1 = 10; 
     int& int_ref2 = 11;      // Error: int_ref2 is not const  
 
-In the code above, the temporary 10 is place in storage so that the const refernence to int can bind to it. Without 'const' the compiler issues an error.        
+in the code above, the temporary 10 is place in storage so that the const refernence to int can bind to it. Without 'const' the compiler issues an error.        
 
 lvalue references and rvalue references in C++11
 ------------------------------------------------
