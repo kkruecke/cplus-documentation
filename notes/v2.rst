@@ -79,7 +79,7 @@ Value Category Can Take Address Of Can Assign To
 ============== =================== ============= 
 lvlaue         yes                 yes
 const lvlaue   yes                 no
-rvalue*        no                  no
+rvalue         no                  no
 ============== =================== ============= 
 
 .. note:: Conceptually rvalues don't occupy storage; however, rvalues of class type do, and const references to temporaries also cause the temporary to be place storage. 
