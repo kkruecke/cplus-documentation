@@ -1,9 +1,8 @@
 Introduction to C++11 Value Categories
 ======================================
 
-
-Historical Perspective: From the C Programming Language to C++ [#fhistory]_
----------------------------------------------------------------------------
+lvalues in the C Programming Language
+-------------------------------------
 
 In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value" in memory; 
 for example,
@@ -17,7 +16,7 @@ in the expression ``n = 1``, the subexpression **n** refers to an integer object
 appear on the left hand side of an assignment and can be assigned to, but the "l" is lvalue is no longer of significance. lvalues occur in contexts outside of assignment.
 
 lvalue and rvalue relevances in C++03
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------
 
 Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions, it made functions into lvalues, and it added the rule that references can bind to lvalues, but only
 references to const can bind to rvalues. Several non-lvalue C expressions became lvalue expressions in C++. In the expression ``n = 1;``, **1** is an rvalue because it is not an object, a location in memory, an lvalue.
@@ -82,6 +81,31 @@ While conceptually rvalues don't occupy storage; rvalues of class type do, and c
 
 In the code above, the temporary 10 is place in storage so that the const refernence to int can bind to it. Without 'const' the compiler issues an error.        
 
+lvalue references and rvalue references in C++11
+------------------------------------------------
+
+What were previously called simply "references" in C++03 are now called "lvalue references" in C++11. This was done to distinguishes them from "rvalue references". lvalue references in C++11 behave just like references
+did in C++03. On the other hand, rvalue refernces are entirely new in C++11 and are needed for move semantics that were introdued in C++11. 
+
+lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
+
+.. code-block:: cpp
+
+    int&& ri = 10; // rvalue reference to int. 
+    double &&f(int &&rint); 
+
+    const int&& rci = 20;  // A const rvalue reference is not really of any use.
+
+This, in fact, the primary use of rvalue references: as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
+
+rvalue references can only bind to rvalues. This is true even for a "rvalue reference to const", as in the example below
+
+.. code-block:: cpp
+
+    int n = 10; 
+    int &&ri = n;       // error: n is an lvalue. 
+    const int &&rj = n; // error: n is an lvalue. 
+
 The Two Kinds of rvalues
 ++++++++++++++++++++++++
 
@@ -114,45 +138,24 @@ the code below
  
    s = s + ", " t; 
 
-the compiler implicitly invokes the converting constructor ``string::string(const char*)`` that converts a character string into a string.  
+the compiler implicitly invokes the converting constructor ``string::string(const char*)`` to convert ", " into a string:  
 
 .. code-block:: cpp
 
     s = s + string(", ") + t; // lvalue + rvalue + lvalue
 
-Note that ``operator+(const string& lo, const string& ro)`` returns an rvalue, since we can't do something like
+Note the binary operator ``operator+(const string& lo, const string& ro)`` returns an rvalue. Since we can't do something like
 
 .. code-block:: cpp
 
    string *p = &(s + t); // error: can't take address of rvalue.
 
-C++11
-^^^^^
-
-What were previously called simply "references" in C++03 are now called "lvalue references" in C++11. This was done to distinguishes them from "rvalue references". lvalue references in C++11 behave just like references
-did in C++03. On the other hand, rvalue refernces are entirely new in C++11 and are needed for move semantics, which is also new in C++11. 
-
-lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
-
-.. code-block:: cpp
-
-    int&& ri = 10; // rvalue reference to int. 
-    double &&f(int &&rint); 
-
-    const int&& rci = 20;  // A const rvalue reference is not really of any use.
-
-This, in fact, the primary use of rvalue references: as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
-
-rvalue references can only bind to rvalues. This is true even for a "rvalue reference to const", as in the example below
-
-.. code-block:: cpp
-
-    int n = 10; 
-    int &&ri = n;       // error: n is an lvalue. 
-    const int &&rj = n; // error: n is an lvalue. 
-
-We saw previously that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, in which a prvalue is turned into a xvalue (in which the pure rvalue that is not in storage is placed in storage). The temporary materialization conversion also
+the result of ``operator+(const string& lo, const string& ro)`` is an rvalue.
+ 
+We saw that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, in which a prvalue that is not in storage is turned into a xvalue that is placed in storage. The temporary materialization conversion also
 occurs when we bind an "rvalue reference" to an rvalue. When we bind a rvalue reference to an rvalue, an xvalue is created. 
+
+.. todo:: Compare logically flow with value-categories.rst
 
 The real reason for rvalue references
 +++++++++++++++++++++++++++++++++++++
@@ -181,7 +184,7 @@ The result of ``s2 + s3`` is an rvalue that expires at the end of the statement.
 
 .. note:: rvalue reference parameters are considered lvalues within the body of the function.
 
-Rvalue reference parameters are considered lvalues within the body of the function. For example, in
+Rvalue reference parameters are considered lvalues within the body of the function. Take, for example
 
 .. code-block:: cpp
 
@@ -191,12 +194,12 @@ Rvalue reference parameters are considered lvalues within the body of the functi
         //...
     }
 
-because the rvalue reference parameter "other" has a name, it is an lvalue within ``string::operator=(string&&other)``.
+Because the rvalue reference parameter "other" has a name, it is an lvalue within ``string::operator=(string&&other)``.
 
 Converting lvalues into xvalues, Expiring values
 ++++++++++++++++++++++++++++++++++++++++++++++++
 
-std::swap() is an example where we want to force the compiler to move an object's state instead of copying it. For example,
+``std::swap()`` is an good example of where we would like to force the compiler to move an object's state instead of copying it. Take, for example,
 
 .. code-block:: cpp
 
@@ -207,8 +210,8 @@ std::swap() is an example where we want to force the compiler to move an object'
        b = t;
     }   
 
-invokes copy constructors. But we know that the state of ``a`` does not need to preserved, but we need to tell the compiler that ``a`` does not need to be preserved by casting it from an lvalue to an xvalue. 
-This is done by ``std::move()`` does, which converts the input parameter into an xvalue, an unamed rvalue reference.
+This code invokes the copy constructors for T. But since we know that the state of ``a`` does not need to preserved, it is more efficient to move its state. To do so, we need to tell the compiler that ``a`` does not need to be preserved by casting it from an lvalue to an xvalue. 
+This is done by calling ``std::move()``, which converts the input parameter into an xvalue, an unamed rvalue reference. ``std::move()`` could perhaps better have been named ``std::rvalue()`` or ``std::xvalue()``.
 
 .. code-block:: cpp
 
@@ -228,8 +231,7 @@ Since return values never have names, calling ``std::move()`` returns an unamed 
        b = std::move(t);
     }   
 
-
-This figure shows that the two properties that distinguishes the value categories of C++11 are "identity" and "move-ability":
+The figure below show that the two key properties that distinguishes the value categories of C++11 are "has identity" and "move-able":
     
 .. figure:: ../images/value-categories-tabular-view.jpg
    :alt: value categories
@@ -241,7 +243,7 @@ This figure shows that the two properties that distinguishes the value categorie
 
 .. note:: prior notes below.
 
-C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). Bjarne Stroutrup described these value categories this way, on page 166, of **The C++ Programming Language, 4th Edition**:
+Thus C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). Bjarne Stroutrup described their differences this way, on page 166, of **The C++ Programming Language, 4th Edition**:
 
     There are two properties that matter for for an object when it comes to addressing, copying and moving:
     
@@ -287,6 +289,8 @@ Another good explanation of C++11 value categories is from `cppreference's artic
 
 TODO
 ----
+
+.. todo:: Mention the excellent Microsoft article.
 
 .. todo:: Evaluate these articles:
 
