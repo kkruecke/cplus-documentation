@@ -246,10 +246,11 @@ The figure below show that the two key properties that distinguishes the value c
 
    **Figure: value categories** 
 
-An excellent explantion of the "has identity" and "move-able" properties that distinguish lvalues, xvalues and prvalue is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
+An excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
+The articles also contains examples of each of the value category.
 
-Examples of xvalues
-+++++++++++++++++++
+Some brief Examples of xvalues
+++++++++++++++++++++++++++++++
 
 .. code-block:: cpp
 
@@ -277,7 +278,10 @@ Good examples of lvalues, xvalues and prvalues can be found at `Value Categories
 
 .. todo:: Read this also `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. 
 
-.. todo:: Mention the important change in C++17 having to do with materialization and how this relates to value categories.
+Value Categories in C++17
+-------------------------
+
+.. todo:: Mention the important change in C++17 having to do with materialization and how this relates to value categories!!!!!
 
 Reference Articles
 ------------------
