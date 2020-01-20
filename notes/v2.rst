@@ -127,8 +127,10 @@ Now since ``operator+(const string& lo, const string& ro)`` returns an rvalue, w
 C++11
 ^^^^^
 
-What where called "references" in C++03, C++11 calls "lvalue references". This distinguishes them from C++11's "rvalue references". lvalue references in C++11 behave just like references in C++03. rvalue refernces are
-new in C++11. lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. You can also use rvalue references as function parameters and return types, as in:
+What were previously called simply "references" in C++03, C++11 now calls "lvalue references". This is done to distinguishes them from "rvalue references". lvalue references in C++11 behave just like references did in C++03. rvalue refernces are
+entirely new in C++11. 
+
+lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, as in
 
 .. code-block:: cpp
 
@@ -137,9 +139,9 @@ new in C++11. lvalue references are declared using single `&` and rvalue referen
 
     const int&& rci = 20;  // A const rvalue reference is not really of any use.
 
-In fact, the primary use of rvalue references is as funciton parameters and return types. They are not primarily to delcare variables like ``ri`` above.
+and, in fact, the primary use of rvalue references is as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
 
-rvalue references can only bind to rvalues. This is true even for "rvalue reference to const", for example:
+rvalue references can only bind to rvalues. This is true even for "rvalue reference to const" and in the example below
 
 .. code-block:: cpp
 
