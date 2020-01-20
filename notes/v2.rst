@@ -1,5 +1,5 @@
-Value Categories: Revision
-==========================
+Introduction to C++11 Value Categories
+======================================
 
 Helpful Articles
 ----------------
