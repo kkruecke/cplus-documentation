@@ -1,0 +1,318 @@
+Introduction to C++11 Value Categories
+======================================
+
+lvalues in the C Programming Language
+-------------------------------------
+
+In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value" in memory; 
+for example,
+
+.. code-block:: cpp
+
+    int n;
+    n = 1;
+
+in the expression ``n = 1``, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
+appear on the left hand side of an assignment and can be assigned to, but the "l" is lvalue is no longer of significance. lvalues occur in contexts outside of assignment.
+
+lvalue and rvalue relevances in C++03
+-------------------------------------
+
+Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions, it made functions into lvalues, and it added the rule that references can bind to lvalues, but only
+references to const can bind to rvalues. Several non-lvalue C expressions became lvalue expressions in C++. In the expression ``n = 1;``, **1** is an rvalue because it is not an object, a location in memory, an lvalue.
+
+Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code generated. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
+When an lvalue is used on the right hand side of an assignment
+
+.. code-block:: cpp
+
+    int n, m;
+    n = 1;
+    m = n; // m undergoes lvalue to rvalue conversion
+
+it is said to undergo **lvalue-to-rvalue** conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
+as an rvalue.
+
+lvalues and rvalues are relevant in other contexts than assignment. The binary operator + is an example. It operands can be either rvalues or lvalues. 
+
+.. code-block:: cpp
+
+    x + 2   // lvalue + rvalue
+    5 + 2   // rvalue + rvalue
+    x + y   // lvalue + lvalue
+
+The result of the + operation is a temporary object that the compiler may place in a register. Since this temporary object is not guaranteed to be in memory, it is therefore an rvalue. Another of example of an lvalue is the 
+result of the derefence operator
+
+.. code-block:: cpp
+
+    int a[N];
+    int *p = a;
+    char *s = nullptr;
+    *p = 3;       // *p is an lvalue  
+    *s = '\0';    // *s is an lvalue even though s is null and even though *s causes undefined behavior.
+
+In C++, rvaluse of class type do occupty data storage. Why? Consider this example 
+
+.. code-block:: cpp
+
+    struct S {int x; int y;};
+    S foo();
+    int j = foo().y; // foo() is an rvalue that occupies storage.
+
+To get the y member of the ``foo().y``, the compiler first needs the base address of the struct S returned by foo(), and any object with an address occupies storage.
+
+**Recap so far** 
+
+============== =================== =============
+Value Category Can Take Address Of Can Assign To
+============== =================== ============= 
+lvlaue         yes                 yes
+const lvlaue   yes                 no
+rvalue         no                  no
+============== =================== ============= 
+
+While conceptually rvalues don't occupy storage; rvalues of class type do, and const references to temporaries also cause the temporary to be place storage, for example 
+
+.. code-block:: cpp
+
+    const int& int_ref1 = 10; 
+    int& int_ref2 = 11;      // Error: int_ref2 is not const  
+
+In the code above, the temporary 10 is place in storage so that the const refernence to int can bind to it. Without 'const' the compiler issues an error.        
+
+lvalue references and rvalue references in C++11
+------------------------------------------------
+
+What were previously called simply "references" in C++03 are now called "lvalue references" in C++11. This was done to distinguishes them from "rvalue references". lvalue references in C++11 behave just like references
+did in C++03. On the other hand, rvalue refernces are entirely new in C++11 and are needed for move semantics, which is also new in C++11. 
+
+lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
+
+.. code-block:: cpp
+
+    int&& ri = 10; // rvalue reference to int. 
+    double &&f(int &&rint); 
+
+    const int&& rci = 20;  // A const rvalue reference is not really of any use.
+
+This, in fact, the primary use of rvalue references: as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
+
+rvalue references can only bind to rvalues. This is true even for a "rvalue reference to const", as in the example below
+
+.. code-block:: cpp
+
+    int n = 10; 
+    int &&ri = n;       // error: n is an lvalue. 
+    const int &&rj = n; // error: n is an lvalue. 
+
+The Two Kinds of rvalues
+++++++++++++++++++++++++
+
+There are actually two kinds of rvalues:
+
+* "Pure rvalues" abbreviated **prvalues** that don't occupy data storage.
+* "Expiring values" abbreviated **xvalues** that do occupy storage.
+
+.. note:: As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. These terms exist in the C++ standard so compiler authors know what needs to be done.
+
+temporary materialization conversion
+++++++++++++++++++++++++++++++++++++
+
+When a temporary is created due to binding to a const reference, it undergoes what is called a "temporary materialization conversion" that converts a prvalue into an xvalue. This places a pure rvalue that is not in storage, in storage, making it an xvalue. For example, in 
+the code below
+
+.. code-block:: cpp
+
+    class string {
+      public:
+         string(const string&);
+         string(const char *); // converting construcotr
+         string& operator=(const string&);
+         //...  
+    }; 
+
+   string operator+(const string& lo, const string& ro); // reference to const will bind to both lvalues and rvalues. 	
+   string s{"hello"};
+   string t{"world"};
+ 
+   s = s + ", " t; 
+
+the compiler implicitly invokes the converting constructor ``string::string(const char*)`` that converts a character string into a string.  
+
+.. code-block:: cpp
+
+    s = s + string(", ") + t; // lvalue + rvalue + lvalue
+
+Note that ``operator+(const string& lo, const string& ro)`` returns an rvalue, since we can't do something like
+
+.. code-block:: cpp
+
+   string *p = &(s + t); // error: can't take address of rvalue.
+
+We saw that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, in which a prvalue is turned into a xvalue (in which the pure rvalue that is not in storage is placed in storage). The temporary materialization conversion also
+occurs when we bind an "rvalue reference" to an rvalue. When we bind a rvalue reference to an rvalue, an xvalue is created. 
+
+.. todo:: Compare logically flow with value-categories.rst
+
+The real reason for rvalue references
++++++++++++++++++++++++++++++++++++++
+
+The main reason rvalue references are in C++11 is to provide more efficient move constructors and move assignment operator that the compiler can call whenever it detects an rvalue.
+
+.. code-block:: cpp
+
+    class string {
+      public:
+         string(const string&);
+         string(const char *);                // converting construcotr
+         string& operator=(const string&);
+                                               
+         string(string&&) noexcept;            // move constructor
+         string& operator=(string&&) noexcept; // move assignment 
+         //...  
+    }; 
+
+    string s1, s2, s3;
+    s1 = s2;         // Because s2 is not expiring, and it must be preserved, the copy constructor is invoked. 
+
+    s1 = s2 + s3;    // Since the result of s1 + s2 expires at the end of the statement, it can be moved from.
+
+The result of ``s2 + s3`` is an rvalue that expires at the end of the statement. Rvalues can be moved from, so the more efficient move constructor is called.
+
+.. note:: rvalue reference parameters are considered lvalues within the body of the function.
+
+Rvalue reference parameters are considered lvalues within the body of the function. For example, in
+
+.. code-block:: cpp
+
+    string& string::operator=(string&& other) noexcept
+    {
+        string temp(other); // invokes copy constructor
+        //...
+    }
+
+because the rvalue reference parameter "other" has a name, it is an lvalue within ``string::operator=(string&&other)``.
+
+Converting lvalues into xvalues, Expiring values
+++++++++++++++++++++++++++++++++++++++++++++++++
+
+std::swap() is an example where we want to force the compiler to move an object's state instead of copying it. For example,
+
+.. code-block:: cpp
+
+    template<class T> void swap(T& a, T& b)
+    {
+       temp t(a);
+       a = b;
+       b = t;
+    }   
+
+invokes copy constructors. But we know that the state of ``a`` does not need to preserved, but we need to tell the compiler that ``a`` does not need to be preserved by casting it from an lvalue to an xvalue. 
+This is done by ``std::move()`` does, which converts the input parameter into an xvalue, an unamed rvalue reference.
+
+.. code-block:: cpp
+
+    template<typename T> constexpr typename std::remove_reference<T>::type&& move(T&& t) noexcept
+    {
+       return static_cast<typename std::remove_reference<T>::type&&>(t); 
+    }
+
+Since return values never have names, calling ``std::move()`` returns an unamed rvalue reference.
+
+.. code-block:: cpp
+
+    template<class T> void swap(T& a, T& b)
+    {
+       temp t(std::move(a));
+       a = std::move(b);
+       b = std::move(t);
+    }   
+
+
+This figure shows that the two properties that distinguishes the value categories of C++11 are "identity" and "move-ability":
+    
+.. figure:: ../images/value-categories-tabular-view.jpg
+   :alt: value categories
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
+
+   **Figure: value categories** 
+
+.. note:: prior notes below.
+
+C++11 has three main value categories: lvalue, xvalue (or eXpiring value), and prvalue (pure rvalues). Bjarne Stroutrup described these value categories this way, on page 166, of **The C++ Programming Language, 4th Edition**:
+
+    There are two properties that matter for for an object when it comes to addressing, copying and moving:
+    
+    * **Has Identity**: The program has the name of, address of, or reference to the object so that it is possible to determine if two objects are the same, whether the value has changed,
+      etc.
+    * **Movable**: the object may be moved from (i.e. we are allowed to move its value to another location and leave the object in a valid but unspecified state, rather than copying it).
+    
+    It turns out that three of the four possibilities of these two properites are needed to precisely describe the C++ language rules (we have no need for object that do not have
+    identity and cannot be moved). Using "**m** for movable" and "**i** for has identity", we can represent this classification of expressions graphically:
+    
+.. figure:: ../images/value-categories-bs.jpg
+   :alt: value categories
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
+
+   **Figure: value categories** 
+
+    So, a classical lvalue is something that has identity and cannot be moved (because we could examine it after the move), and a classical rvalue is anything that we are allowed to move
+    from. 
+
+.. todo:: Inclue BS's code example on page 166 
+
+..
+
+Another good explanation of C++11 value categories is from `cppreference's article <https://en.cppreference.com/w/cpp/language/value_category>`_, which offers this explanation:
+    
+    With the introduction of move semantics in C++11, value categories were redefined to characterize two independent properties of expressions:
+    
+    * **has identity**: it's possible to determine whether the expression refers to the same entity as another expression, such as by comparing addresses of the objects or the functions they identify (obtained directly or indirectly)
+    * **can be moved from**: move constructor, move assignment operator, or another function overload that implements move semantics can bind to the expression. 
+    
+    This lead to the following value categories for expressions:
+    
+    **have identity** and **cannot be moved from** are called lvalue expressions;
+    **have identity** and **can be moved from** are called xvalue expressions;
+    **do not have identity** and **can be moved from** are called prvalue ("pure rvalue") expressions;
+    **do not have identity** and **cannot be moved from** are not used. 
+    
+    The expressions that have identity are called "glvalue expressions" (glvalue stands for "generalized lvalue"). Both lvalues and xvalues are glvalue expressions.
+    
+    The expressions that can be moved from are called "rvalue expressions". Both prvalues and xvalues are rvalue expressions.
+
+TODO
+----
+
+.. todo:: Mention the excellent Microsoft article.
+
+.. todo:: Evaluate these articles:
+
+See the examples and explanations `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. 
+Seethis article   http://bajamircea.github.io/coding/cpp/2016/04/07/move-forward.html. Same question.
+Two very good sites: `The deal with C++14 xvalues <https://blog.jeaye.com/2017/03/19/xvalues/>`_ and `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ <-- very good.
+
+.. todo:: Mention the important change in C++17 having to do with materialization and how this relates to value categories.
+
+.. todo:: Use BS's example on page 166 and any cppreference or other articles-above examples. Also synthesize any important explanations from the other articles, including Dr. Sheep's video. The keep thing is to provide examples at top. 
+   Finally add BS's conclusion from C++PL that the two practical categories are rvalue and value. Add a final comment about C++17 and materialization.
+
+.. rubric:: Footnotes
+
+.. [#fhistory] This material is from `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_.
+
+Helpful Articles
+----------------
+
+* `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
+* https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories
+* `Bjarne Stroustrup Article Introducing Value Categories <http://www.stroustrup.com/terminology.pdf>`_
+* `Video: C++ lvalue rvalue xvalue glvalue prvalue <https://www.youtube.com/watch?v=yIOH95oIKbo>`_
+* `Stackoverflow Explanation <https://stackoverflow.com/questions/3601602/what-are-rvalues-lvalues-xvalues-glvalues-and-prvalues>`_ 
+
+.. todo:: footnotes.
