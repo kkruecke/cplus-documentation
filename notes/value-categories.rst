@@ -12,17 +12,18 @@ for example,
     int n;
     n = 1;
 
-in the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue derives its name from the fact that only objects can
-appear on the left hand side of an assignment and can be assigned to, but the "l" in lvalue is no longer of significance. lvalues occur in contexts outside of assignment.
+in the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue originally derived its name from the fact that only objects can
+appear on the left hand side of an assignment and can be assigned to, but the "l" in lvalue is no longer of any real significance. lvalues occur in contexts outside of assignment.
 
 lvalues, rvalues and references in C++03
 ----------------------------------------
 
-Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, a location in memory, an lvalue.
+Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
 C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues. Several non-lvalue C expressions also became lvalue expressions in C++.
 
 Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
-When an lvalue is used on the right hand side of an assignment
+
+When an lvalue is used on the right hand side of an assignment as below
 
 .. code-block:: cpp
 
@@ -30,7 +31,7 @@ When an lvalue is used on the right hand side of an assignment
     n = 1;
     m = n; // m and n are both lvalues. n undergoes lvalue-to-rvalue conversion. 
 
-it is said to undergo **lvalue-to-rvalue** conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
+it is said to undergo **lvalue-to-rvalue** conversion. In ``m = n``,  **n** undergoes lvalue-to-rvalue conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
 as an rvalue.
 
 lvalues and rvalues are relevant in contexts other than assignment. Take, for example, the binary operator +. It operands can be either rvalues or lvalues. 
@@ -52,7 +53,7 @@ result of the derefence operator
     *p = 3;       // *p is an lvalue  
     *s = '\0';    // *s is an lvalue even though s is null and even though *s causes undefined behavior.
 
-``*s`` is an lvalue even though s is null and even though ``*s`` causes undefined behavior. 
+``*s`` is an lvalue even though ``s`` is nullptr and even though ``*s`` causes undefined behavior. 
 
 In C++, rvalues of class type do occupty data storage. Why? Consider this example 
 
@@ -87,7 +88,7 @@ lvalue references and rvalue references in C++11
 ------------------------------------------------
 
 What were previously called "references" in C++03 are now called "lvalue references" in C++11. This was done to distinguishes them from "rvalue references", which are new in C++11. lvalue references in C++11 behave just like references
-did in C++03. On the other hand, rvalue refernces are entirely new in C++11 and are needed for move semantics, which was also introdued in C++11. 
+did in C++03. On the other hand, rvalue refernces are entirely new in C++11. They are needed for move semantics also introdued in C++11. 
 
 lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
 
@@ -134,7 +135,7 @@ For example, in the code below
          //...  
     }; 
 
-   string operator+(const string& lo, const string& ro); // reference to const will bind to both lvalues and rvalues. 	
+   string operator+(const string& lo, const string& ro); // lvalue reference to const will bind to both lvalues and rvalues. 	
    string s{"hello"};
    string t{"world"};
  
@@ -180,11 +181,9 @@ The main reason rvalue references are in C++11 is to provide more efficient move
 
     s1 = s2 + s3;    // Since the result of s1 + s2 expires at the end of the statement, it can be moved from.
 
-The result of ``s2 + s3`` is an rvalue that expires at the end of the statement. Since rvalues can be moved from, the more efficient move constructor is called.
+The result of ``s2 + s3`` is an rvalue that expires at the end of the statement. Since rvalues can be moved from, the more efficient move constructor will be called.
 
 .. note:: rvalue reference parameters are considered lvalues within the body of the function.
-
-.. warning:: reference parameters are considered lvalues within the body of the function. 
 
 Take, for example
 
