@@ -94,7 +94,7 @@ when the compiler detects an rvalue by "stealing" instead of copying resources.
 What were previously called rvalues in C++03 are now called **prvalues** in C++11, and another new rvalue subcategory, **xvalues** or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
 a method returns an rvalue reference. "Pure rvalues" abbreviated **prvalues** don't occupy data storage. "Expiring values" abbreviated **xvalues** that do occupy storage.
 
-.. todo:: Add the succinct description of Nikolai J. that rvalues in C++03 are now prvalues in C++11, that prvalues don't have identity, that the other new type of rvalue, xvalues, do. Give examples of of each value category from his book. Are prvalues relavent for move semantics.
+.. todo:: Read C++ Move Semantics by Nikolai Josuttis. 
 
 .. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
  
@@ -293,4 +293,5 @@ Reference Articles
 
 .. rubric:: Footnotes
 
-.. [#fhistory] This material is from both the cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.
+.. [#fhistory] This material is from both the cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
+    and `Chapter 5 of C++17 The Complete Guide by Nikolai Josuttis <http://www.cppstd17.com/>_.
