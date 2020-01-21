@@ -270,11 +270,10 @@ But you can think of the "x" in "xvalue" as meaning "expert-only" if that helps.
 Further Explanantion and Examples
 ---------------------------------
 
-An excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
+Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_ is an excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues.
 The articles also contains examples of each of the value category.
 
-Good examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ and at the cppreference.com
-article `Value categories < <https://en.cppreference.com/w/cpp/language/value_category#history>`_
+Examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ and at the cppreference.com article `Value categories < <https://en.cppreference.com/w/cpp/language/value_category#history>`_
 
 Value Categories in C++17
 -------------------------
