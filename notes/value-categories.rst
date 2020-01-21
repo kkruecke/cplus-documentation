@@ -87,12 +87,17 @@ in the code above, the temporary 10 is place in storage so that the const refern
 lvalue references and rvalue references in C++11
 ------------------------------------------------
 
-What were previously called “references” in C++03 are now called “lvalue references” in C++11. This was done to distinguishes them from “rvalue references”, which are new in C++11. lvalue references in C++11 behave just like references did in C++03. On the other hand, rvalue refernces
-are new in C++11. They are used primarily as parameter declarations of move constructors and move assignment operators. Move construction and move assignment significantly improve performance (by "stealing" the resources of the rvalue) when the compiler detects an rvalue. 
+What were previously called “references” in C++03 are now called **lvalue references** in C++11. This was done to distinguishes them from **rvalue references**, which are new in C++11. **lvalue references** in C++11 behave just like references did in C++03. On the other hand,
+**rvalue refernces** in C++11 are used primarily as parameter declarations (primarily for move constructors and move assignment operators) and as a function return type (primarily the return type of std::move() ). Move construction and move assignment significantly improve performance
+(by "stealing" instead of copying resource) when the compiler detects an rvalue. 
 
-In C++11 the concept of what constitutes an rvalue was broadened. What were previously called rvalues in C++03 are now called **prvalues**, and new rvalue subcategory, xvalues or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
-a method returns an rvalue reference.
+In C++11 the scope of what constitutes an rvalue was broadened. What were previously called rvalues in C++03 are now called **prvalues**, and new rvalue subcategory, **xvalues** or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
+a method returns an rvalue reference. "Pure rvalues" abbreviated **prvalues** don't occupy data storage. "Expiring values" abbreviated **xvalues** that do occupy storage.
 
+.. todo:: A Nikolai J. thoughts and eliminate duplicate ghoughts.
+
+.. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
+ 
 lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
 
 .. code-block:: cpp
@@ -102,7 +107,7 @@ lvalue references are declared using single `&` and rvalue reference are declare
 
     const int&& rci = 20;  // A const rvalue reference is not really of any use.
 
-In fact, the primary use of rvalue references is as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
+The primary use of rvalue references is as functon parameters and return types. Their purpose is not primarily to allow us to delcare variables like ``ri`` above.
 
 rvalue references can only bind to rvalues. This is true even for a "rvalue reference to const", as in the example below
 
@@ -111,16 +116,6 @@ rvalue references can only bind to rvalues. This is true even for a "rvalue refe
     int n = 10; 
     int &&ri = n;       // error: n is an lvalue. 
     const int &&rj = n; // error: n is an lvalue. 
-
-The Two Kinds of rvalues
-++++++++++++++++++++++++
-
-There are actually two kinds of rvalues:
-
-* "Pure rvalues" abbreviated **prvalues** that don't occupy data storage.
-* "Expiring values" abbreviated **xvalues** that do occupy storage.
-
-.. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
 
 temporary materialization conversion
 ++++++++++++++++++++++++++++++++++++
@@ -161,8 +156,8 @@ the result of ``operator+(const string& lo, const string& ro)`` must be an rvalu
 We saw that binding an "lvalue reference to const" to an rvalue triggers a temporary materialization conversion, in which a prvalue that is not in storage is turned into a xvalue that is placed in storage. The temporary materialization conversion also
 occurs when we bind an "rvalue reference" to an rvalue. When we bind a rvalue reference to an rvalue, an xvalue is created. 
 
-The real reason for rvalue references
-+++++++++++++++++++++++++++++++++++++
+What rvalue references offer
+++++++++++++++++++++++++++++
 
 The main reason rvalue references are in C++11 is to provide more efficient move constructors and move assignment operator that the compiler can call whenever it detects an rvalue.
 
@@ -235,8 +230,8 @@ Since return values never have names, calling ``std::move()`` returns an unamed 
        b = std::move(t);
     }   
 
-The Two Key Properties that Distinguish Value Categories
---------------------------------------------------------
+What Distinguishes Value Categories
+-----------------------------------
 
 The figure below show that the two key properties that distinguishes the value categories of C++11 are "has identity" and "move-able":
     
