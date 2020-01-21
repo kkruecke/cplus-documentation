@@ -94,7 +94,7 @@ when the compiler detects an rvalue by "stealing" instead of copying resources.
 What were previously called rvalues in C++03 are now called **prvalues** in C++11, and another new rvalue subcategory, **xvalues** or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
 a method returns an rvalue reference. "Pure rvalues" abbreviated **prvalues** don't occupy data storage. "Expiring values" abbreviated **xvalues** that do occupy storage.
 
-.. todo:: Add the succinct Nikolai J. thoughts and eliminate duplicate thoughts.
+.. todo:: Add the succinct description of Nikolai J. that rvalues in C++03 are now prvalues in C++11, that prvalues don't have identity, that the other new type of rvalue, xvalues, do. Give examples of of each value category from his book.
 
 .. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
  
