@@ -245,11 +245,8 @@ The figure below show that the two key properties that distinguishes the value c
 
    **Figure: value categories** 
 
-An excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
-The articles also contains examples of each of the value category.
-
-Some brief Examples of xvalues
-++++++++++++++++++++++++++++++
+An xvalue Example
++++++++++++++++++
 
 .. code-block:: cpp
 
@@ -270,12 +267,14 @@ Some brief Examples of xvalues
 In the code example above, we haven't moved anything yet. We've just created an xvalue by casting an lvalue to an unnamed rvalue reference. It can still be identified by its lvalue name; but, as an xvalue, it is now capable of being moved. 
 But you can think of the "x" in "xvalue" as meaning "expert-only" if that helps. By casting an lvalue into an xvalue (a kind of rvalue), the value then becomes capable of being bound to an rvalue reference.
 
-Examples of lvalues, xvalues and prvalues 
------------------------------------------
+Further Explanantion and Examples
+---------------------------------
 
-Good examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_.
+An excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues is Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_. 
+The articles also contains examples of each of the value category.
 
-.. todo:: Read this also `Building Intuition on value categories <http://marcodiiga.github.io/building-intuition-on-value-categories>`_. 
+Good examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ and at the cppreference.com
+article `Value categories < <https://en.cppreference.com/w/cpp/language/value_category#history>`_
 
 Value Categories in C++17
 -------------------------
@@ -293,4 +292,4 @@ Reference Articles
 
 .. rubric:: Footnotes
 
-.. [#fhistory] This material is from `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.
+.. [#fhistory] This material is from both the cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.
