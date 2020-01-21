@@ -271,7 +271,11 @@ Further Explanantion and Examples
 Microsoft's `Value categories, and references to them <https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/cpp-value-categories>`_ is an excellent explantion of the "has identity" and "move-able" properties that characterize and distinguish lvalues, xvalues and prvalues.
 The articles also contains examples of each of the value category.
 
-Examples of lvalues, xvalues and prvalues can be found at `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_ and at the cppreference.com article `Value categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_
+Examples of lvalues, xvalues and prvalues can be found at:
+
+* `Value Categories cheatsheet <https://github.com/jeaye/value-category-cheatsheet/blob/master/value-category-cheatsheet.pdf>`_
+* `The deal with C++14 xvalues  <https://blog.jeaye.com/2017/03/19/xvalues/>`_
+* The cppreference.com article `Value categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_
 
 Value Categories in C++17
 -------------------------
