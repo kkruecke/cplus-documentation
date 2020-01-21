@@ -230,19 +230,6 @@ Since return values never have names, calling ``std::move()`` returns an unamed 
        b = std::move(t);
     }   
 
-What Distinguishes Value Categories
------------------------------------
-
-The figure below show that the two key properties that distinguishes the value categories of C++11 are "has identity" and "move-able":
-    
-.. figure:: ../images/value-categories-tabular-view.jpg
-   :alt: value categories
-   :align: center 
-   :scale: 100 %
-   :figclass: custom-figure
-
-   **Figure: value categories** 
-
 An xvalue Example
 +++++++++++++++++
 
@@ -264,6 +251,19 @@ An xvalue Example
 
 In the code example above, we haven't moved anything yet. We've just created an xvalue by casting an lvalue to an unnamed rvalue reference. It can still be identified by its lvalue name; but, as an xvalue, it is now capable of being moved. 
 But you can think of the "x" in "xvalue" as meaning "expert-only" if that helps. By casting an lvalue into an xvalue (a kind of rvalue), the value then becomes capable of being bound to an rvalue reference.
+
+What Distinguishes Value Categories
+-----------------------------------
+
+The figure below show that the two key properties that distinguishes the value categories of C++11 are "has identity" and "move-able":
+    
+.. figure:: ../images/value-categories-tabular-view.jpg
+   :alt: value categories
+   :align: center 
+   :scale: 100 %
+   :figclass: custom-figure
+
+   **Figure: value categories** 
 
 Further Explanantion and Examples
 ---------------------------------
