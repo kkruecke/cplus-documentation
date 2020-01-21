@@ -233,7 +233,7 @@ Since return values never have names, calling ``std::move()`` returns an unamed 
     }   
 
 The Two Key Properties that Distinguish Value Categories
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+--------------------------------------------------------
 
 The figure below show that the two key properties that distinguishes the value categories of C++11 are "has identity" and "move-able":
     
