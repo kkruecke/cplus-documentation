@@ -87,8 +87,11 @@ in the code above, the temporary 10 is place in storage so that the const refern
 lvalue references and rvalue references in C++11
 ------------------------------------------------
 
-What were previously called "references" in C++03 are now called "lvalue references" in C++11. This was done to distinguishes them from "rvalue references", which are new in C++11. lvalue references in C++11 behave just like references
-did in C++03. On the other hand, rvalue refernces are entirely new in C++11. They are needed for move semantics also introdued in C++11. 
+What were previously called “references” in C++03 are now called “lvalue references” in C++11. This was done to distinguishes them from “rvalue references”, which are new in C++11. lvalue references in C++11 behave just like references did in C++03. On the other hand, rvalue refernces
+are new in C++11. They are used primarily as parameter declarations of move constructors and move assignment operators. Move construction and move assignment significantly improve performance (by "stealing" the resources of the rvalue) when the compiler detects an rvalue. 
+
+In C++11 the concept of what constitutes an rvalue was broadened. What were previously called rvalues in C++03 are now called **prvalues**, and new rvalue subcategory, xvalues or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
+a method returns an rvalue reference.
 
 lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
 
@@ -117,7 +120,7 @@ There are actually two kinds of rvalues:
 * "Pure rvalues" abbreviated **prvalues** that don't occupy data storage.
 * "Expiring values" abbreviated **xvalues** that do occupy storage.
 
-.. note:: As a programmer you don't need to worry about the distinction between what is a prvalue and what is an xvalue. These terms exist in the C++ standard so compiler authors know what needs to be done.
+.. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
 
 temporary materialization conversion
 ++++++++++++++++++++++++++++++++++++
