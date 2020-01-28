@@ -1,7 +1,7 @@
 Introduction to C++11 Value Categories
 ======================================
 
-lvalues in the C Programming Language [#fhistory]_ 
+lvalues in the C Programming Language [#1]_ 
 --------------------------------------------------
 
 In C expressions were categorized as "lvalue expressions" and others (functions and non-object values), where "lvalue" meant an expression that identifies an object, a "locator value" in memory; 
@@ -293,5 +293,4 @@ Reference Articles
 
 .. rubric:: Footnotes
 
-.. [#fhistory] This material is from both the cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_
-    and `Chapter 5 of C++17 The Complete Guide by Nikolai Josuttis <http://www.cppstd17.com/>_.
+.. [#1] This material is from both the cppreference.com article `Value Categories <https://en.cppreference.com/w/cpp/language/value_category#history>`_ and `CppCon 2019:Ben Saks “Back to Basics: Understanding Value Categories" <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_ and `Chapter 5 of C++17 The Complete Guide by Nikolai Josuttis <http://www.cppstd17.com/>`_.
