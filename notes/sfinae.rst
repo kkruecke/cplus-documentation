@@ -3,9 +3,10 @@ SFINAE and enable_if<>
 
 See:
 
+* `Template SFINAE & type-traits (very good) <https://shaharmike.com/cpp/sfinae/>`_
 * `Filipek: Notes on C++ SFINAE <https://www.bfilipek.com/2016/02/notes-on-c-sfinae.html>`_  
 * `Filipek: SFINAE Followup <https://www.bfilipek.com/2016/02/sfinae-followup.html>`_
-* `SFINAE and enable_if (is very good) <https://eli.thegreenplace.net/2014/sfinae-and-enable_if/>`_
+* `SFINAE and enable_if (very good) <https://eli.thegreenplace.net/2014/sfinae-and-enable_if/>`_
 * `Modern C++, Item 27 by Scott Meyers`
 * `Microsoft enable_if Article has Several Examples <https://docs.microsoft.com/en-us/cpp/standard-library/enable-if-class?view=vs-2019>`_
 
