@@ -8,8 +8,9 @@ Rvalue References and Lvalue References in C++
 
 Helpful Articles on Understanding Rvalue References, Move Semantics and Forwarding References
 ---------------------------------------------------------------------------------------------
-
+*  `Core C++ 2019 :: Dan Saks :: Understanding Lvalues and Rvalues <https://www.youtube.com/watch?v=mK0r21-djk8>`_.
 * `A Brief Introduction to Rvalue References <http://www.artima.com/cppsource/rvalue.html>`_.
+* `Core C++ 2019 : Dan Saks : Understanding Lvalues and Rvalues video of talk <https://www.youtube.com/watch?v=mK0r21-djk8>`_
 * `Thomas Becker's article C++ rvalue Reference Explained <http://thbecker.net/articles/rvalue_references/section_07.html>`_.
 
 .. todo: See https://www.internalpointers.com/post/c-rvalue-references-and-move-semantics-beginners
