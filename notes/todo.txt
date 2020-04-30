@@ -1,0 +1,1 @@
+Using value-categories.rst and any missing ideas found in new-lvalue-rvalue.rst. Call the new version references-in-C++11.rst.
