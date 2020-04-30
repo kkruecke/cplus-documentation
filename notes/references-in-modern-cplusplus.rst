@@ -2,9 +2,11 @@ Introduction to C++11 Value Categories
 ======================================
 
 lvalues in the C Programming Language [#1]_ 
---------------------------------------------------
+--------------------------------------------
 
-In C expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a region of data storage that may have a value, a "locator value" in memory; 
+.. todo:: Merge what is in new-vlau-rvalue.rst into this file. Have idex.rst reference this file instead of value-categories.rst.
+
+In C (prior to C++) expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a region of data storage that may have a value, a "locator value" in memory; 
 for example,
 
 .. code-block:: cpp
@@ -12,7 +14,7 @@ for example,
     int n;
     n = 1;
 
-in the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value. The term **lvalue** originally derived its name from the fact that only objects can
+In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value. The term **lvalue** originally derived its name from the fact that only objects can
 appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
 
 lvalues, rvalues and references in C++03
