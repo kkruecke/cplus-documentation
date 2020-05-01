@@ -25,6 +25,13 @@ References are implemented using pointers
 References are implemented using pointers. References act like a const pointer that's dereferenced automatically. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression.
 The concepts of lvalues and rvalues help explain C++ reference types, and the real strength of references comes out in operator overloading. 
 
+Advantage over Pointers
+-----------------------
+
+References allow built in operators to be overloaded while still allowing objects to passed as arguments, thus avoiding pointers as arguments. When reference-to-const arguments are used, the same syntax and exactly the same usage as pass-by-value is supported. For example,
+
+.. todo:: Add the example from new-lvalue-rvalue.rst here.
+
 lvalues, rvalues and references in C++03
 ----------------------------------------
 

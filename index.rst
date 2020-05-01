@@ -12,7 +12,7 @@ Notes on Features of C++-17
    notes/variadic-templates.rst
    notes/regex.rst
    notes/managed-ptrs.rst
-   notes/value-categories.rst
+   notes/references-in-modern-cplusplus.rst
    notes/rvalue-lvalue.rst
    notes/forwarding-refs.rst
    notes/move-semantics.rst
