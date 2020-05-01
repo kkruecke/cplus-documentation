@@ -30,7 +30,40 @@ Advantage over Pointers
 
 References allow classes to overloaded built in operators while still allowing objects to passed as arguments. When reference-to-const arguments are used, the same syntax and exactly the same usage as pass-by-value is supported. For example,
 
-.. todo:: Add the example from new-lvalue-rvalue.rst here.
+.. code-block:: cpp
+
+    class complex {
+        complex operator+(const complex& param);
+        //....
+    }; 
+
+The complex binary + operator takes a "reference to const". This parameter will bind to both const of non-const objects. If we had written ``complex operator+(complex& param)``, then param would only bind to non-cost lvalue arguments.
+A "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and also to an rvalue, say x, if x is convertible to T. For example
+
+.. code-block:: cpp
+
+     int const &intref = 3; 
+     const double& dref = intref;
+
+Here 3 is obviously "convertable" to an int because it is an int, and so the compiler creates a temporary to hold 3 and then binds ``intref`` to the temporary. The same thinking applies to the second line. ``intref`` is an lvalue that is convertable to a double,
+so the compiler creates a temporary to store the converted-to double value and then binds ``dref`` to it. 
+
+Only const references can bind to rvalues. If ``intref`` were a non-const reference to a int, then it would not bind to 3 and no temporary would be created. 
+
+Why does C++ create the temporary? The reason C++ bothers to create the temporaries is so that pass by value and pass by reference look the same in all cases. For example, the pass-by-value function ``f`` and the pass-by-const-reference function ``fref`` below behave the same way.
+
+.. code-block:: cpp
+
+    long double x;
+    void f(long double ld);
+    //...
+    f(x); // passes a copy of x
+    f(1); // passes a copy of 1 converted to a double.
+    void fref(const long double& ld);
+    fref(x); // ld is const reference to the double x.  
+    fref(1); // passes a reference to a temporary, a copy of 1, converted to a double.
+
+.. todo:: resume the merging of new-lvalue-rvalue.rst into this document here.
 
 lvalues, rvalues and references in C++03
 ----------------------------------------

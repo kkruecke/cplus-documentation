@@ -43,7 +43,7 @@ The concepts of lvalues and rvalues help explain C++ reference types, and the re
     }; 
 
 The binary + operator takes a "reference to const" parameter. Such a parameter will bind to a argument that is either const of non-const. If we had written ``complex operator+(complex& param)``, then param would only bind to non-cost lvalue arguments.
-In general a "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and to rvalues like, say x, if x is convertible to T. For example
+In general a "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and to an rvalues x, if x is convertible to T. For example
 
 .. code-block:: cpp
 
