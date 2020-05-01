@@ -17,6 +17,8 @@ for example,
 In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value. The term **lvalue** originally derived its name from the fact that only objects can
 appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
 
+.. todo:: Print out both files--new-lvalue-rvalue.rst and value-categories.rst--read and digest them and then merge the essential information in the former into the later.
+
 lvalues, rvalues and references in C++03
 ----------------------------------------
 

@@ -16,7 +16,7 @@ Introduction and Definitions
 ----------------------------
 
 **lvalues** and **rvalues** are properties of expressions. They are attributes of subexpressions in a larger expression. Prior to C++, in C, an lvalue was a expression that referred to an object, a region of data storage that may have a value. An rvalue is any expression that is not a lavlue. For example, in the
-expression below
+code below
 
 .. code-block:: cpp
 
@@ -24,7 +24,8 @@ expression below
 
     n = 1;
 
-``n`` can be assigned because it is an lvalue, a location of memory that can hold a value. Thus, in C, an lvalue is an expression valid of the left-hand side of an assignment. Note, an lvalue is a compile-time property not a runtime property.
+``n`` can be assigned because it is an lvalue expression; it is a location of memory that can hold a value. Thus, in C, an lvalue was an expression valid on the left-hand side of an assignment. Note, so say thant ``n`` in the assignment statement is an lvalue expression to describe a compile-time property not a
+runtime property. An lvalue expression is an compile-type property of the expression.
 
 A thorough introduction to lvalues and rvalues is Dan Saks lecture at Core C++ 2019 on `Understanding Lvalues and Rvalues <https://www.youtube.com/watch?v=mK0r21-djk8>`_. 
 

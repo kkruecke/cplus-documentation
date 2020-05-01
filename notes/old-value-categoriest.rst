@@ -4,24 +4,25 @@ Introduction to C++11 Value Categories
 lvalues in the C Programming Language [#1]_ 
 --------------------------------------------------
 
-In C expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a  "locator value" in memory; 
-for example,
+In C expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a  "locator value" in memory; for example,
 
 .. code-block:: cpp
 
     int n;
     n = 1;
 
-in the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue originally derived its name from the fact that only objects can
-appear on the left hand side of an assignment and can be assigned to, but the "l" in lvalue is no longer of any real significance. lvalues occur in contexts outside of assignment.
+In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue. The term lvalue originally derived its name from the fact that only objects can appear on the left hand side of an assignment and can be assigned to, but the
+"l" in lvalue is no longer of any real significance. lvalues occur in contexts outside of assignment. Note, an lvalue expression is a compile-time property not a runtime property. An lvalue expression is an compile-type property of an expression.
+
+.. todo:: Print out both files--new-lvalue-rvalue.rst and value-categories.rst--read and digest them and then merge the essential information in the former into the later.
 
 lvalues, rvalues and references in C++03
 ----------------------------------------
 
-Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
-C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues. Several non-lvalue C expressions also became lvalue expressions in C++.
+Pre-2011 C++ followed the C model, but assigned the name **rvalue** to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue. C++03 added the rule that references can bind to lvalues, but only
+references-to-const can bind to rvalues (as well as to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (?? do I mean rvalue ??) expressions in C++.
 
-Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
+Distinguishing an **rvalue** from a **lvalue** allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
 
 When an lvalue is used on the right hand side of an assignment as below
 
@@ -31,7 +32,7 @@ When an lvalue is used on the right hand side of an assignment as below
     n = 1;
     m = n; // m and n are both lvalues. n undergoes lvalue-to-rvalue conversion. 
 
-it is said to undergo **lvalue-to-rvalue** conversion. In ``m = n``,  **n** undergoes lvalue-to-rvalue conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
+it is said to undergo an **lvalue-to-rvalue** conversion. In ``m = n``,  **n** undergoes lvalue-to-rvalue conversion. When we talk about something being an lvalue, we are concerned with where the object lives, but when we only need to know the value it holds, we can view the object, the lvalue in this example,
 as an rvalue.
 
 lvalues and rvalues are relevant in contexts other than assignment. Take, for example, the binary operator +. It operands can be either rvalues or lvalues. 
