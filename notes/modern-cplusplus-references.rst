@@ -45,12 +45,12 @@ A "reference to const" of type T binds to both const and non-const lvalues expre
      int const &intref = 3; 
      const double& dref = intref;
 
-Here 3 is obviously "convertable" to an int because it is an int, and so the compiler creates a temporary to hold 3 and then binds ``intref`` to the temporary. The same thinking applies to the second line. ``intref`` is an lvalue that is convertable to a double,
-so the compiler creates a temporary to store the converted-to double value and then binds ``dref`` to it. 
+Here 3 being an int is obviously "convertable" to an int, and so the compiler creates a temporary to hold 3 and binds ``intref`` to it. The same thinking applies to the second line. ``intref`` is an lvalue that is convertable to a double.
+The compiler creates a temporary and stores the converted-to double value and, then, binds ``dref`` to it. 
 
 Only const references can bind to rvalues. If ``intref`` were a non-const reference to a int, then it would not bind to 3 and no temporary would be created. 
 
-Why does C++ create the temporary? The reason C++ bothers to create the temporaries is so that pass by value and pass by reference look the same in all cases. For example, the pass-by-value function ``f`` and the pass-by-const-reference function ``fref`` below behave the same way.
+Why does C++ create the temporary? C++ does this to mimic the behavaior of pass by value, so pass by value and pass by reference look the same in all cases. For example, the pass-by-value function ``f`` and the pass-by-const-reference function ``fref`` below behave the same way.
 
 .. code-block:: cpp
 
@@ -68,9 +68,9 @@ Why does C++ create the temporary? The reason C++ bothers to create the temporar
 lvalues, rvalues and references in C++03
 ----------------------------------------
 
-Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
-C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (do I mean rvalue???? Listen again to
-Ben Saks at https://www.youtube.com/watch?v=XS2JddPq7GQ) expressions in C++.
+Pre-2011 C++ followed the C model, but assigned the name **rvalue** to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
+C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to binding to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (<-- do I mean rvalue?Listen again to
+Ben Saks at https://www.youtube.com/watch?v=XS2JddPq7GQ ) expressions in C++.
 
 Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
 
