@@ -28,7 +28,7 @@ The concepts of lvalues and rvalues help explain C++ reference types, and the re
 Advantage over Pointers
 -----------------------
 
-References allow built in operators to be overloaded while still allowing objects to passed as arguments, thus avoiding pointers as arguments. When reference-to-const arguments are used, the same syntax and exactly the same usage as pass-by-value is supported. For example,
+References allow classes to overloaded built in operators while still allowing objects to passed as arguments. When reference-to-const arguments are used, the same syntax and exactly the same usage as pass-by-value is supported. For example,
 
 .. todo:: Add the example from new-lvalue-rvalue.rst here.
 
