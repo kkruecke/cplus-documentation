@@ -17,13 +17,20 @@ for example,
 In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value. The term **lvalue** originally derived its name from the fact that only objects can
 appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
 
-.. todo:: Print out both files--new-lvalue-rvalue.rst and value-categories.rst--read and digest them and then merge the essential information in the former into the later.
+.. todo:: Print out both files--new-lvalue-rvalue.rst and references-in-modern-cplusplus.rst (which started as a copy of value-categories.rst)--read and digest them and then merge the essential information in the former into the later.
+
+References are implemented using pointers
+-----------------------------------------
+
+References are implemented using pointers. References act like a const pointer that's dereferenced automatically. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression.
+The concepts of lvalues and rvalues help explain C++ reference types, and the real strength of references comes out in operator overloading. 
 
 lvalues, rvalues and references in C++03
 ----------------------------------------
 
 Pre-2011 C++ followed the C model, but assigned the name "rvalue" to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
-C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues. Several non-lvalue C expressions also became lvalue expressions in C++.
+C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (do I mean rvalue???? Listen again to
+Ben Saks at https://www.youtube.com/watch?v=XS2JddPq7GQ) expressions in C++.
 
 Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
 
