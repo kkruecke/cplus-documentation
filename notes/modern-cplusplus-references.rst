@@ -5,6 +5,7 @@ lvalues in the C Programming Language [#1]_
 --------------------------------------------
 
 .. todo:: Merge what is in new-vlau-rvalue.rst into this file. Have idex.rst reference this file instead of value-categories.rst.
+          then re-listen to `Ben Saks lecture <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.  
 
 In C (prior to C++) expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a region of data storage that may have a value, a "locator value" in memory; 
 for example,
@@ -23,12 +24,12 @@ References are implemented using pointers
 -----------------------------------------
 
 References are implemented using pointers. References act like a const pointer that's dereferenced automatically. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression.
-The concepts of lvalues and rvalues help explain C++ reference types, and the real strength of references comes out in operator overloading. 
+The real strength of references comes out in operator overloading. 
 
 Advantage over Pointers
 -----------------------
 
-References allow classes to overloaded built in operators while still allowing objects to passed as arguments. When reference-to-const arguments are used, the same syntax and exactly the same usage as pass-by-value is supported. For example,
+References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they work identical, in terms of usage and syntax, to pass-by-value arguments. For example,
 
 .. code-block:: cpp
 
@@ -38,15 +39,15 @@ References allow classes to overloaded built in operators while still allowing o
     }; 
 
 The complex binary + operator takes a "reference to const". This parameter will bind to both const of non-const objects. If we had written ``complex operator+(complex& param)``, then param would only bind to non-cost lvalue arguments.
-A "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and also to an rvalue, say x, if x is convertible to T. For example
+A "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and also to any rvalue, say x, if x is convertible to T. For example
 
 .. code-block:: cpp
 
      int const &intref = 3; 
      const double& dref = intref;
 
-Here 3 being an int is obviously "convertable" to an int, and so the compiler creates a temporary to hold 3 and binds ``intref`` to it. The same thinking applies to the second line. ``intref`` is an lvalue that is convertable to a double.
-The compiler creates a temporary and stores the converted-to double value and, then, binds ``dref`` to it. 
+Here 3 is obviously "convertable" to an int, and so the compiler creates a temporary to hold 3 and binds ``intref`` to it. The same thing occurs on the second line. ``intref`` is an lvalue that is convertable to a double.
+The compiler creates a temporary and stores the converted-to double value in it, and, then, binds ``dref`` to it. 
 
 Only const references can bind to rvalues. If ``intref`` were a non-const reference to a int, then it would not bind to 3 and no temporary would be created. 
 
@@ -139,15 +140,15 @@ lvalues and rvalues in C++11
 ----------------------------
 
 What were previously called “references” in C++03 are now called **lvalue references** in C++11. This was done to distinguishes them from the new **rvalue references** of C++11. **lvalue references** in C++11 behave just like references did in C++03. On the other hand,
-**rvalue refernces** in C++11 are used primarily as parameter declarations for move constructors and move assignment operators, and as a function return type, primarily the return type of std::move(). Move construction and move assignment significantly improve performance
+**rvalue refernces** in C++11 are used primarily as parameter declarations of move constructors and move assignment operators, and as a function return type, primarily the return type of ``std::move()``. Move construction and move assignment significantly improve performance.
 when the compiler detects an rvalue by "stealing" instead of copying resources.  
 
 What were previously called rvalues in C++03 are now called **prvalues** in C++11, and another new rvalue subcategory, **xvalues** or "expiring values", was introduced. xvalues result when a lvalue is cast to an rvalue reference or when
 a method returns an rvalue reference. "Pure rvalues" abbreviated **prvalues** don't occupy data storage. "Expiring values" abbreviated **xvalues** that do occupy storage.
 
-.. todo:: Read C++ Move Semantics by Nikolai Josuttis. 
+.. todo:: Read C++ Move Semantics eDocument  by Nikolai Josuttis that I purchased. 
 
-.. note:: As a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
+.. note:: Keep in mind that as a programmer you don't need to worry about the distinction prvalues and xvalues. These terms exist in the C++ standard so compiler authors know what needs to be done.
  
 lvalue references are declared using single `&` and rvalue reference are declared using a double `&&`. rvalue references can be used as function parameters and return types, for example 
 
