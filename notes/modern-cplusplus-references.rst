@@ -70,7 +70,7 @@ lvalues, rvalues and references in C++03
 ----------------------------------------
 
 Pre-2011 C++ followed the C model, but assigned the name **rvalue** to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
-C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to binding to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (<-- do I mean rvalue?Listen again to
+C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (<-- do I mean rvalue?Listen again to
 Ben Saks at https://www.youtube.com/watch?v=XS2JddPq7GQ ) expressions in C++.
 
 Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
