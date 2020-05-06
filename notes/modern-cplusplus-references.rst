@@ -7,18 +7,25 @@ lvalues in the C Programming Language [#1]_
 .. todo:: Merge what is in new-vlau-rvalue.rst into this file. Have idex.rst reference this file instead of value-categories.rst.
           then re-listen to `Ben Saks lecture <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.  
 
-In C (prior to C++) expressions were categorized as **lvalue expressions** and others (functions and non-object values), where **lvalue** meant an expression that identifies an object, a region of data storage that may have a value, a "locator value" in memory; 
-for example,
+The **value categories** that categorize expresssions aren't really language features, rather they are semantic properties of expressions. Understanding **value categories** helps in deciphering compiler message, understanding reference types and how reference
+types help in defining user-defined operators.
+
+Prior to C++, in C expressions were categorized as **lvalue expressions**, where **lvalue** meant an expression that identifies an object, a region of data storage, a defined location in memory,
+that may have a value, a "locator value" in memory, and can appear on the left hand side of an assignment statement; for example,
 
 .. code-block:: cpp
 
     int n;
     n = 1;
 
-In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value. The term **lvalue** originally derived its name from the fact that only objects can
-appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
+In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value.
+In C an lvalue can appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
 
-.. todo:: Print out both files--new-lvalue-rvalue.rst and references-in-modern-cplusplus.rst (which started as a copy of value-categories.rst)--read and digest them and then merge the essential information in the former into the later.
+Anything that is not an **lvalue** is termed an **rvalue**. The subexpression ``1`` above is an rvalue.
+
+Why are the concepts of **lvalues** and **rvalues** important? Why both to distinguish what is an lvalue or an rvalue?
+
+.. todo:: resume Ben Saks at 5:20 Minutes.
 
 References are implemented using pointers
 -----------------------------------------
@@ -26,8 +33,8 @@ References are implemented using pointers
 References are implemented using pointers. References act like a const pointer that's dereferenced automatically. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression.
 The real strength of references comes out in operator overloading. 
 
-Advantage over Pointers
------------------------
+Advantages of Referecnes over Pointers
+--------------------------------------
 
 References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they work identical, in terms of usage and syntax, to pass-by-value arguments. For example,
 
