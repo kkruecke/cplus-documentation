@@ -1,17 +1,14 @@
 Introduction to C++11 Value Categories
 ======================================
 
-lvalues in the C Programming Language [#1]_ 
---------------------------------------------
+lvalues and rvalues in the C Programming Language [#1]_ 
+-------------------------------------------------------
 
-.. todo:: Merge what is in new-vlau-rvalue.rst into this file. Have idex.rst reference this file instead of value-categories.rst.
-          then re-listen to `Ben Saks lecture <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.  
-
-The **value categories** that categorize expresssions aren't really language features, rather they are semantic properties of expressions. Understanding **value categories** helps in deciphering compiler message, understanding reference types and how reference
+The **value categories** that categorize expresssions aren't really language features. They are rather semantic properties of expressions. Understanding **value categories** helps in deciphering often-cryptic compiler message, and they help in understanding reference types and how reference
 types help in defining user-defined operators.
 
-Prior to C++, in C expressions were categorized as **lvalue expressions**, where **lvalue** meant an expression that identifies an object, a region of data storage, a defined location in memory,
-that may have a value, a "locator value" in memory, and can appear on the left hand side of an assignment statement; for example,
+Prior to C++, in C expressions were categorized as **lvalue expressions**, where **lvalue** meant an expression that identifies an object, a region of data storage, a defined location in memory, that may have a value, a "locator value" in memory, and can appear on the left hand side of
+an assignment statement; for example,
 
 .. code-block:: cpp
 
@@ -23,9 +20,9 @@ In C an lvalue can appear on the left hand side of an assignment and can be assi
 
 Anything that is not an **lvalue** is termed an **rvalue**. The subexpression ``1`` above is an rvalue.
 
-Why are the concepts of **lvalues** and **rvalues** important? Why both to distinguish what is an lvalue or an rvalue?
+But why are the concepts of **lvalues** and **rvalues** important? Why distinguish what is an lvalue and an rvalue?
 
-.. todo:: resume Ben Saks at 5:20 Minutes.
+.. todo:: resume `Ben Saks lecture <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.  at 5:20 Minutes.
 
 References are implemented using pointers
 -----------------------------------------
@@ -36,7 +33,7 @@ The real strength of references comes out in operator overloading.
 Advantages of Referecnes over Pointers
 --------------------------------------
 
-References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they work identical, in terms of usage and syntax, to pass-by-value arguments. For example,
+References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they have the same syntax as to pass-by-value arguments, and they behavior similarly as pass-by-value arguments. For example,
 
 .. code-block:: cpp
 
