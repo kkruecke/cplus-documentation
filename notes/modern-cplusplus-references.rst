@@ -1,13 +1,15 @@
 Introduction to C++11 Value Categories
 ======================================
 
+.. todo:: Read Nikolai Josuitis's book on Move Semantics
+
 lvalues and rvalues in the C Programming Language [#1]_ 
 -------------------------------------------------------
 
-The **value categories** that categorize expresssions aren't really language features. They are rather semantic properties of expressions. Understanding **value categories** helps in deciphering often-cryptic compiler message, and they help in understanding reference types and how reference
-types help in defining user-defined operators.
+C++11 **value categories** aren't really language features. They are rather semantic properties of expressions. Understanding **value categories** helps in deciphering often-cryptic compiler messages, and they help to explain reference types and how reference
+types are essential in defining user-defined operators.
 
-Prior to C++, in C expressions were categorized as **lvalue expressions**, where **lvalue** meant an expression that identifies an object, a region of data storage, a defined location in memory, that may have a value, a "locator value" in memory, and can appear on the left hand side of
+Prior to C++, C expressions were categorized as **lvalue expressions** and non-lvalue expressions, where **lvalue** meant an expression that identifies an object, a region of data storage with a defined location in memory, that may have a value and can appear on the left hand side of
 an assignment statement; for example,
 
 .. code-block:: cpp
@@ -15,25 +17,21 @@ an assignment statement; for example,
     int n;
     n = 1;
 
-In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Thus **n** is an lvalue, a storage location that can hold a value.
-In C an lvalue can appear on the left hand side of an assignment and can be assigned to, but in C++11 the "l" in lvalue is no longer of any real significance, and lvalues occur in contexts outside of assignment.
+In the expression ``n = 1`` above, the subexpression **n** refers to an integer object, a specific location in memory. Therefore **n** is an lvalue, a storage location that can hold a value. In C an lvalue can appear on the left hand side of an assignment and can be assigned to, but in C++11
+the "l" in lvalue is no longer of any real significance, and lvalues can occur in contexts outside of assignment.
 
-Anything that is not an **lvalue** is termed an **rvalue**. The subexpression ``1`` above is an rvalue.
+Anything that is not an **lvalue** is termed an **rvalue**. So the subexpression ``1`` above is an rvalue.
 
-But why are the concepts of **lvalues** and **rvalues** important? Why distinguish what is an lvalue and an rvalue?
+Why are the concepts of **lvalues** and **rvalues** important? Why distinguish what is an lvalue and an rvalue?
 
 .. todo:: resume `Ben Saks lecture <https://www.youtube.com/watch?v=XS2JddPq7GQ>`_.  at 5:20 Minutes.
 
-References are implemented using pointers
------------------------------------------
+Advantage of References over Pointers
+-------------------------------------
 
-References are implemented using pointers. References act like a const pointer that's dereferenced automatically. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression.
-The real strength of references comes out in operator overloading. 
+References behave like pointers that are automatically dereferenced, and they are implemented using pointers. And like a dereferenced pointer ``*p``, which yields an lvalue, a reference, too, is an lvalue expression. The real strength of references comes out in operator overloading. 
 
-Advantages of Referecnes over Pointers
---------------------------------------
-
-References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they have the same syntax as to pass-by-value arguments, and they behavior similarly as pass-by-value arguments. For example,
+References allow classes to overload built in operators while still allowing objects to be passed as arguments. When reference-to-const arguments are used, they have the same syntax as to pass-by-value arguments, and they behave semantically like pass-by-value arguments. Take, for example,
 
 .. code-block:: cpp
 
@@ -42,16 +40,16 @@ References allow classes to overload built in operators while still allowing obj
         //....
     }; 
 
-The complex binary + operator takes a "reference to const". This parameter will bind to both const of non-const objects. If we had written ``complex operator+(complex& param)``, then param would only bind to non-cost lvalue arguments.
-A "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and also to any rvalue, say x, if x is convertible to T. For example
+Here the complex binary + operator takes a "reference to const". This parameter will bind to both const of non-const objects. If we had written ``complex operator+(complex& param)``, then param would only bind to non-cost lvalue arguments.
+A "reference to const" of type T binds to both const and non-const lvalues expressions involving objects of type T, and, if an rvalue is convertible to T, ``param`` will also bind to it as shown below. 
 
 .. code-block:: cpp
 
      int const &intref = 3; 
      const double& dref = intref;
 
-Here 3 is obviously "convertable" to an int, and so the compiler creates a temporary to hold 3 and binds ``intref`` to it. The same thing occurs on the second line. ``intref`` is an lvalue that is convertable to a double.
-The compiler creates a temporary and stores the converted-to double value in it, and, then, binds ``dref`` to it. 
+Since 3 is obviously "convertable" to an int, the compiler can create a temporary to hold 3 and then bind ``intref`` to it. The same thing occurs on the second line. Since ``intref`` is an lvalue that is convertable to a double, the compiler can create a temporary and stores the converted-to double value in it,
+and, then, binds ``dref`` to it. 
 
 Only const references can bind to rvalues. If ``intref`` were a non-const reference to a int, then it would not bind to 3 and no temporary would be created. 
 
