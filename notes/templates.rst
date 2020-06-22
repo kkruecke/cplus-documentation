@@ -452,6 +452,6 @@ A variadic template can take an arbitrary number of template arguments.  Variadi
 Articles on Template specialization and partial specialization
 --------------------------------------------------------------
 
-* https://en.cppreference.com/w/cpp/language/partial_specialization 
-* https://en.cppreference.com/w/cpp/language/template_specialization
-* https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm
+* `Partial Template Specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_ 
+* `Template Specialization' <https://en.cppreference.com/w/cpp/language/template_specialization>`_
+* Excellent IBM Knowledge Base articles on `Template Specialization <https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.cbclx01/template_specialization.htm>`_
