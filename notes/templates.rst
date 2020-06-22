@@ -6,7 +6,7 @@ Templates and Specializations
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a primary class template can be partially specialized for a category of template arguments:
+This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a primary class template can be partially specialized for a given category of template arguments:
 
 .. code-block:: cpp
 
@@ -21,7 +21,7 @@ This modified example, taken from `partial template specialization <https://en.c
         } 
      };  
 
-     // #1: Partial specialization in which the 2nd parameter is always a pointer to the type of the first generic parameter. 
+     // #1: Partial specialization in which the 2nd parameter is a pointer to the type of the first generic parameter. 
      template<typename T, int I> class A<T, T*, I> { 
         public:
         void describe() const
@@ -48,6 +48,9 @@ This modified example, taken from `partial template specialization <https://en.c
      
      };
 
+     A<X *, 10.5, 5> a; // Instantiates partial template specialization above.
+     a.describe();   // prints: "uses partial template specialization #2 'class A<T*, T2, I>', in which the first parameter is a pointer." 
+
      // #3: Partial specialization in which first parameter is always int, the 2nd parameter is always a pointer
      //  and the third is the scalar 5
      template<typename T>
@@ -60,6 +63,10 @@ This modified example, taken from `partial template specialization <https://en.c
      
      }; 
 
+     A<6, X *, 5> a; // Instantiates partial template specialization above.
+     a.describe();   // prints: "uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5." 
+
+
      // #4: Partial specialization in which the second parameter is always a pointer.
      template<typename X, typename T, int I>
      class A<X, T*, I> {  
@@ -69,6 +76,11 @@ This modified example, taken from `partial template specialization <https://en.c
           cout << "uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer." << endl;
         } 
      }; 
+
+     class Y {//...
+     };
+     A<Y, X*, 10> a;
+     a.describe();   // prints:  "uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer." 
      
 The output from these partial template instantiations further illustrate when a partial template specializations occurs:
 
