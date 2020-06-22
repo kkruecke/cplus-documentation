@@ -6,7 +6,7 @@ Templates and Specializations
 Partial Template Specialization Examples
 ----------------------------------------
 
-This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a primary class template can be partially specialized:
+This modified example, taken from `partial template specialization <https://en.cppreference.com/w/cpp/language/partial_specialization>`_, shows how a primary class template can be partially specialized for a category of template arguments:
 
 .. code-block:: cpp
 
@@ -14,7 +14,7 @@ This modified example, taken from `partial template specialization <https://en.c
      template<typename T1, typename T2, int I>
      class A {
         public:
-        void describe()
+        void describe() const
         {
           cout << "Primary class template<typename T1, typename T2, int I>." << endl;
      
@@ -24,18 +24,24 @@ This modified example, taken from `partial template specialization <https://en.c
      // #1: Partial specialization in which the 2nd parameter is always a pointer to the type of the first generic parameter. 
      template<typename T, int I> class A<T, T*, I> { 
         public:
-        void describe()
+        void describe() const
         {
           cout << "uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'." << endl;
      
         } 
      }; 
+     class X { 
+        //.... omitted
+     };       
+
+     A<X, X *, 5> a; // Instantiates partial template specialization above.
+     a.describe();   // prints:  "uses partial template specialization #1 'class A<T, T*, I>', in which the 2nd parameter is a pointer to 'type of the first parameter'."
 
      // #2: Partial specialization in which the first parameter is always a pointer.
      template<typename T, typename T2, int I>
      class A<T*, T2, I> { 
         public:
-        void describe()
+        void describe() const
         {
           cout << "uses partial template specialization #2 'class A<T*, T2, I>', in which the first parameter is a pointer." << endl;
         } 
@@ -47,7 +53,7 @@ This modified example, taken from `partial template specialization <https://en.c
      template<typename T>
      class A<int, T*, 5> { 
         public:
-        void describe()
+        void describe() const
         {
           cout << "uses partial template specialization #3 'class A<int, T*, 5>', in which the first parameter is an int, and the 2nd is a pointer and the third is the scalar 5." << endl;
         } 
@@ -58,7 +64,7 @@ This modified example, taken from `partial template specialization <https://en.c
      template<typename X, typename T, int I>
      class A<X, T*, I> {  
         public:
-        void describe()
+        void describe() const
         {
           cout << "uses partial template specialization #4 'class A<X, T*, I>', in which The second parameter is a pointer." << endl;
         } 

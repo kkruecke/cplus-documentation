@@ -6,8 +6,8 @@ Introduction to C++11 Value Categories
 lvalues and rvalues in the C Programming Language [#1]_ 
 -------------------------------------------------------
 
-C++11 **value categories** aren't really language features. They are rather semantic properties of expressions. Understanding **value categories** helps in deciphering often-cryptic compiler messages, and they help to explain reference types and how reference
-types are essential in defining user-defined operators.
+C++11 **value categories** aren't really language features like, say, polymorphims. Rather they are semantic properties of expressions, and understanding **value categories** helps you in deciphering often-cryptic compiler messages. They help explain reference types, which are so  
+essential in defining user-defined operators.
 
 Prior to C++, C expressions were categorized as **lvalue expressions** and non-lvalue expressions, where **lvalue** meant an expression that identifies an object, a region of data storage with a defined location in memory, that may have a value and can appear on the left hand side of
 an assignment statement; for example,
@@ -72,7 +72,7 @@ lvalues, rvalues and references in C++03
 ----------------------------------------
 
 Pre-2011 C++ followed the C model, but assigned the name **rvalue** to non-lvalue expressions. In the expression ``n = 1;``, for example, ``1`` is an rvalue because it is not an object, not a location in memory, and thus not an lvalue.
-C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (<-- do I mean rvalue?Listen again to
+C++03 added the rule that references can bind to lvalues, but only references-to-const can bind to rvalues (in addition to binding to both const and non-const lvalue expressions). Several non-lvalue C expressions also became lvalue (<-- do I mean rvalue?Listen again to
 Ben Saks at https://www.youtube.com/watch?v=XS2JddPq7GQ ) expressions in C++.
 
 Distinguishing rvalues from lvalues allows the compiler to improve the efficiency of the code it generates. The compiler does not need to place rvalues in storage (although this does not apply to class instances as will be discussed).
