@@ -11,8 +11,8 @@ Overloading Constructors and Assignment Operators with rvalue references
 
 .. todo:: See also https://www.fluentcpp.com/2018/07/17/how-to-construct-c-objects-without-making-copies/
 
-When a copy constructor or an assignment operator is invoked, the source object remains unchanged. But if the source object is about to die and its resources about to be deleted, it would be more efficient if the source objects resources were
-simply transfered to the new object being constructed or, in the case of the assignment operator, the object being assigned. For example, take the String class below.
+When a copy constructor or an assignment operator is invoked, the source object remains unchanged. But if the source object is about to die and its resources about to be deleted, it obviously is be more efficient to
+do a shallow copy, to simply transfer the ownership of the source object's resources, like heap memory, to the new object. For example, take the String class below.
 
 .. code-block:: cpp
 
@@ -52,7 +52,7 @@ simply transfered to the new object being constructed or, in the case of the ass
 
     String s3{s1 + s2}; 
 
-The temporary string representing *s1 + s2* will die after the line is executed and its memory will be deleted. Therefore it would be more efficient if its resources were simply taken over or moved to *s3* like this
+The temporary string representing *s1 + s2* will die after the line is executed and its memory will be deleted. Therefore it is to move to *s1 + s2* to *s3* like this
 
 .. code-block:: cpp
 
@@ -62,11 +62,11 @@ The temporary string representing *s1 + s2* will die after the line is executed 
        str.p = nullptr;
     }   
 
-When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references like the constructor above (called a move constructor), and this allows the compiler to now branch at compiler time
-depending on whether the constructor or assignment operator is being passed an lvalue or an rvalue. But how do you implement the constructor and assigment operator that take an rvalue reference? 
+When C++11 introduced rvalue references, it allowed constructors and assignment operators to be overloaed with rvalue references, like the constructor above (called a move constructor). This allows the compiler to branch at compiler time
+depending on whether the constructor or assignment operator is being passed a temporary value (or has been cast to a temporary value). 
 
 The ``Vector`` class below was introduced in :ref:`rvalue-reference`. Move semantics allow you to overloaded a class\ |apos|\ s constructor and assignment operator with a new type of reference called an **rvalue reference** 
-See :ref:`rvalue-reference` for an explanation of rvalue references. Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
+Doing so allows the compiler to always choose the more effecient move constructor and move assignment operator when an rvalue is encountered. Below is a template ``Vector`` class with the usual copy constructor and assignment operator as well
 as ``void push_back(const T&)`` that take an ``const T&``:
 
 .. code-block:: cpp
@@ -106,9 +106,9 @@ as ``void push_back(const T&)`` that take an ``const T&``:
     
          Vector& operator=(const Vector<T>& lhs);
     
-         void push_back(const T& t);
+         void push_back(const T& t); // Does deep copy
     
-         void push_back(T&& t);
+         void push_back(T&& t); // Does shallow copy
     
          T& operator[](int);
     
@@ -196,7 +196,7 @@ as ``void push_back(const T&)`` that take an ``const T&``:
        return static_cast<T *>(this)->operator[](pos);
     }
 
-.. todo:: probably need to re-comment about ravlue reference paramaters are lvalues
+Note: Rvalue paramters are lvalues. Therefore to move-from them, they must be cast to rvalues using ``std::move()``: 
 
 .. code-block:: cpp
 
@@ -219,8 +219,7 @@ as ``void push_back(const T&)`` that take an ``const T&``:
    
    Derived::Derived(Derived&& d) : Base(std::move(d)), ... {} 
 
-Therefore to ensure the *Derived* move constructor invokes ``Base::Base(Base&&)``, *d* must first be cast to an rvalue using ``std::move(d)``.
-All this is explained in more detail below.
+To ensure the *Derived* move constructor invokes ``Base::Base(Base&&)``, *d* must first be cast to an rvalue using ``std::move(d)``. The reason why is explained in more detail below.
    
 Implementation of move constructor and move assignment operator
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
