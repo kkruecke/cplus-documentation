@@ -119,4 +119,4 @@ but x itself is not about to die. It will exist for the lifetime of f. This fact
 Further Discussion
 ------------------
 
-The topic of rvalue and lvalues is part of the larger topic of :ref:`value-categories`.
+The topic of rvalue and lvalues is part of the larger topic of **value categories**.
